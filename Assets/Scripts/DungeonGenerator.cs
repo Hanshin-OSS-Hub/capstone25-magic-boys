@@ -12,9 +12,7 @@ public class DungeonGenerator : MonoBehaviour
     public KeyCode reloadKey = KeyCode.Backspace;
     public List<Tile> genneratedTiles = new List<Tile>();
 
-
     Transform tileFrom, tileTo;
-
 
     void Start()
     {
@@ -27,9 +25,7 @@ public class DungeonGenerator : MonoBehaviour
             tileTo = CreateTile();
             ConnectTiles();
         }
-
     }
-
     private void Update()
     {
         if (Input.GetKeyDown(reloadKey))
@@ -72,7 +68,7 @@ public class DungeonGenerator : MonoBehaviour
         int index = Random.Range(0, tilePrefabs.Length);
         GameObject goTile = Instantiate(tilePrefabs[index], Vector3.zero, Quaternion.identity, transform) as GameObject;
         goTile.name = tilePrefabs[index].name;
-        Transform origin = genneratedTiles[genneratedTiles.FindIndex(index => index.tile == tileFrom)].tile;
+        Transform origin = genneratedTiles[genneratedTiles.FindIndex(x => x.tile == tileFrom)].tile;
         genneratedTiles.Add(new Tile(goTile.transform, origin));
         return goTile.transform;
     }

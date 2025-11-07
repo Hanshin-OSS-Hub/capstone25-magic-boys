@@ -2,7 +2,7 @@ using UnityEngine;
 
 [System.Serializable]
 
-public class Tile : MonoBehaviour
+public class Tile
 {
 
     public Transform tile;
