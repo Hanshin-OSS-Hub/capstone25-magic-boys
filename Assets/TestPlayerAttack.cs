@@ -1,15 +1,16 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class TestPlayerAttack : MonoBehaviour
 {
     [Header("Refs")]
-    public Camera cam;                 // 메인 카메라(비워두면 자동)
-    public Transform firePoint;        // 발사 원점(손/무기 끝)
-    public PlayerStats player;         // 킬 크레딧/MP/데미지 출처
+    public Camera cam;
+    public Transform firePoint;
+    public PlayerStats player;
 
     [Header("Layers")]
-    public LayerMask enemyMask;        // Enemy만
-    public LayerMask worldMask;        // 벽/지형 등(에임 점 잡을 때)
+    public LayerMask enemyMask;
+    public LayerMask worldMask;
 
     [Header("Ranged (LMB)")]
     public float rangedRange = 25f;
@@ -22,11 +23,11 @@ public class TestPlayerAttack : MonoBehaviour
 
     [Header("Skill #1 (Key 1)")]
     public KeyCode skillKey = KeyCode.Alpha1;
-    public int skillMpCost = 15;                 // ★ 필요한 MP
-    public int baseSkillDamage = 30;             // 마법 계수(최종은 PlayerStats.GetMagicDamage로 계산)
-    public SkillProjectile projectilePrefab;     // ★ 투사체 프리팹
-    public float projectileSpeed = 22f;          // 투사체 속도
-    public float projectileMaxDistance = 40f;    // 최대 비행거리
+    public int skillMpCost = 15;
+    public int baseSkillDamage = 30;
+    public SkillProjectile projectilePrefab;
+    public float projectileSpeed = 22f;
+    public float projectileMaxDistance = 40f;
 
     [Header("Debug")]
     public bool drawDebug = true;
@@ -36,8 +37,6 @@ public class TestPlayerAttack : MonoBehaviour
     void Awake()
     {
         if (!cam) cam = Camera.main;
-        if (!cam) Debug.LogError("TestPlayerAttack: Camera 필요!");
-
         if (!firePoint)
         {
             var temp = new GameObject("~FirePointAuto");
@@ -49,24 +48,35 @@ public class TestPlayerAttack : MonoBehaviour
 
     void Update()
     {
-        // 기본 공격
-        if (Input.GetMouseButtonDown(0)) ShootRangedFromCharacter();
-        if (Input.GetKeyDown(KeyCode.F)) DoMelee();
+        // ★ 메뉴 열렸으면 입력 전부 차단 (Time.timeScale=0이어도 Update는 돎)
+        if (StatsPanelToggle.UIBlocked) return;
 
-        // ★ 스킬 1: 투사체 발사 + MP 차감
-        if (Input.GetKeyDown(skillKey)) CastSkill1();
+        // ★ UI 위 클릭이면 전투 입력 차단
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            return;
+
+        // ========== 입력 ==========
+
+        if (Input.GetMouseButtonDown(0))
+            ShootRangedFromCharacter();
+
+        if (Input.GetKeyDown(KeyCode.F))
+            DoMelee();
+
+        if (Input.GetKeyDown(skillKey))
+            CastSkill1();
     }
 
-    // 화면 중앙 에임 포인트
+    // ===== 조준 유틸 =====
     Vector3 GetAimPoint(float maxDistance = 1000f)
     {
         Ray aimRay = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-        // 월샷 방지: 먼저 월드(벽/지형)에 맞으면 그 지점 사용
         if (Physics.Raycast(aimRay, out var hit, maxDistance, worldMask, QueryTriggerInteraction.Ignore))
             return hit.point;
         return aimRay.origin + aimRay.direction * maxDistance;
     }
 
+    // ===== 원거리 기본 공격 (LMB) =====
     void ShootRangedFromCharacter()
     {
         Vector3 aimPoint = GetAimPoint(rangedRange * 2f);
@@ -86,6 +96,7 @@ public class TestPlayerAttack : MonoBehaviour
         }
     }
 
+    // ===== 근접 (F) =====
     void DoMelee()
     {
         Vector3 origin = firePoint ? firePoint.position : transform.position + Vector3.up * 1.2f;
@@ -104,7 +115,7 @@ public class TestPlayerAttack : MonoBehaviour
         }
     }
 
-    // ★ 스킬 1: MP 확인 → 투사체 생성 → 발사
+    // ===== 스킬 1 (Key 1) : MP 소모 + 투사체 =====
     void CastSkill1()
     {
         if (projectilePrefab == null)
@@ -113,22 +124,18 @@ public class TestPlayerAttack : MonoBehaviour
             return;
         }
 
-        // MP 체크 & 차감
         if (!player.SpendMP(skillMpCost))
         {
             Debug.Log("MP가 부족합니다!");
             return;
         }
 
-        // 발사 방향 = firePoint → 화면 중앙 에임 지점
         Vector3 aimPoint = GetAimPoint(projectileMaxDistance);
         Vector3 origin = firePoint.position;
         Vector3 dir = (aimPoint - origin).normalized;
 
-        // 데미지는 MAG/LUK 반영 (기대 크리 포함)
         int finalDamage = player.GetMagicDamage(baseSkillDamage);
 
-        // 투사체 생성 및 초기화
         var proj = Instantiate(projectilePrefab, origin, Quaternion.LookRotation(dir));
         proj.Launch(finalDamage, player, enemyMask, projectileSpeed, projectileMaxDistance);
     }

@@ -5,41 +5,67 @@ public enum StatType { STR, DEX, MAG, LUK }
 
 public class PlayerStats : MonoBehaviour
 {
-    [Header("Base")]
+    [Header("Base (before stat scaling)")]
     public int baseMaxHP = 100;
     public int baseMaxMP = 50;
+    public int basePhysicalATK = 10;
+    public int baseMagicATK = 10;
+    public float baseMPRegenPerSec = 1f;
+    public float baseMoveSpeed = 5f;          // m/s
+    public float baseAttacksPerSecond = 1.5f; // 초당 공격수 (공격속도)
 
-    [Header("Runtime")]
+    [Header("Runtime Resources")]
     public int maxHP;
     public int currentHP;
     public int maxMP;
     public int currentMP;
 
-    [Header("EXP / Level")]
+    [Header("EXP / Level / Stat Points")]
     public int level = 1;
     public int currentExp = 0;
     public int expToNext = 50;
+    public int statPoints = 0;
 
-    [Header("Stats (for damage)")]
-    public int STR = 0;   // 물리 보정(옵션)
-    public int MAG = 0;   // 마법 보정
-    public int LUK = 0;   // 크리 확률/배수 보정
+    [Header("Allocated Stats")]
+    public int STR = 0;  // 힘: HP/물리공격 ↑
+    public int DEX = 0;  // 민첩: 공격속도/이동속도 ↑
+    public int MAG = 0;  // 마력: MP최대/자연회복/마법공격 ↑
+    public int LUK = 0;  // 운: 크리확률/크리배수 ↑
 
-    [Header("Crit Settings")]
-    [Range(0f, 1f)] public float baseCritChance = 0.05f;   // 5%
-    public float baseCritMultiplier = 1.5f;               // 1.5x
+    [Header("Derived (auto)")]
+    public int physicalATK;
+    public int magicATK;
+    public float mpRegenPerSec;
+    public float moveSpeed;
+    public float attacksPerSecond;
+    public float attackInterval; // 1 / APS
+    [Range(0, 1)] public float critChance;
+    public float critMultiplier;
 
-    // UI 이벤트
+    [Header("Crit Base")]
+    [Range(0, 1)] public float baseCritChance = 0.05f;  // 5%
+    public float baseCritMultiplier = 1.5f;            // 1.5x
+
+    // Events (UI 등)
     public event Action<int, int> OnHPChanged;
     public event Action<int, int> OnMPChanged;
     public event Action<int, int, int> OnExpChanged;
+    public event Action<int> OnStatPointChanged;
     public event Action OnDied;
+
+    float _mpRegenCarry;
 
     void Awake()
     {
-        maxHP = baseMaxHP; currentHP = maxHP;
-        maxMP = baseMaxMP; currentMP = maxMP;
+        RecalculateDerived();
+        currentHP = maxHP;
+        currentMP = maxMP;
         BroadcastAll();
+    }
+
+    void Update()
+    {
+        TickMPRegen(Time.deltaTime);
     }
 
     void BroadcastAll()
@@ -47,9 +73,33 @@ public class PlayerStats : MonoBehaviour
         OnHPChanged?.Invoke(currentHP, maxHP);
         OnMPChanged?.Invoke(currentMP, maxMP);
         OnExpChanged?.Invoke(currentExp, expToNext, level);
+        OnStatPointChanged?.Invoke(statPoints);
     }
 
-    // ---- HP ----
+    // ===== Derived rules (간단 밸런스) =====
+    public void RecalculateDerived()
+    {
+        maxHP = baseMaxHP + STR * 10;
+        maxMP = baseMaxMP + MAG * 10;
+
+        physicalATK = basePhysicalATK + STR * 2;
+        magicATK = baseMagicATK + MAG * 3;
+
+        mpRegenPerSec = baseMPRegenPerSec + MAG * 0.3f;
+
+        moveSpeed = baseMoveSpeed + DEX * 0.15f; // 0.15 m/s per DEX
+        attacksPerSecond = baseAttacksPerSecond + DEX * 0.05f; // +0.05 APS per DEX
+        attacksPerSecond = Mathf.Max(0.2f, attacksPerSecond);
+        attackInterval = 1f / attacksPerSecond;
+
+        critChance = Mathf.Clamp01(baseCritChance + LUK * 0.005f); // +0.5%/LUK
+        critMultiplier = baseCritMultiplier + LUK * 0.01f;         // +1%/LUK
+
+        currentHP = Mathf.Min(currentHP, maxHP);
+        currentMP = Mathf.Min(currentMP, maxMP);
+    }
+
+    // ===== HP / MP =====
     public void TakeDamage(int amount)
     {
         if (amount <= 0) return;
@@ -63,7 +113,6 @@ public class PlayerStats : MonoBehaviour
         OnHPChanged?.Invoke(currentHP, maxHP);
     }
 
-    // ---- MP ----
     public bool SpendMP(int amount)
     {
         if (amount <= 0) return true;
@@ -77,8 +126,19 @@ public class PlayerStats : MonoBehaviour
         currentMP = Mathf.Min(maxMP, currentMP + amount);
         OnMPChanged?.Invoke(currentMP, maxMP);
     }
+    void TickMPRegen(float dt)
+    {
+        if (mpRegenPerSec <= 0f || currentMP >= maxMP) return;
+        _mpRegenCarry += mpRegenPerSec * dt;
+        int gain = Mathf.FloorToInt(_mpRegenCarry);
+        if (gain > 0)
+        {
+            _mpRegenCarry -= gain;
+            RestoreMP(gain);
+        }
+    }
 
-    // ---- EXP / Level ----
+    // ===== EXP / Level =====
     public void AddExp(int amount)
     {
         if (amount <= 0) return;
@@ -87,7 +147,9 @@ public class PlayerStats : MonoBehaviour
         {
             currentExp -= expToNext;
             level++;
-            expToNext = Mathf.RoundToInt(expToNext * 1.2f); // 간단 스케일
+            statPoints += 1; // ★ 레벨업 시 포인트 지급
+            expToNext = Mathf.RoundToInt(expToNext * 1.2f);
+            OnStatPointChanged?.Invoke(statPoints);
         }
         OnExpChanged?.Invoke(currentExp, expToNext, level);
     }
@@ -98,29 +160,41 @@ public class PlayerStats : MonoBehaviour
         OnDied?.Invoke();
     }
 
-    // ====== Damage helpers ======
-    // 물리 공격 계산(원하면 좌클릭 근접/원거리 기본 공격에 사용)
+    // ===== Stat allocation =====
+    public bool AllocateStat(StatType type)
+    {
+        if (statPoints <= 0) return false;
+        switch (type)
+        {
+            case StatType.STR: STR++; break;
+            case StatType.DEX: DEX++; break;
+            case StatType.MAG: MAG++; break;
+            case StatType.LUK: LUK++; break;
+        }
+        statPoints--;
+        RecalculateDerived();
+        OnStatPointChanged?.Invoke(statPoints);
+        OnHPChanged?.Invoke(currentHP, maxHP);
+        OnMPChanged?.Invoke(currentMP, maxMP);
+        return true;
+    }
+
+    // ===== Damage helpers =====
     public int GetPhysicalDamage(int baseWeaponOrSkill = 0)
     {
-        float dmg = baseWeaponOrSkill + STR * 2f;            // 예시 스케일
+        float dmg = baseWeaponOrSkill + physicalATK;
         ApplyCrit(ref dmg);
         return Mathf.Max(0, Mathf.RoundToInt(dmg));
     }
-
-    // 마법 공격 계산(스킬1 등에서 사용)
     public int GetMagicDamage(int baseSkill = 0)
     {
-        float dmg = baseSkill + MAG * 3f;                    // 예시 스케일
+        float dmg = baseSkill + magicATK;
         ApplyCrit(ref dmg);
         return Mathf.Max(0, Mathf.RoundToInt(dmg));
     }
-
     void ApplyCrit(ref float dmg)
     {
-        float critChance = Mathf.Clamp01(baseCritChance + LUK * 0.005f);
-        float critMult = baseCritMultiplier + LUK * 0.01f;
-
-        if (UnityEngine.Random.value < critChance) // ★ 여기!
-            dmg *= critMult;
+        if (UnityEngine.Random.value < critChance)
+            dmg *= critMultiplier;
     }
 }
