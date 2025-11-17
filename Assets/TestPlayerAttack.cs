@@ -29,6 +29,13 @@ public class TestPlayerAttack : MonoBehaviour
     public float projectileSpeed = 22f;
     public float projectileMaxDistance = 40f;
 
+    [Header("Skill #1 Cooldown")]
+    public float skill1Cooldown = 5f;     // 총 쿨다운 시간(초)
+    private float skill1Remain = 0f;      // 남은 쿨(초)
+    public bool IsSkill1Ready => skill1Remain <= 0f;
+    // UI에서 쓰기 좋은 0~1 비율(1=막 눌렀다, 0=준비 완료)
+    public float Skill1CooldownRatio => Mathf.Clamp01(skill1Remain / skill1Cooldown);
+
     [Header("Debug")]
     public bool drawDebug = true;
     public Color debugRangedColor = Color.cyan;
@@ -48,15 +55,17 @@ public class TestPlayerAttack : MonoBehaviour
 
     void Update()
     {
-        // ★ 메뉴 열렸으면 입력 전부 차단 (Time.timeScale=0이어도 Update는 돎)
+        // 메뉴 열렸으면 입력 전부 차단 (Time.timeScale=0이어도 Update는 돎)
         if (StatsPanelToggle.UIBlocked) return;
 
-        // ★ UI 위 클릭이면 전투 입력 차단
+        // UI 위 클릭이면 전투 입력 차단
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
             return;
 
-        // ========== 입력 ==========
+        // --- 쿨다운 감소 (일시정지 시 멈추도록 deltaTime 사용) ---
+        if (skill1Remain > 0f) skill1Remain -= Time.deltaTime;
 
+        // ========== 입력 ==========
         if (Input.GetMouseButtonDown(0))
             ShootRangedFromCharacter();
 
@@ -64,7 +73,7 @@ public class TestPlayerAttack : MonoBehaviour
             DoMelee();
 
         if (Input.GetKeyDown(skillKey))
-            CastSkill1();
+            TryCastSkill1();
     }
 
     // ===== 조준 유틸 =====
@@ -115,18 +124,30 @@ public class TestPlayerAttack : MonoBehaviour
         }
     }
 
-    // ===== 스킬 1 (Key 1) : MP 소모 + 투사체 =====
+    // ===== 스킬 1 시도 (쿨 & MP 체크) =====
+    void TryCastSkill1()
+    {
+        if (!IsSkill1Ready)
+        {
+            Debug.Log($"스킬 쿨다운 {skill1Remain:F1}s");
+            return;
+        }
+        if (!player.SpendMP(skillMpCost))
+        {
+            Debug.Log("MP가 부족합니다!");
+            return;
+        }
+
+        CastSkill1();                 // 실제 발사
+        skill1Remain = skill1Cooldown; // 쿨 시작
+    }
+
+    // ===== 스킬 1 (Key 1) : 투사체 발사 =====
     void CastSkill1()
     {
         if (projectilePrefab == null)
         {
             Debug.LogWarning("SkillProjectile 프리팹이 비어있습니다.");
-            return;
-        }
-
-        if (!player.SpendMP(skillMpCost))
-        {
-            Debug.Log("MP가 부족합니다!");
             return;
         }
 
