@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class AttackState : IEnemyState
@@ -25,13 +26,23 @@ public class AttackState : IEnemyState
 
         attackAnimationTimer -= Time.deltaTime;
         if (attackAnimationTimer <= 0) 
-        { 
+        {
+            PerformAttack(enemy);
             enemy.OnAttackAnimationFinished(); 
         }
-
-
-
-
     }
 
+    private void PerformAttack(EnemyStateManager enemy) // 공격 수행 함수
+    {
+        if (enemy.PlayerTransform == null) return;
+        IDamageable player = enemy.PlayerTransform.GetComponent<IDamageable>();
+        if (player != null)
+        {
+            if (enemy.DistanceToPlayer <= enemy.GetAttackRange()) // 애니메이션이 끝났을 때 공격 범위 내에 있다면 데미지줌
+            {
+                player.TakeDamage(enemy.GetDamage());
+            }
+        }
+
+    }
 }

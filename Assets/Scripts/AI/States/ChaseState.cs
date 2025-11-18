@@ -4,13 +4,13 @@ public class ChaseState : IEnemyState
 {
     public void EnterState(EnemyStateManager enemy)
     {
-        Debug.Log("추격 시작!");
+        //Debug.Log("추격 시작!");
         enemy.NavMeshAgent.isStopped = false;
     }
 
     public void ExitState(EnemyStateManager enemy)
     {
-        Debug.Log("추격 종료.");
+        //Debug.Log("추격 종료.");
     }
 
     public void UpdateState(EnemyStateManager enemy)
