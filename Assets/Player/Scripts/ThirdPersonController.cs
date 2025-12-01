@@ -94,6 +94,24 @@ namespace StarterAssets
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
 
+        private PlayerAttack _attack;
+        private PlayerRoll _roll;
+
+        [Header("Roll Settings")]
+        public float RollSpeed = 8.0f;       // 구르는 이동 속도
+        public float RollDuration = 0.7f;    // 구르기 지속 시간
+        public float RollCooldown = 0.3f;    // 구르기 후 잠깐 딜레이
+
+        private bool _isRolling;
+        private float _rollTimer;
+        private float _rollCooldownTimer;
+        private Vector3 _rollDirection;
+
+        private int _animIDRoll;
+
+        private float _lastJumpKeyTime = -999f;
+        public float DoubleTapTime = 0.25f;  // 스페이스 두 번 입력 간격
+
 #if ENABLE_INPUT_SYSTEM
         private PlayerInput _playerInput;
 #endif
@@ -138,6 +156,9 @@ namespace StarterAssets
 #else
             Debug.LogError("Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif
+            _attack = GetComponent<PlayerAttack>(); 
+            _roll = GetComponent<PlayerRoll>();
+
 
             AssignAnimationIDs();
 
@@ -149,10 +170,80 @@ namespace StarterAssets
         {
             _hasAnimator = TryGetComponent(out _animator);
 
+            HandleRollInput();
+
             JumpAndGravity();
             GroundedCheck();
             Move();
         }
+                private void HandleRollInput()
+        {
+            // 쿨타임 처리
+            if (_rollCooldownTimer > 0f)
+            {
+                _rollCooldownTimer -= Time.deltaTime;
+            }
+
+            // 구르는 중이면 타이머만 감소시키고 종료 시점 체크
+            if (_isRolling)
+            {
+                _rollTimer -= Time.deltaTime;
+                if (_rollTimer <= 0f)
+                {
+                    _isRolling = false;
+                    _rollCooldownTimer = RollCooldown;
+                }
+                return;
+            }
+
+#if ENABLE_INPUT_SYSTEM
+            // StarterAssetsInputs는 jump 플래그를 씀, 여기서는 스페이스 두 번만 직접 감지
+#endif
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                float now = Time.time;
+
+                // 두 번 연속, 그리고 움직이는 중이고, 땅에 있을 때만 구르기
+                if (now - _lastJumpKeyTime <= DoubleTapTime &&
+                    _input.move != Vector2.zero &&
+                    Grounded &&
+                    _rollCooldownTimer <= 0f)
+                {
+                    StartRoll();
+                    // 점프 입력은 취소해서 기본 점프가 발동하지 않도록
+                    _input.jump = false;
+                }
+
+                _lastJumpKeyTime = now;
+            }
+        }
+
+        private void StartRoll()
+        {
+            // 현재 이동 입력 방향 기준으로 구르기 방향 계산 (WASD 전부 가능)
+            Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
+
+            if (inputDirection == Vector3.zero)
+            {
+                // 혹시 모를 예외 처리: 입력이 없다면 앞으로
+                inputDirection = Vector3.forward;
+            }
+
+            // 카메라 기준 방향으로 회전
+            float targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
+                                   _mainCamera.transform.eulerAngles.y;
+
+            _rollDirection = Quaternion.Euler(0.0f, targetRotation, 0.0f) * Vector3.forward;
+
+            _isRolling = true;
+            _rollTimer = RollDuration;
+
+            if (_hasAnimator)
+            {
+                _animator.SetTrigger(_animIDRoll);
+            }
+        }
+
 
         private void LateUpdate()
         {
@@ -166,6 +257,7 @@ namespace StarterAssets
             _animIDJump = Animator.StringToHash("Jump");
             _animIDFreeFall = Animator.StringToHash("FreeFall");
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
+            _animIDRoll = Animator.StringToHash("Roll");
         }
 
         private void GroundedCheck()
@@ -205,68 +297,112 @@ namespace StarterAssets
                 _cinemachineTargetYaw,
                 0.0f);
         }
-
         private void Move()
+{
+    // 1) 구르는 중이면 롤 전용 이동만 처리
+    if (_roll != null && _roll.IsRolling)
+    {
+        Vector3 rollDir = _roll.GetRollDirection();   // 미리 저장된 구르기 방향
+        float rollSpeed = 8f;                         // 롤 속도 (원하는 값으로 조정)
+
+        // 수평 이동 + 중력
+        Vector3 horizontal = rollDir * rollSpeed;
+        Vector3 vertical = new Vector3(0.0f, _verticalVelocity, 0.0f);
+
+        _controller.Move((horizontal + vertical) * Time.deltaTime);
+
+        if (_hasAnimator)
         {
-            float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
-
-            if (_input.move == Vector2.zero) targetSpeed = 0.0f;
-
-            float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude;
-
-            float speedOffset = 0.1f;
-            float inputMagnitude = _input.analogMovement ? _input.move.magnitude : 1f;
-
-            if (currentHorizontalSpeed < targetSpeed - speedOffset ||
-                currentHorizontalSpeed > targetSpeed + speedOffset)
-            {
-                _speed = Mathf.Lerp(
-                    currentHorizontalSpeed,
-                    targetSpeed * inputMagnitude,
-                    Time.deltaTime * SpeedChangeRate);
-
-                _speed = Mathf.Round(_speed * 1000f) / 1000f;
-            }
-            else
-            {
-                _speed = targetSpeed;
-            }
-
-            _animationBlend = Mathf.Lerp(_animationBlend, targetSpeed, Time.deltaTime * SpeedChangeRate);
-            if (_animationBlend < 0.01f) _animationBlend = 0f;
-
-            Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
-
-            if (_input.move != Vector2.zero)
-            {
-                _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
-                                  _mainCamera.transform.eulerAngles.y;
-                float rotation = Mathf.SmoothDampAngle(
-                    transform.eulerAngles.y,
-                    _targetRotation,
-                    ref _rotationVelocity,
-                    RotationSmoothTime);
-
-                transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
-            }
-
-            Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
-
-            _controller.Move(
-                targetDirection.normalized * (_speed * Time.deltaTime) +
-                new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
-
-            if (_hasAnimator)
-            {
-                _animator.SetFloat(_animIDSpeed, _animationBlend);
-                _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
-            }
+            _animator.SetFloat(_animIDSpeed, 0.0f);
+            _animator.SetFloat(_animIDMotionSpeed, 0.0f);
         }
+
+        return;
+    }
+
+    // 2) 공격 중에는 제자리에서 중력만 적용
+    if (_attack != null && _attack.IsAttacking)
+    {
+        _controller.Move(new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+
+        if (_hasAnimator)
+        {
+            _animator.SetFloat(_animIDSpeed, 0.0f);
+            _animator.SetFloat(_animIDMotionSpeed, 0.0f);
+        }
+
+        return;
+    }
+
+    // 3) 평상시 이동 처리
+    float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+
+    if (_input.move == Vector2.zero)
+        targetSpeed = 0.0f;
+
+    float currentHorizontalSpeed =
+        new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude;
+
+    float speedOffset = 0.1f;
+    float inputMagnitude = _input.analogMovement ? _input.move.magnitude : 1f;
+
+    if (currentHorizontalSpeed < targetSpeed - speedOffset ||
+        currentHorizontalSpeed > targetSpeed + speedOffset)
+    {
+        _speed = Mathf.Lerp(
+            currentHorizontalSpeed,
+            targetSpeed * inputMagnitude,
+            Time.deltaTime * SpeedChangeRate);
+
+        _speed = Mathf.Round(_speed * 1000f) / 1000f;
+    }
+    else
+    {
+        _speed = targetSpeed;
+    }
+
+    _animationBlend = Mathf.Lerp(_animationBlend, targetSpeed, Time.deltaTime * SpeedChangeRate);
+    if (_animationBlend < 0.01f)
+        _animationBlend = 0f;
+
+    Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
+
+    if (_input.move != Vector2.zero)
+    {
+        _targetRotation =
+            Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
+            _mainCamera.transform.eulerAngles.y;
+
+        float rotation = Mathf.SmoothDampAngle(
+            transform.eulerAngles.y,
+            _targetRotation,
+            ref _rotationVelocity,
+            RotationSmoothTime);
+
+        transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+    }
+
+    Vector3 targetDirection =
+        Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
+
+    _controller.Move(
+        targetDirection.normalized * (_speed * Time.deltaTime) +
+        new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+
+    if (_hasAnimator)
+    {
+        _animator.SetFloat(_animIDSpeed, _animationBlend);
+        _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
+    }
+}
+
+
 
         private void JumpAndGravity()
         {
             if (Grounded)
             {
+                if (_roll != null && _roll.IsRolling) return;
                 _fallTimeoutDelta = FallTimeout;
 
                 if (_hasAnimator)
