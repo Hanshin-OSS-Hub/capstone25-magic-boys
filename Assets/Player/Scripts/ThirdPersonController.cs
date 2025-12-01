@@ -101,6 +101,9 @@ namespace StarterAssets
         public float RollSpeed = 8.0f;       // 구르는 이동 속도
         public float RollDuration = 0.7f;    // 구르기 지속 시간
         public float RollCooldown = 0.3f;    // 구르기 후 잠깐 딜레이
+        [HideInInspector] public bool IsLockOn = false;
+        [HideInInspector] public Transform LockOnTarget = null;
+
 
         private bool _isRolling;
         private float _rollTimer;
@@ -280,23 +283,49 @@ namespace StarterAssets
         }
 
         private void CameraRotation()
+{
+    // 1) 락온 중이면 보스를 바라보도록 각도 계산
+    if (IsLockOn && LockOnTarget != null)
+    {
+        Vector3 dir = LockOnTarget.position - CinemachineCameraTarget.transform.position;
+
+        if (dir.sqrMagnitude > 0.0001f)
         {
-            if (_input.look.sqrMagnitude >= _threshold && !LockCameraPosition)
-            {
-                float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
+            Quaternion lookRot = Quaternion.LookRotation(dir);
+            Vector3 euler = lookRot.eulerAngles;
 
-                _cinemachineTargetYaw += _input.look.x * deltaTimeMultiplier;
-                _cinemachineTargetPitch += _input.look.y * deltaTimeMultiplier;
-            }
+            // Yaw(좌우), Pitch(상하) 추출
+            _cinemachineTargetYaw = euler.y;
 
-            _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
-            _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
-
-            CinemachineCameraTarget.transform.rotation = Quaternion.Euler(
-                _cinemachineTargetPitch + CameraAngleOverride,
-                _cinemachineTargetYaw,
-                0.0f);
+            float pitch = euler.x;
+            // 0~360 -> -180~180 보정 (위/아래 각도 자연스럽게)
+            if (pitch > 180f) pitch -= 360f;
+            _cinemachineTargetPitch = pitch;
         }
+    }
+    else
+    {
+        // 2) 평소에는 기존 마우스 입력으로 회전
+        if (_input.look.sqrMagnitude >= _threshold && !LockCameraPosition)
+        {
+            float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
+
+            _cinemachineTargetYaw   += _input.look.x * deltaTimeMultiplier;
+            _cinemachineTargetPitch += _input.look.y * deltaTimeMultiplier;
+        }
+    }
+
+    // 공통 클램프
+    _cinemachineTargetYaw   = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
+    _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
+
+    // 실제 카메라 타깃 회전 적용
+    CinemachineCameraTarget.transform.rotation = Quaternion.Euler(
+        _cinemachineTargetPitch + CameraAngleOverride,
+        _cinemachineTargetYaw,
+        0.0f);
+}
+
         private void Move()
 {
     // 1) 구르는 중이면 롤 전용 이동만 처리
