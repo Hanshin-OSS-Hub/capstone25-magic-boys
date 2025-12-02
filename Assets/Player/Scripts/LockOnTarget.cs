@@ -49,7 +49,6 @@ public class LockOnTarget : MonoBehaviour
         controller.IsLockOn = true;
         controller.LockOnTarget = bossTarget;
 
-        // 카메라 입력을 잠가두고 싶으면 true, 마우스로 약간 보정하고 싶으면 false
         controller.LockCameraPosition = true;
     }
 

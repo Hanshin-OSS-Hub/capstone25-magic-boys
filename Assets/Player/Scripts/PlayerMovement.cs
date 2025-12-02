@@ -6,14 +6,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private PlayerInput playerInput;
     [SerializeField] private Rigidbody rb;
     [SerializeField] private Camera cam;
-    // [SerializeField] private PlayerHealth hp;
-    // [SerializeField] private Interactions interactions;
 
     [Header("이동 설정")]
     public float walkSpeed = 5f;
     public float runSpeed = 10f;
     public float crouchMoveSpeed = 2f;
-    public float mouseSensitivity = 180f; // deg/sec 기준으로 변경
+    public float mouseSensitivity = 180f;
     public float jumpForce = 5f;
     public LayerMask groundMask;
 
@@ -33,8 +31,6 @@ public class PlayerMovement : MonoBehaviour
     private float pitch = 0f;        // 카메라 상하
     private float yawDeltaFixed = 0; // FixedUpdate에서 쓸 수평 회전 델타 누적
 
-    // 발소리 관련
-    // private EFootstep floorMaterial; 
     private bool currentFootState;
     private bool previousFootState;
 
@@ -53,25 +49,18 @@ public class PlayerMovement : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        // 레이어가 실제 존재하는지 확인 필수
         int playerLayer = LayerMask.NameToLayer("Player");
         int heldLayer   = LayerMask.NameToLayer("HeldItem");
         int groundLayer = LayerMask.NameToLayer("Ground");
         if (playerLayer >= 0 && heldLayer >= 0) Physics.IgnoreLayerCollision(playerLayer, heldLayer, true);
         if (heldLayer >= 0 && groundLayer >= 0) Physics.IgnoreLayerCollision(heldLayer, groundLayer, true);
 
-        // 넘어짐 방지: X/Z 회전만 고정 (Y는 회전해야 하니 고정 금지)
+        // 넘어짐 방지: X/Z 회전만 고정 (Y 고정 금지)
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
     }
 
     void Update()
     {
-        // if ((hp != null && hp.isDead) || (interactions != null && interactions.isReading))
-        //     return;
-
-        // 바닥 재질 체크
-        // floorMaterial = GetFloorMaterial();
-
         // 마우스 입력(프레임 독립)
         Vector2 mouse = playerInput.MouseInput;
         float dt = Time.unscaledDeltaTime;
@@ -81,7 +70,7 @@ public class PlayerMovement : MonoBehaviour
         pitch = Mathf.Clamp(pitch, -90f, 90f);
         cam.transform.localRotation = Quaternion.Euler(pitch, 0f, 0f);
 
-        // 좌우(요): 물리 회전과 일치시키기 위해 FixedUpdate에서 처리 -> 델타만 누적
+        // 좌우: 물리 회전과 일치시키기 위해 FixedUpdate에서 처리 -> 델타만 누적
         yawDeltaFixed += mouse.x * mouseSensitivity * dt;
 
         HandleCrouch(playerInput.IsCrouchPressed);
@@ -92,13 +81,6 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        // if ((hp != null && hp.isDead) || (interactions != null && interactions.isReading))
-        // {
-        //     Move(Vector2.zero);
-        //     yawDeltaFixed = 0f; // 회전 델타도 소모
-        //     return;
-        // }
-
         // 수평 회전은 물리 틱에서 rb.MoveRotation으로 적용
         if (Mathf.Abs(yawDeltaFixed) > 0.0001f)
         {
@@ -139,7 +121,7 @@ public class PlayerMovement : MonoBehaviour
         // 속도 스위치
         currentSpeed = isCrouch ? crouchMoveSpeed : (isRun ? runSpeed : walkSpeed);
 
-        // 스케일 보간 (주의: 스케일 방식은 콜라이더/카메라 클리핑 문제 가능)
+        // 스케일 보간
         Vector3 s = transform.localScale;
         float newY = Mathf.Lerp(s.y, targetScaleY, Time.deltaTime * crouchSpeed);
         transform.localScale = new Vector3(s.x, newY, s.z);
@@ -159,48 +141,15 @@ public class PlayerMovement : MonoBehaviour
 
     private void GroundCheck()
     {
-        // 스케일 기반 레이 길이 + 약간의 여유
+        // 스케일 기반 레이 길이 
         float rayDistance = transform.localScale.y * 1.0f + 0.25f;
         Vector3 origin = transform.position + Vector3.up * 0.1f; // 살짝 위에서 쏘면 노이즈 감소
         isGround = Physics.Raycast(origin, Vector3.down, rayDistance, groundMask, QueryTriggerInteraction.Ignore);
 
         currentFootState = isGround;
-        // 착지 순간에만 재생 (걷는 발소리는 따로 타이머 기반으로 추천)
-        // if (currentFootState && !previousFootState)
-        //     PlayStepSound();
 
         previousFootState = currentFootState;
 
         Debug.DrawRay(origin, Vector3.down * rayDistance, isGround ? Color.green : Color.red);
     }
-
-    // private EFootstep GetFloorMaterial()
-    // {
-    //     if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 2f, ~0, QueryTriggerInteraction.Ignore))
-    //     {
-    //         switch (hit.collider.tag)
-    //         {
-    //             case "Stone": return EFootstep.STONE;
-    //             case "Dirt":  return EFootstep.DIRT;
-    //             case "Wood":  return EFootstep.WOOD;
-    //         }
-    //     }
-    //     return EFootstep.STONE;
-    // }
-
-    // public void PlayStepSound()
-    // {
-    //     switch (floorMaterial)
-    //     {
-    //         case EFootstep.STONE:
-    //             AudioManager.Instance.PlaySound2D("Footsteps_Rock_Walk_0" + Random.Range(1, 3), type: ESoundType.FOOTSTEP);
-    //             break;
-    //         case EFootstep.DIRT:
-    //             AudioManager.Instance.PlaySound2D("Footsteps_DirtyGround_Walk_0" + Random.Range(1, 3), type: ESoundType.FOOTSTEP);
-    //             break;
-    //         case EFootstep.WOOD:
-    //             AudioManager.Instance.PlaySound2D("Footsteps_Wood_Walk_0" + Random.Range(1, 3), type: ESoundType.FOOTSTEP);
-    //             break;
-    //     }
-    // }
 }

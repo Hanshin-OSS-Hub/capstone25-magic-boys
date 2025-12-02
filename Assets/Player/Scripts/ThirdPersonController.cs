@@ -3,8 +3,6 @@
 using UnityEngine.InputSystem;
 #endif
 
-/* Note: animations are called via the controller for both the character and capsule using animator null checks
- */
 
 namespace StarterAssets
 {
@@ -200,7 +198,7 @@ namespace StarterAssets
             }
 
 #if ENABLE_INPUT_SYSTEM
-            // StarterAssetsInputs는 jump 플래그를 씀, 여기서는 스페이스 두 번만 직접 감지
+            // 스페이스 두 번 직접 감지
 #endif
             if (Input.GetKeyDown(KeyCode.Space))
             {
@@ -223,12 +221,12 @@ namespace StarterAssets
 
         private void StartRoll()
         {
-            // 현재 이동 입력 방향 기준으로 구르기 방향 계산 (WASD 전부 가능)
+            // 현재 이동 입력 방향 기준으로 구르기 방향 계산
             Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
 
             if (inputDirection == Vector3.zero)
             {
-                // 혹시 모를 예외 처리: 입력이 없다면 앞으로
+                // 입력이 없다면 앞으로
                 inputDirection = Vector3.forward;
             }
 
@@ -284,7 +282,7 @@ namespace StarterAssets
 
         private void CameraRotation()
 {
-    // 1) 락온 중이면 보스를 바라보도록 각도 계산
+    // 락온 중이면 보스를 바라보도록 각도 계산
     if (IsLockOn && LockOnTarget != null)
     {
         Vector3 dir = LockOnTarget.position - CinemachineCameraTarget.transform.position;
@@ -305,7 +303,7 @@ namespace StarterAssets
     }
     else
     {
-        // 2) 평소에는 기존 마우스 입력으로 회전
+        // 평소에는 기존 마우스 입력으로 회전
         if (_input.look.sqrMagnitude >= _threshold && !LockCameraPosition)
         {
             float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
@@ -328,7 +326,7 @@ namespace StarterAssets
 
         private void Move()
 {
-    // 1) 구르는 중이면 롤 전용 이동만 처리
+    // 구르는 중이면 롤 전용 이동만 처리
     if (_roll != null && _roll.IsRolling)
     {
         Vector3 rollDir = _roll.GetRollDirection();   // 미리 저장된 구르기 방향
@@ -349,7 +347,7 @@ namespace StarterAssets
         return;
     }
 
-    // 2) 공격 중에는 제자리에서 중력만 적용
+    // 공격 중에는 제자리에서 중력만 적용
     if (_attack != null && _attack.IsAttacking)
     {
         _controller.Move(new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
@@ -363,7 +361,7 @@ namespace StarterAssets
         return;
     }
 
-    // 3) 평상시 이동 처리
+    //평상시 이동 처리
     float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
 
     if (_input.move == Vector2.zero)

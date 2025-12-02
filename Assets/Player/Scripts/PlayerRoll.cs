@@ -8,7 +8,7 @@ public class PlayerRoll : MonoBehaviour
     private float lastSpaceTime = -999f;
 
     [Header("구르기 설정")]
-    public float rollDuration = 0.8f;   // 구르기 지속시간 (애니메이션 길이랑 비슷하게)
+    public float rollDuration = 0.8f;   // 구르기 지속시간
     
     private Animator animator;
     private int rollHash;
@@ -18,13 +18,12 @@ public class PlayerRoll : MonoBehaviour
 
     private Vector3 rollDirection;
 
-    // 이동/카메라 기준을 맞추기 위한 참조
+
     private StarterAssetsInputs _input;
     private Transform _cameraTransform;
 
     void Awake()
     {
-        // 플레이어에 붙어있는 StarterAssetsInputs 가져오기
         _input = GetComponent<StarterAssetsInputs>();
         if (_input == null)
         {
@@ -55,14 +54,14 @@ public class PlayerRoll : MonoBehaviour
             return;
         }
 
-        // 1) Ctrl 눌렀을 때 즉시 구르기
+        // Ctrl 눌렀을 때 즉시 구르기
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
             TryRoll();
             return;
         }
 
-        // 2) 스페이스 더블탭 구르기
+        // 스페이스 더블탭 구르기
         if (Input.GetKeyDown(KeyCode.Space))
         {
             float now = Time.time;
@@ -82,14 +81,14 @@ public class PlayerRoll : MonoBehaviour
         if (_input == null) return;
 
         //  이동에서 쓰는 것과 똑같이, StarterAssetsInputs의 move 값 사용
-        Vector2 move = _input.move;  // (-1~1, -1~1)
+        Vector2 move = _input.move; 
         Vector3 inputDir = new Vector3(move.x, 0f, move.y).normalized;
 
         // 방향키 안 눌렀으면 정면으로
         if (inputDir == Vector3.zero)
             inputDir = Vector3.forward;
 
-        //  카메라 기준으로 방향 회전 (이동 코드랑 같은 방식)
+        //  카메라 기준으로 방향 회전 
         float yaw = 0f;
         if (_cameraTransform != null)
         {

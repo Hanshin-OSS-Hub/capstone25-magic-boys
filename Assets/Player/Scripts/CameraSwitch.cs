@@ -5,22 +5,22 @@ public class CameraSwitch : MonoBehaviour
     [Header("Refs")]
     public Camera cam;
     public Transform fpAnchor;   // 1인칭 위치
-    public Transform tpAnchor;   // 3인칭 위치 (어깨 뒤)
+    public Transform tpAnchor;   // 3인칭 위치 
 
     [Header("Settings")]
     public KeyCode toggleKey = KeyCode.V;
-    public float switchLerp = 12f; // 전환 부드러움
+    public float switchLerp = 12f;
     public float fovFP = 70f;
     public float fovTP = 65f;
 
     [Header("Obstruction (3rd)")]
-    public LayerMask collisionMask;   // 보통 Default, Environment 등
+    public LayerMask collisionMask;  
     public float sphereRadius = 0.2f; // 카메라 충돌 반경
     public float extraBack = 0.1f;    // 여유 거리
 
     public bool isFirstPerson = true;
 
-    private Vector3 tpLocalTarget; // 3인칭 목표 로컬 위치(충돌 보정 후)
+    private Vector3 tpLocalTarget; // 3인칭 목표 로컬 위치
 
     private void Reset()
     {
