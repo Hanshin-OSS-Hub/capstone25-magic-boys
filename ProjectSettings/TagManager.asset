@@ -4,11 +4,14 @@
 TagManager:
   serializedVersion: 3
 <<<<<<< HEAD
+<<<<<<< HEAD
   tags:
   - Monster
   - CinemachineTarget
   - Boss
 =======
+=======
+>>>>>>> origin/map_test
   tags: []
 >>>>>>> origin/roguelike_test
   layers:
@@ -18,9 +21,15 @@ TagManager:
   - Enemy
   - Water
   - UI
+<<<<<<< HEAD
   - Interactable
   - Player
   - Ground
+=======
+  - Tile
+  - 
+  - 
+>>>>>>> origin/map_test
   - 
   - 
   - 

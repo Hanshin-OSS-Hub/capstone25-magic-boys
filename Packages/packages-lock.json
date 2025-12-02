@@ -11,6 +11,14 @@
       "depth": 0,
       "source": "builtin",
       "dependencies": {}
+    "com.srcnalt.openai-unity": {
+      "version": "https://github.com/srcnalt/OpenAI-Unity.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "3.2.1"
+      },
+      "hash": "054467e2a2daccf7f23ff8f7165f1d832815dc70"
     },
     "com.unity.ai.navigation": {
       "version": "2.0.9",
@@ -131,6 +139,11 @@
       "dependencies": {
         "com.unity.nuget.mono-cecil": "0.1.6-preview.2"
       },
+    "com.unity.nuget.newtonsoft-json": {
+      "version": "3.2.1",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.render-pipelines.core": {
