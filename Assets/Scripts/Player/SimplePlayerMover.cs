@@ -5,6 +5,7 @@ public class SimplePlayerMover : MonoBehaviour, IDamageable
     public float moveSpeed = 5f;
     public float maxHP = 100f;
     public float currentHP;
+    public int currentExp = 0;
 
     void Start()
     {
@@ -53,6 +54,11 @@ public class SimplePlayerMover : MonoBehaviour, IDamageable
         }
     }
 
+    public void AddExp(int amount)
+    {
+        currentExp += amount;
+        Debug.Log($"°æÇèÄ¡ È¹µæ! +{amount} (ÇöÀç ÃÑ °æÇèÄ¡: {currentExp})");
 
+    }
 
 }

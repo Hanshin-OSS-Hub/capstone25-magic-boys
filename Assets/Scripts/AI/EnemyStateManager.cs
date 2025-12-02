@@ -1,43 +1,42 @@
-using System;
-using System.Xml;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.AI; // NavMeshAgent 사용을 위해 필요
-using System.Collections; // 코루틴 사용을 위해 필요
+using UnityEngine.AI;
 
 public class EnemyStateManager : MonoBehaviour, IDamageable
 {
     [HideInInspector] public IdleState idleState = new IdleState();
     [HideInInspector] public ChaseState chaseState = new ChaseState();
-    [HideInInspector] public AttackState attackState = new AttackState();
-    [HideInInspector] public PatrolState patrolState = new PatrolState();
+    // [삭제] PatrolState 제거
     [HideInInspector] public DeadState deadState = new DeadState();
 
-    [SerializeField] EnemyData stats; // 적의 스탯 정보
-    [SerializeField] Transform[] patrolPoints; // 순찰 지점  |  *주의* unity 6000.0.58f1에서 인스펙터창에 배열을 사용하게 되면 심각한 버그가 생김, Preferences -> General -> Editor Font: Inter에서 System Font로 변경하여 해결
-    [SerializeField] Material hitMaterial; // 피격 시 변경할 재질
+    public IEnemyState attackState;
+    public IEnemyState currentState;
 
-    public IEnemyState CurrentState;    // 현재 상태를 담는 변수
-    public float attackTimer;           // 공격 쿨타임 관리용
-    public int currentPatrolIndex = 0;  // 현재 순찰 지점 인덱스
+    public EnemyData stats;             // 적의 스탯 정보
+
+    // [삭제] patrolPoints 배열 삭제 (더 이상 필요 없음 -> 오류 해결)
+    public Transform firePoint;
+
     public float currentHP;
+    public float distanceToPlayer;
+    public float attackTimer;           // 공격 쿨타임 관리용
+    // [삭제] currentPatrolIndex 삭제
+
+    [HideInInspector] public NavMeshAgent navMeshAgent;
+    [HideInInspector] public Animator animator;
+    [HideInInspector] public Transform playerTransform;
+
     private MeshRenderer meshRenderer;
-    private Material originalMaterial; // 원래 재질 저장용
-
-    public float DistanceToPlayer { get; private set; } // Manager만 쓰기가능, 나머지에선 읽기전용으로 선언된 변수
-    private NavMeshAgent navMeshAgent; // 경로탐색 에이전트
-    private Transform playerTransform; // 플레이어 위치정보
-
-    public NavMeshAgent NavMeshAgent => navMeshAgent; // => : 읽기 전용, navMeshAgent, playerTransform = null; 설정방지
-    public Transform PlayerTransform => playerTransform;
-
-
-
+    private Material originalMaterial;  // 원래 재질 저장용
 
     void Awake()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
+        animator = GetComponent<Animator>();
         meshRenderer = GetComponent<MeshRenderer>();
-        originalMaterial = meshRenderer.material;
+
+        if (meshRenderer != null)
+            originalMaterial = meshRenderer.material;
     }
 
     void Start()
@@ -46,108 +45,134 @@ public class EnemyStateManager : MonoBehaviour, IDamageable
         {
             navMeshAgent.speed = stats.MoveSpeed;
             currentHP = stats.MaxHP;
+            SetupAttackState();
         }
 
-        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
-        if (playerObject != null)
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj != null)
         {
-            playerTransform = playerObject.transform;
-            Debug.Log("플레이어 찾기 성공! 대상: " + playerObject.name);
+            playerTransform = playerObj.transform;
+            // Debug.Log("플레이어 찾기 성공! 대상: " + playerObj.name);
         }
-        else
-        {
-            Debug.LogError("플레이어를 찾지 못함");
-        }
+
+        // [삭제] 패트롤 포인트 태그 검색 로직 삭제
+
         TransitionToState(idleState);
     }
 
     void Update()
     {
-        CalculateCommonData();
-        CurrentState?.UpdateState(this); // ?: null이 아닐 때만 실행
+        if (playerTransform != null)    // 플레이어와의 거리 계산
+            distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
+        else
+            distanceToPlayer = Mathf.Infinity;
+
+        currentState?.UpdateState(this);
+
         if (attackTimer > 0) attackTimer -= Time.deltaTime;
     }
 
-    public void TransitionToState(IEnemyState newState) //상태 전환
+    public void TransitionToState(IEnemyState newState)
     {
-        CurrentState?.ExitState(this);
-        CurrentState = newState;
-        CurrentState.EnterState(this);
-        print($"상태전환: {newState}");
+        currentState?.ExitState(this);
+        currentState = newState;
+        currentState.EnterState(this);
     }
 
-    public void OnAttackAnimationFinished() { TransitionToState(chaseState); } // 공격 애니메이션 종료 시 추격 상태로 전환
-    public float GetDetectionRange() { return stats.DetectionRange; }
-    public float GetAttackRange() { return stats.AttackRange; }
-    public float GetAttackCooldown() { return stats.AttackCooldown; }
-    public float GetDamage() { return stats.Damage; }
-    public Transform[] GetPatrolPoints() { return patrolPoints; }
-
-
-    void CalculateCommonData()
+    void SetupAttackState() // 공격 타입 설정
     {
-        if (PlayerTransform != null) //플레이어와의 거리 계산
-        {
-            DistanceToPlayer = Vector3.Distance(transform.position, PlayerTransform.position);
-        }
-        else DistanceToPlayer = Mathf.Infinity;
+        if (stats.CombatType == EnemyCombatType.Ranged)
+            attackState = new RangeAttackState();
+        else
+            attackState = new AttackState();
+    }
+
+    public void OnAttackAnimationFinished()
+    {
+        TransitionToState(chaseState);
     }
 
     public void TakeDamage(float damage)
     {
-        if (currentHP <= 0) return; // 이미 죽은 상태면 무시
+        if (currentHP <= 0) return;
 
-        TriggerHitVisual(); 
+        TriggerHitVisual();
         currentHP -= damage;
 
         if (currentHP <= 0)
         {
+            GiveExpToPlayer();
             TransitionToState(deadState);
         }
-      
     }
 
-    private void TriggerHitVisual() // 피격 효과 실행
+    public void TriggerHitVisual() // 피격 효과
     {
-        StartCoroutine(HitFlashCoroutine());
+        Material hitMat = Resources.Load<Material>("HitMaterial");
+        if (hitMat != null) StartCoroutine(HitFlashCoroutine(hitMat));
     }
 
-    private IEnumerator HitFlashCoroutine() // 피격 효과
+    private IEnumerator HitFlashCoroutine(Material hitMat)
     {
-        meshRenderer.material = hitMaterial;
-        yield return new WaitForSeconds(0.2f);
-        meshRenderer.material = originalMaterial;
+        if (meshRenderer != null)
+        {
+            meshRenderer.material = hitMat;
+            yield return new WaitForSeconds(0.2f);
+            meshRenderer.material = originalMaterial;
+        }
     }
 
-    public void StartDeathSequence() // 죽음 처리 코루틴
+    public void StartDeathSequence() // 사망 처리
     {
-        StartCoroutine(DeathCoroutine(1.5f));
+        StartCoroutine(DeathCoroutine());
     }
 
-
-    private IEnumerator DeathCoroutine(float sinkTime)
+    private IEnumerator DeathCoroutine()
     {
         float timer = 0f;
-        float sinkSpeed = 0.5f;
+        float sinkTime = 3.0f;
 
-        Quaternion startRotation = transform.rotation; // 현재 회전값 저장
-        Quaternion targetRotation = startRotation * Quaternion.Euler(0, 0, 90); // 현재 값에서 Z축으로 90도(왼쪽) 회전한 목표 설정
+        Quaternion startRotation = transform.rotation;
+        Quaternion targetRotation = startRotation * Quaternion.Euler(0, 0, 90);
 
         while (timer < sinkTime)
         {
-            transform.Translate(Vector3.down * sinkSpeed * Time.deltaTime, Space.World);
-           
-            float t = timer / sinkTime; // 현재 진행률 계산 (0.0에서 1.0까지)
-
-            transform.rotation = Quaternion.Slerp(startRotation, targetRotation, t); // 회전 모션 보간
+            transform.Translate(Vector3.down * 0.5f * Time.deltaTime, Space.World);
+            float t = timer / sinkTime;
+            transform.rotation = Quaternion.Slerp(startRotation, targetRotation, t);
 
             timer += Time.deltaTime;
             yield return null;
-
         }
-
         Destroy(gameObject);
     }
+
+    // [수정] 풀링 초기화 함수 (소환될 때 호출됨)
+    public void ResetEnemy()
+    {
+        currentHP = stats.MaxHP;
+        navMeshAgent.enabled = true;
+        navMeshAgent.isStopped = true; // 일단 멈춘 상태로 시작 (플레이어 인식 전까지)
+        GetComponent<Collider>().enabled = true;
+
+        // 다시 Idle 상태로 시작
+        TransitionToState(idleState);
+    }
+
+
+    void GiveExpToPlayer()
+    {
+        if (playerTransform == null) return;
+
+        // 이후 실제 플레이어 스크립트로 교체
+        var playerScript = playerTransform.GetComponent<SimplePlayerMover>();
+
+        if (playerScript != null)
+        {
+            playerScript.AddExp(stats.DropExp);
+        }
+    }
+
 
 
 }

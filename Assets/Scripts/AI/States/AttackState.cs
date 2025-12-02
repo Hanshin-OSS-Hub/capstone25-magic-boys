@@ -8,9 +8,10 @@ public class AttackState : IEnemyState
     public void EnterState(EnemyStateManager enemy)
     {
         Debug.Log("공격 시작!");
-        enemy.NavMeshAgent.isStopped = true;
-        enemy.transform.LookAt(enemy.PlayerTransform);
-        enemy.attackTimer = enemy.GetAttackCooldown();
+        enemy.navMeshAgent.isStopped = true;
+        enemy.transform.LookAt(enemy.playerTransform);
+        
+        enemy.attackTimer = enemy.stats.AttackCooldown;
 
         attackAnimationTimer = 1.0f; // 임시: 1초 동안 공격 애니메이션 재생
     }
@@ -22,7 +23,8 @@ public class AttackState : IEnemyState
 
     public void UpdateState(EnemyStateManager enemy)
     {
-        enemy.transform.LookAt(enemy.PlayerTransform);
+        // 플레이어를 계속 바라봄
+        enemy.transform.LookAt(enemy.playerTransform);
 
         attackAnimationTimer -= Time.deltaTime;
         if (attackAnimationTimer <= 0) 
@@ -34,15 +36,14 @@ public class AttackState : IEnemyState
 
     private void PerformAttack(EnemyStateManager enemy) // 공격 수행 함수
     {
-        if (enemy.PlayerTransform == null) return;
-        IDamageable player = enemy.PlayerTransform.GetComponent<IDamageable>();
+        if (enemy.playerTransform == null) return;
+        IDamageable player = enemy.playerTransform.GetComponent<IDamageable>();
         if (player != null)
         {
-            if (enemy.DistanceToPlayer <= enemy.GetAttackRange()) // 애니메이션이 끝났을 때 공격 범위 내에 있다면 데미지줌
+            if (enemy.distanceToPlayer <= enemy.stats.AttackRange) 
             {
-                player.TakeDamage(enemy.GetDamage());
+                player.TakeDamage(enemy.stats.Damage);
             }
         }
-
     }
 }

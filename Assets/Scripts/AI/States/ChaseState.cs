@@ -5,7 +5,7 @@ public class ChaseState : IEnemyState
     public void EnterState(EnemyStateManager enemy)
     {
         //Debug.Log("추격 시작!");
-        enemy.NavMeshAgent.isStopped = false;
+        enemy.navMeshAgent.isStopped = false;
     }
 
     public void ExitState(EnemyStateManager enemy)
@@ -15,20 +15,24 @@ public class ChaseState : IEnemyState
 
     public void UpdateState(EnemyStateManager enemy)
     {
-        // 공격 할 수 있는가?
-        if (enemy.DistanceToPlayer <= enemy.GetAttackRange() && enemy.attackTimer <= 0)
+        // 1. 공격 가능? (이건 유지해야 함)
+        if (enemy.distanceToPlayer <= enemy.stats.AttackRange && enemy.attackTimer <= 0)
         {
             enemy.TransitionToState(enemy.attackState);
             return;
         }
-        // 플레이어를 놓쳤는가?
-        if (enemy.DistanceToPlayer > enemy.GetDetectionRange()) 
+
+        // 인식 범위를 벗어나면 대기 상태로 전환
+        //if (enemy.distanceToPlayer > enemy.stats.DetectionRange) 
+        //{
+        //    enemy.TransitionToState(enemy.idleState);
+        //    return;
+        //}
+
+
+        if (enemy.playerTransform != null)
         {
-            enemy.TransitionToState(enemy.patrolState);
-            return;
+            enemy.navMeshAgent.SetDestination(enemy.playerTransform.position);
         }
-        enemy.NavMeshAgent.SetDestination(enemy.PlayerTransform.position); // 플레이어의 좌표를 목표지점으로 설정
     }
-
-
 }
