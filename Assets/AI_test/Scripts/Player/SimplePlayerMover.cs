@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class SimplePlayerMover : MonoBehaviour, IDamageable
 {
-    public float moveSpeed = 5f;
+    // public float moveSpeed = 5f;
     public float maxHP = 100f;
     public float currentHP;
     public int currentExp = 0;
@@ -15,19 +15,19 @@ public class SimplePlayerMover : MonoBehaviour, IDamageable
 
     void Update()
     {
-        // 1. Å°º¸µå ÀÔ·Â ¹Þ±â (W,A,S,D)
-        float horizontal = Input.GetAxis("Horizontal"); // A, D
-        float vertical = Input.GetAxis("Vertical");     // W, S
+        // // 1. Å°ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ ï¿½Þ±ï¿½ (W,A,S,D)
+        // float horizontal = Input.GetAxis("Horizontal"); // A, D
+        // float vertical = Input.GetAxis("Vertical");     // W, S
 
-        // 2. ÀÌµ¿ ¹æÇâ °è»ê (ÇÃ·¹ÀÌ¾îÀÇ "·ÎÄÃ" ¹æÇâ ±âÁØ)
-        Vector3 moveDirection = new Vector3(horizontal, 0, vertical);
+        // // 2. ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ (ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ "ï¿½ï¿½ï¿½ï¿½" ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
+        // Vector3 moveDirection = new Vector3(horizontal, 0, vertical);
 
-        // 3. ½ÇÁ¦ ÀÌµ¿ (Space.Self¸¦ »ç¿ëÇØ¾ß '³»°¡ º¸´Â ¹æÇâ'À¸·Î ÀÌµ¿)
-        transform.Translate(moveDirection * moveSpeed * Time.deltaTime, Space.Self);
+        // // 3. ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ (Space.Selfï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ 'ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½'ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½)
+        // transform.Translate(moveDirection * moveSpeed * Time.deltaTime, Space.Self);
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            // Ä«¸Þ¶ó ½Ã¾ßÀÇ Á¤Áß¾Ó(0.5, 0.5)À¸·Î ±¤¼±À» »ý¼º
+            // Ä«ï¿½Þ¶ï¿½ ï¿½Ã¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ß¾ï¿½(0.5, 0.5)ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
 
             RaycastHit hit;
@@ -37,7 +37,7 @@ public class SimplePlayerMover : MonoBehaviour, IDamageable
                 if (target != null)
                 {
                     target.TakeDamage(4);
-                    Debug.Log("ÇÃ·¹ÀÌ¾î °ø°Ý! " + hit.collider.name + "¿¡°Ô 4 µ¥¹ÌÁö!");
+                    Debug.Log("ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½! " + hit.collider.name + "ï¿½ï¿½ï¿½ï¿½ 4 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½!");
                 }
             }
         }
@@ -47,17 +47,17 @@ public class SimplePlayerMover : MonoBehaviour, IDamageable
     public void TakeDamage(float damage)
     {
         currentHP -= damage;
-        Debug.Log($"ÇÃ·¹ÀÌ¾î ÇÇ°Ý, ³²Àº HP: {currentHP}");
+        Debug.Log($"ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½Ç°ï¿½, ï¿½ï¿½ï¿½ï¿½ HP: {currentHP}");
         if (currentHP <= 0)
         {
-            Debug.Log("ÇÃ·¹ÀÌ¾î »ç¸Á");
+            Debug.Log("ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½");
         }
     }
 
     public void AddExp(int amount)
     {
         currentExp += amount;
-        Debug.Log($"°æÇèÄ¡ È¹µæ! +{amount} (ÇöÀç ÃÑ °æÇèÄ¡: {currentExp})");
+        Debug.Log($"ï¿½ï¿½ï¿½ï¿½Ä¡ È¹ï¿½ï¿½! +{amount} (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ä¡: {currentExp})");
 
     }
 
