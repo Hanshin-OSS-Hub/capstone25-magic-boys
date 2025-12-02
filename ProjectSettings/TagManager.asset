@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   tags:
   - Monster
   - CinemachineTarget
@@ -14,6 +15,10 @@ TagManager:
 >>>>>>> origin/map_test
   tags: []
 >>>>>>> origin/roguelike_test
+=======
+  tags:
+  - PatrolPoint
+>>>>>>> origin/AI_test
   layers:
   - Default
   - TransparentFX
@@ -21,6 +26,7 @@ TagManager:
   - Enemy
   - Water
   - UI
+<<<<<<< HEAD
 <<<<<<< HEAD
   - Interactable
   - Player
@@ -30,6 +36,11 @@ TagManager:
   - 
   - 
 >>>>>>> origin/map_test
+=======
+  - Player
+  - Boss
+  - 
+>>>>>>> origin/AI_test
   - 
   - 
   - 
