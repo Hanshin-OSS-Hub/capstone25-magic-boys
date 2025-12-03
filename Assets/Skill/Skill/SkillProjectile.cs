@@ -15,12 +15,10 @@ public class SkillProjectile : MonoBehaviour
     Rigidbody rb;
     Collider col;
 
-    [Header("SFX/VFX - Hit")]
-    public string hitSfxName;
-    public AudioClip hitSfxClip;
+    [Header("Hit SFX")]
+    public string hitSfxName = "fireball_hit";
     [Range(0, 1)] public float hitSfxVolume = 1f;
     public Vector2 hitPitchRandom = new Vector2(0.95f, 1.05f);
-    public GameObject hitVFX;
 
     public void Launch(int damage, PlayerStats owner, LayerMask enemyMask, float speed, float maxDistance)
     {
@@ -59,17 +57,14 @@ public class SkillProjectile : MonoBehaviour
         var enemy = other.GetComponentInParent<EnemySimple>() ?? other.GetComponent<EnemySimple>();
         if (!enemy) return;
 
-        Vector3 hitPos = other.ClosestPoint(transform.position);
+        // 트리거에서 내부로 파고들어 숨는 문제 방지용 보정
+        Vector3 hitPos = transform.position - transform.forward * 0.08f;
         Quaternion hitRot = Quaternion.LookRotation(-transform.forward);
 
         float pitch = Random.Range(hitPitchRandom.x, hitPitchRandom.y);
-        if (!string.IsNullOrEmpty(hitSfxName))
-            SoundManager.Instance?.PlaySFX3D(hitSfxName, hitPos, hitSfxVolume, pitch);
-        else if (hitSfxClip)
-            SoundManager.Instance?.PlaySFX3D(hitSfxClip, hitPos, hitSfxVolume, pitch);
+        SoundManager.Instance?.PlaySFX3D(hitSfxName, hitPos, hitSfxVolume, pitch);
 
-        if (hitVFX)
-            ParticleManager.instance?.PlayParticle(ParticleManager.ParticleType.FireHit, hitPos, hitRot);
+        ParticleManager.Instance?.Play(ParticleType.FireHit, hitPos, hitRot);
 
         enemy.TakeDamage(damage, owner);
         Destroy(gameObject);

@@ -13,19 +13,21 @@ public class PlayerAttack : MonoBehaviour
     public LayerMask enemyMask;
     public LayerMask worldMask;
 
-    // 애니/락
+    // 애니메이션/락
     Animator animator;
     int attackHash;
     public float attackLockTime = 1.1f;
     float attackTimer;
     public bool IsAttacking { get; private set; }
 
+    // ===== Melee (LMB) : 무음/무이펙트 =====
     [Header("Melee (LMB)")]
     public float meleeRange = 2.5f;
     public float meleeRadius = 0.8f;
     public int meleeDamage = 20;
-    public float hitDelay = 0f; // 애니 타이밍용
+    public float hitDelay = 0f;
 
+    // ===== Skill 1 (Q) =====
     [Header("Skill #1 (Q)")]
     public int skillMpCost = 15;
     public int baseSkillDamage = 30;
@@ -35,22 +37,29 @@ public class PlayerAttack : MonoBehaviour
     public float skill1Cooldown = 5f;
     float skill1Remain;
     public bool IsSkill1Ready => skill1Remain <= 0f;
-    public float Skill1CooldownRatio => Mathf.Clamp01(skill1Remain / skill1Cooldown);
+    public float Skill1CooldownRatio => (skill1Cooldown <= 0f) ? 0f : Mathf.Clamp01(skill1Remain / skill1Cooldown);
 
-    [Header("SFX/VFX - Melee")]
-    public string meleeSwingSfxName;
-    public AudioClip meleeSwingSfxClip;
-    public string meleeHitSfxName;
-    public AudioClip meleeHitSfxClip;
-    [Range(0, 1)] public float meleeSfxVolume = 1f;
-    public Vector2 meleePitchRandom = new Vector2(0.97f, 1.03f);
-
-    [Header("SFX/VFX - Skill1 Cast")]
-    public string castSfxName;
-    public AudioClip castSfxClip;
+    [Header("SFX (Skill1 Cast)")]
+    public string castSfxName = "fireball_cast";
     [Range(0, 1)] public float castSfxVolume = 1f;
     public Vector2 castPitchRandom = new Vector2(0.98f, 1.02f);
-    public GameObject castVFX;
+
+    // ===== Skill 2 (E) =====
+    [Header("Skill #2 (E)")]
+    public int skill2MpCost = 20;
+    public int baseSkill2Damage = 45;
+    public SkillProjectile projectile2Prefab;
+    public float projectile2Speed = 26f;
+    public float projectile2MaxDistance = 45f;
+    public float skill2Cooldown = 7f;
+    float skill2Remain;
+    public bool IsSkill2Ready => skill2Remain <= 0f;
+    public float Skill2CooldownRatio => (skill2Cooldown <= 0f) ? 0f : Mathf.Clamp01(skill2Remain / skill2Cooldown);
+
+    [Header("SFX (Skill2 Cast)")]
+    public string cast2SfxName = "spark_cast";
+    [Range(0, 1)] public float cast2SfxVolume = 1f;
+    public Vector2 cast2PitchRandom = new Vector2(0.98f, 1.02f);
 
     [Header("Debug")]
     public bool drawDebug = true;
@@ -64,10 +73,10 @@ public class PlayerAttack : MonoBehaviour
 
         if (!firePoint)
         {
-            var temp = new GameObject("~FirePointAuto");
-            temp.transform.SetParent(transform);
-            temp.transform.localPosition = new Vector3(0f, 1.5f, 0.2f);
-            firePoint = temp.transform;
+            var go = new GameObject("~FirePointAuto");
+            go.transform.SetParent(transform);
+            go.transform.localPosition = new Vector3(0f, 1.5f, 0.2f);
+            firePoint = go.transform;
         }
 
         animator = GetComponentInChildren<Animator>();
@@ -86,21 +95,20 @@ public class PlayerAttack : MonoBehaviour
             if (attackTimer <= 0f) IsAttacking = false;
         }
 
-        if (skill1Remain > 0f) skill1Remain -= Time.deltaTime;
+        if (skill1Remain > 0f) skill1Remain = Mathf.Max(0f, skill1Remain - Time.deltaTime);
+        if (skill2Remain > 0f) skill2Remain = Mathf.Max(0f, skill2Remain - Time.deltaTime);
 
-        // LMB = 근접, Q = 스킬
         if (input.IsAttackPressed && attackTimer <= 0f) StartMelee();
         if (input.IsSkill1Pressed) TryCastSkill1();
+        if (input.IsSkill2Pressed) TryCastSkill2();
     }
 
+    // ===== Melee =====
     void StartMelee()
     {
         if (animator) animator.SetTrigger(attackHash);
         attackTimer = attackLockTime;
         IsAttacking = true;
-
-        // 스윙 사운드(선행)
-        Play3D(meleeSwingSfxName, meleeSwingSfxClip, firePoint.position, meleeSfxVolume, meleePitchRandom);
 
         if (hitDelay <= 0f) DoMelee();
         else Invoke(nameof(DoMelee), hitDelay);
@@ -116,20 +124,16 @@ public class PlayerAttack : MonoBehaviour
         if (Physics.SphereCast(origin, meleeRadius, dir, out var hit, meleeRange, enemyMask, QueryTriggerInteraction.Collide))
         {
             var enemy = hit.collider.GetComponentInParent<EnemySimple>() ?? hit.collider.GetComponent<EnemySimple>();
-            if (enemy)
-            {
-                Play3D(meleeHitSfxName, meleeHitSfxClip, hit.point, meleeSfxVolume, meleePitchRandom);
-                enemy.TakeDamage(meleeDamage, player);
-            }
+            if (enemy) enemy.TakeDamage(meleeDamage, player);
         }
     }
 
     // ===== Skill1 (Q) =====
     void TryCastSkill1()
     {
-        if (!IsSkill1Ready) { Debug.Log($"스킬 쿨다운 {skill1Remain:F1}s"); return; }
-        if (!projectilePrefab) { Debug.LogWarning("SkillProjectile 프리팹이 비었습니다."); return; }
-        if (!player || !player.SpendMP(skillMpCost)) { Debug.Log("MP가 부족합니다!"); return; }
+        if (!IsSkill1Ready) { Debug.Log($"스킬1 쿨 {skill1Remain:F1}s"); return; }
+        if (!projectilePrefab) { Debug.LogWarning("Skill1 프리팹 비었음"); return; }
+        if (!player || !player.SpendMP(skillMpCost)) { Debug.Log("MP 부족"); return; }
 
         CastSkill1();
         skill1Remain = skill1Cooldown;
@@ -141,32 +145,52 @@ public class PlayerAttack : MonoBehaviour
         Vector3 origin = firePoint.position;
         Vector3 dir = (aimPoint - origin).normalized;
 
-        int finalDamage = player ? player.GetMagicDamage(baseSkillDamage) : baseSkillDamage;
+        int dmg = player ? player.GetMagicDamage(baseSkillDamage) : baseSkillDamage;
 
         var proj = Instantiate(projectilePrefab, origin, Quaternion.LookRotation(dir));
-        proj.Launch(finalDamage, player, enemyMask, projectileSpeed, projectileMaxDistance);
+        proj.Launch(dmg, player, enemyMask, projectileSpeed, projectileMaxDistance);
 
-        // 시전 SFX/VFX
-        float castPitch = Random.Range(castPitchRandom.x, castPitchRandom.y);
-        Play3D(castSfxName, castSfxClip, origin, castSfxVolume, new Vector2(castPitch, castPitch));
+        float pitch = Random.Range(castPitchRandom.x, castPitchRandom.y);
+        SoundManager.Instance?.PlaySFX3D(castSfxName, origin, castSfxVolume, pitch);
 
-        if (castVFX)
-            ParticleManager.instance?.PlayParticle(ParticleManager.ParticleType.FireCast, origin, Quaternion.LookRotation(dir));
+        ParticleManager.Instance?.Play(ParticleType.FireCast, origin, Quaternion.LookRotation(dir));
     }
 
+    // ===== Skill2 (E) =====
+    void TryCastSkill2()
+    {
+        if (!IsSkill2Ready) { Debug.Log($"스킬2 쿨 {skill2Remain:F1}s"); return; }
+        if (!projectile2Prefab) { Debug.LogWarning("Skill2 프리팹 비었음"); return; }
+        if (!player || !player.SpendMP(skill2MpCost)) { Debug.Log("MP 부족"); return; }
+
+        CastSkill2();
+        skill2Remain = skill2Cooldown;
+    }
+
+    void CastSkill2()
+    {
+        Vector3 aimPoint = GetAimPoint(projectile2MaxDistance);
+        Vector3 origin = firePoint.position;
+        Vector3 dir = (aimPoint - origin).normalized;
+
+        int dmg = player ? player.GetMagicDamage(baseSkill2Damage) : baseSkill2Damage;
+
+        var proj = Instantiate(projectile2Prefab, origin, Quaternion.LookRotation(dir));
+        proj.Launch(dmg, player, enemyMask, projectile2Speed, projectile2MaxDistance);
+
+        float pitch = Random.Range(cast2PitchRandom.x, cast2PitchRandom.y);
+        SoundManager.Instance?.PlaySFX3D(cast2SfxName, origin, cast2SfxVolume, pitch);
+
+        // 스파크 연출(원하면 FireCast로 유지 가능)
+        ParticleManager.Instance?.Play(ParticleType.SparkCast, origin, Quaternion.LookRotation(dir));
+    }
+
+    // ===== 공용 =====
     Vector3 GetAimPoint(float maxDistance)
     {
         Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
         if (Physics.Raycast(ray, out var hit, maxDistance, worldMask, QueryTriggerInteraction.Ignore))
             return hit.point;
         return ray.origin + ray.direction * maxDistance;
-    }
-
-    // ---- SFX helper ----
-    void Play3D(string name, AudioClip clip, Vector3 pos, float vol, Vector2 pitchRange)
-    {
-        float pitch = Random.Range(pitchRange.x, pitchRange.y);
-        if (!string.IsNullOrEmpty(name)) SoundManager.Instance?.PlaySFX3D(name, pos, vol, pitch);
-        else if (clip) SoundManager.Instance?.PlaySFX3D(clip, pos, vol, pitch);
     }
 }
