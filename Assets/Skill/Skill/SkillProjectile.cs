@@ -15,6 +15,13 @@ public class SkillProjectile : MonoBehaviour
     Rigidbody rb;
     Collider col;
 
+    [Header("SFX/VFX - Hit")]
+    public string hitSfxName;
+    public AudioClip hitSfxClip;
+    [Range(0, 1)] public float hitSfxVolume = 1f;
+    public Vector2 hitPitchRandom = new Vector2(0.95f, 1.05f);
+    public GameObject hitVFX;
+
     public void Launch(int damage, PlayerStats owner, LayerMask enemyMask, float speed, float maxDistance)
     {
         this.damage = damage;
@@ -23,10 +30,9 @@ public class SkillProjectile : MonoBehaviour
         this.speed = speed;
         this.remainDistance = maxDistance;
 
-        if (rb == null) rb = GetComponent<Rigidbody>();
-        if (col == null) col = GetComponent<Collider>();
+        if (!rb) rb = GetComponent<Rigidbody>();
+        if (!col) col = GetComponent<Collider>();
 
-        // 물리 세팅(투사체용)
         rb.isKinematic = true;
         rb.useGravity = false;
         col.isTrigger = true;
@@ -42,25 +48,30 @@ public class SkillProjectile : MonoBehaviour
         transform.position += transform.forward * move;
         remainDistance -= move;
 
-        if (remainDistance <= 0f)
-        {
-            Destroy(gameObject);
-        }
+        if (remainDistance <= 0f) Destroy(gameObject);
     }
 
     void OnTriggerEnter(Collider other)
     {
         if (!launched) return;
-
-        // Enemy 레이어만 맞추고 싶으면 레이어 비교
-        if (((1 << other.gameObject.layer) & enemyMask) == 0)
-            return;
+        if (((1 << other.gameObject.layer) & enemyMask) == 0) return;
 
         var enemy = other.GetComponentInParent<EnemySimple>() ?? other.GetComponent<EnemySimple>();
-        if (enemy != null)
-        {
-            enemy.TakeDamage(damage, owner); // 사망 시 Enemy가 EXP 지급
-            Destroy(gameObject);
-        }
+        if (!enemy) return;
+
+        Vector3 hitPos = other.ClosestPoint(transform.position);
+        Quaternion hitRot = Quaternion.LookRotation(-transform.forward);
+
+        float pitch = Random.Range(hitPitchRandom.x, hitPitchRandom.y);
+        if (!string.IsNullOrEmpty(hitSfxName))
+            SoundManager.Instance?.PlaySFX3D(hitSfxName, hitPos, hitSfxVolume, pitch);
+        else if (hitSfxClip)
+            SoundManager.Instance?.PlaySFX3D(hitSfxClip, hitPos, hitSfxVolume, pitch);
+
+        if (hitVFX)
+            ParticleManager.instance?.PlayParticle(ParticleManager.ParticleType.FireHit, hitPos, hitRot);
+
+        enemy.TakeDamage(damage, owner);
+        Destroy(gameObject);
     }
 }

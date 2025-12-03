@@ -1,51 +1,45 @@
+using TMPro;
+using UnityEngine;
+
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
 public class StatsPanelToggle : MonoBehaviour
 {
-    // 전역: 메뉴 열림 여부(다른 스크립트에서 읽기만)
     public static bool UIBlocked { get; private set; }
 
     [Header("Refs")]
-    public GameObject statsPanel;                 // 스탯 버튼/표시 패널(켜졌다 꺼질 대상)
-    public TestPlayerController controller;       // 플레이어 컨트롤러 (커서/입력 잠금)
-    public PlayerStats player;                    // 포인트 표시용(옵션)
+    public PlayerInput input;           // ← 새로 추가 (씬의 PlayerInput 참조)
+    public GameObject statsPanel;       // 열고 닫을 패널
+    public PlayerStats player;
 
     [Header("UI (optional)")]
     public TMP_Text pointText;
     public Button btnSTR, btnDEX, btnMAG, btnLUK;
 
-    [Header("Key")]
-    public KeyCode toggleKey = KeyCode.K;
-
     [Header("Disable when open (optional)")]
-    public MonoBehaviour[] disableDuringMenu;     // 예: TestPlayerAttack 등 입력 스크립트들
+    public MonoBehaviour[] disableDuringMenu;
 
     bool paused = false;
 
     void Awake()
     {
-        if (!controller) controller = FindObjectOfType<TestPlayerController>();
+        if (!input) input = FindObjectOfType<PlayerInput>();
         if (!player) player = FindObjectOfType<PlayerStats>();
 
         if (!statsPanel)
             Debug.LogWarning("[StatsPanelToggle] statsPanel not assigned!");
-
-        //항상 켜져있는 패널에 붙여야함.
-        if (gameObject == statsPanel)
-            Debug.LogWarning("[StatsPanelToggle] Attach to Canvas (not to the panel that gets disabled).");
     }
 
     void Start()
     {
-        Show(false); // 시작은 닫힘
-        Debug.Log("[StatsPanelToggle] Ready. Press 'K' to toggle.");
+        Show(false);
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(toggleKey))
+        if (input != null && input.IsToggleStatsPressed)
             Show(!paused);
     }
 
@@ -55,12 +49,15 @@ public class StatsPanelToggle : MonoBehaviour
 
         if (statsPanel) statsPanel.SetActive(on);
 
-        Time.timeScale = on ? 0f : 1f;                 // 일시정지/재개
-        if (controller) controller.SetUIFocus(on);     // 커서/입력 잠금 전환
+        // 게임 정지/재개
+        Time.timeScale = on ? 0f : 1f;
 
-        UIBlocked = on;                                // ★ 전역 차단 플래그
+        // 커서 전환(컨트롤러 의존 제거)
+        Cursor.lockState = on ? CursorLockMode.None : CursorLockMode.Locked;
+        Cursor.visible = on;
 
-        // (옵션) 특정 컴포넌트 껐다 켜기
+        UIBlocked = on;
+
         if (disableDuringMenu != null)
         {
             foreach (var c in disableDuringMenu)
@@ -68,7 +65,6 @@ public class StatsPanelToggle : MonoBehaviour
         }
 
         RefreshUI();
-        Debug.Log($"[StatsPanelToggle] {(on ? "OPEN" : "CLOSE")} | timescale={Time.timeScale}");
     }
 
     public void Open() => Show(true);
@@ -89,11 +85,11 @@ public class StatsPanelToggle : MonoBehaviour
 
     void OnEnable()
     {
-        if (player != null) player.OnStatPointChanged += OnPointChanged;
+        if (player) player.OnStatPointChanged += OnPointChanged;
     }
     void OnDisable()
     {
-        if (player != null) player.OnStatPointChanged -= OnPointChanged;
+        if (player) player.OnStatPointChanged -= OnPointChanged;
     }
     void OnPointChanged(int _) => RefreshUI();
 }

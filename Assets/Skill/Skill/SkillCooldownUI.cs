@@ -4,7 +4,7 @@ using TMPro;
 
 public class SkillCooldownUI : MonoBehaviour
 {
-    public TestPlayerAttack attack;  // 플레이어 공격 스크립트 참조
+    public PlayerAttack attack;  // 플레이어 공격 스크립트 참조
     public Image radial;             // 원형 덮개 Image
     public TMP_Text secondsText;     // 남은 초(선택)
 

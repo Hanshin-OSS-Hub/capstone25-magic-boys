@@ -2,38 +2,40 @@ using UnityEngine;
 
 public class PlayerInput : MonoBehaviour
 {
-    // 이동 및 시점 조작 입력
+    // 이동/시점
     public Vector2 MoveInput { get; private set; }
     public Vector2 MouseInput { get; private set; }
 
-    // 각종 키 입력 상태
+    // 버튼류
     public bool IsRunPressed { get; private set; }
     public bool IsCrouchPressed { get; private set; }
     public bool IsJumpPressed { get; private set; }
-    public bool IsInteractPressed { get; private set; }
-    public bool IsDropPressed { get; private set; }
-    public bool IsAttackPressed { get; private set; }
+    public bool IsInteractPressed { get; private set; } // F (근접 등)
+    public bool IsDropPressed { get; private set; } // G
+    public bool IsAttackPressed { get; private set; } // LMB (Fire1)
 
+    // 추가
+    public bool IsSkill1Pressed { get; private set; } // Q
+    public bool IsToggleStatsPressed { get; private set; } // K
 
-    // 매 프레임 입력을 감지하고 저장
     void Update()
     {
-        // GetKeyDown은 키를 누르는 순간에만 true
+        // edge
         IsJumpPressed = Input.GetKeyDown(KeyCode.Space);
         IsInteractPressed = Input.GetKeyDown(KeyCode.F);
         IsDropPressed = Input.GetKeyDown(KeyCode.G);
+        IsAttackPressed = Input.GetButtonDown("Fire1");
 
-        // GetKey는 키를 누르고 있는 동안 계속 true
+        // 추가 edge
+        IsSkill1Pressed = Input.GetKeyDown(KeyCode.Q);
+        IsToggleStatsPressed = Input.GetKeyDown(KeyCode.K);
+
+        // hold
         IsRunPressed = Input.GetKey(KeyCode.LeftShift);
         IsCrouchPressed = Input.GetKey(KeyCode.LeftControl);
 
-        // WASD 입력
+        // axes
         MoveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        
-        // 마우스 움직임 입력
         MouseInput = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
-
-        // "Fire1" == '마우스 좌클릭'
-        IsAttackPressed = Input.GetButtonDown("Fire1");
     }
 }
