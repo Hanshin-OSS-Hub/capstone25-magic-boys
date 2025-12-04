@@ -2429,41 +2429,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0c38d06a4a8b7746ab64d2d1ad53375, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  input: {fileID: 439010292}
-  player: {fileID: 439010300}
-  cam: {fileID: 1935493972}
-  firePoint: {fileID: 957023421}
-  enemyMask:
-    serializedVersion: 2
-    m_Bits: 512
-  worldMask:
-    serializedVersion: 2
-    m_Bits: 0
   attackLockTime: 1.1
-  meleeRange: 2.5
-  meleeRadius: 0.8
-  meleeDamage: 20
-  hitDelay: 0
-  skillMpCost: 15
-  baseSkillDamage: 30
-  projectilePrefab: {fileID: -3790764205292089062, guid: 1336648bc1d8baf46a4515860950c9d4, type: 3}
-  projectileSpeed: 22
-  projectileMaxDistance: 40
-  skill1Cooldown: 3
-  castSfxName: fireball_cast
-  castSfxVolume: 1
-  castPitchRandom: {x: 0.98, y: 1.02}
-  skill2MpCost: 20
-  baseSkill2Damage: 45
-  projectile2Prefab: {fileID: 2101115356960878115, guid: 4aa9f30a28a77224ba84b2a2c334c71b, type: 3}
-  projectile2Speed: 26
-  projectile2MaxDistance: 45
-  skill2Cooldown: 7
-  cast2SfxName: spark_cast
-  cast2SfxVolume: 1
-  cast2PitchRandom: {x: 0.98, y: 1.02}
-  drawDebug: 1
-  debugMeleeColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!54 &439010290
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2519,7 +2485,7 @@ MonoBehaviour:
   GroundedRadius: 0.35
   GroundLayers:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 1280
   CinemachineCameraTarget: {fileID: 1157606556}
   TopClamp: 70
   BottomClamp: -30
