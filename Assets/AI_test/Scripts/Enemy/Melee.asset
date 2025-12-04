@@ -15,7 +15,7 @@ MonoBehaviour:
   EnemyName: Test Mob1
   EnemyDescription: Test Mob1's Description
   CombatType: 0
-  MaxHP: 20
+  MaxHP: 1
   Damage: 10
   MoveSpeed: 3
   DetectionRange: 10
@@ -23,3 +23,4 @@ MonoBehaviour:
   AttackCooldown: 2
   projectilePrefab: {fileID: 0}
   projectileSpeed: 0
+  DropExp: 10
