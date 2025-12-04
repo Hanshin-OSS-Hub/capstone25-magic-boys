@@ -24,7 +24,7 @@ public class PlayerInput : MonoBehaviour
     // (옵션) 홀드 상태가 필요하면 이렇게도 노출
     public bool IsRunHeld => Input.GetKey(KeyCode.LeftShift);
     public bool IsCrouchHeld => Input.GetKey(KeyCode.LeftControl);
-    public bool IsAttackHeld => Input.GetButton("Fire1");
+    // public bool IsAttackHeld => Input.GetButton("Fire1");
 
     void Update()
     {
@@ -42,7 +42,7 @@ public class PlayerInput : MonoBehaviour
         IsJumpPressed = Input.GetKeyDown(KeyCode.Space);
         IsInteractPressed = Input.GetKeyDown(KeyCode.F);
         IsDropPressed = Input.GetKeyDown(KeyCode.G);
-        IsAttackPressed = Input.GetButtonDown("Fire1");
+        // IsAttackPressed = Input.GetButtonDown("Fire1");
         IsSkill1Pressed = Input.GetKeyDown(KeyCode.Q);
         IsSkill2Pressed = Input.GetKeyDown(KeyCode.E);
         IsToggleStatsPressed = Input.GetKeyDown(KeyCode.K);
