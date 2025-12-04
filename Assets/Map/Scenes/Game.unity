@@ -1057,6 +1057,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea7bf185a055509468428a5ead0a4fd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  voiceDebounce: 0.3
 --- !u!114 &198286356
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6186,6 +6187,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1298915819}
+  - component: {fileID: 1298915820}
   m_Layer: 0
   m_Name: VoiceCommand
   m_TagString: Untagged
@@ -6208,6 +6210,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1298915820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1298915818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a962b9419fd07934cae480cd692e699a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  whisper: {fileID: 1347744633}
+  input: {fileID: 198286355}
 --- !u!1 &1338603665
 GameObject:
   m_ObjectHideFlags: 0
