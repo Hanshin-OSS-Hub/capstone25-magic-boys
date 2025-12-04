@@ -7,7 +7,6 @@ public class SkillProjectile : MonoBehaviour
     int damage;
     PlayerStats owner;
     LayerMask enemyMask;
-
     float speed;
     float remainDistance;
     bool launched;
@@ -15,15 +14,10 @@ public class SkillProjectile : MonoBehaviour
     Rigidbody rb;
     Collider col;
 
-    [Header("Hit SFX")]
-    public string hitSfxName = "fireball_hit";
-    [Range(0, 1)] public float hitSfxVolume = 1f;
-    public Vector2 hitPitchRandom = new Vector2(0.95f, 1.05f);
-
     public void Launch(int damage, PlayerStats owner, LayerMask enemyMask, float speed, float maxDistance)
     {
         this.damage = damage;
-        this.owner = owner;
+        this.owner = owner;                 // 지금은 미사용(필요시 히트로그/가시성)
         this.enemyMask = enemyMask;
         this.speed = speed;
         this.remainDistance = maxDistance;
@@ -54,19 +48,12 @@ public class SkillProjectile : MonoBehaviour
         if (!launched) return;
         if (((1 << other.gameObject.layer) & enemyMask) == 0) return;
 
-        var enemy = other.GetComponentInParent<EnemySimple>() ?? other.GetComponent<EnemySimple>();
-        if (!enemy) return;
-
-        // 트리거에서 내부로 파고들어 숨는 문제 방지용 보정
-        Vector3 hitPos = transform.position - transform.forward * 0.08f;
-        Quaternion hitRot = Quaternion.LookRotation(-transform.forward);
-
-        float pitch = Random.Range(hitPitchRandom.x, hitPitchRandom.y);
-        SoundManager.Instance?.PlaySFX3D(hitSfxName, hitPos, hitSfxVolume, pitch);
-
-        ParticleManager.Instance?.Play(ParticleType.FireHit, hitPos, hitRot);
-
-        enemy.TakeDamage(damage, owner);
-        Destroy(gameObject);
+        // ▼ EnemySimple → IDamageable
+        var dmg = other.GetComponentInParent<IDamageable>() ?? other.GetComponent<IDamageable>();
+        if (dmg != null)
+        {
+            dmg.TakeDamage(damage);
+            Destroy(gameObject);
+        }
     }
 }

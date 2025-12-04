@@ -28,7 +28,7 @@ public class EnemyProjectile : MonoBehaviour
             if (target != null)
             {
                 target.TakeDamage(damage);
-                Debug.Log("원거리 공격! " + damage + " 데미지!");
+                //Debug.Log("원거리 공격! " + damage + " 데미지!");
             }
             Destroy(gameObject);
         }

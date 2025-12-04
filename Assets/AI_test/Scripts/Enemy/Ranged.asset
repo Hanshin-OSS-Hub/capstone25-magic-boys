@@ -15,7 +15,7 @@ MonoBehaviour:
   EnemyName: Ranged
   EnemyDescription: 
   CombatType: 1
-  MaxHP: 20
+  MaxHP: 1
   Damage: 10
   MoveSpeed: 3
   DetectionRange: 20
@@ -23,3 +23,4 @@ MonoBehaviour:
   AttackCooldown: 3
   projectilePrefab: {fileID: 4688760338870842338, guid: 150ea3ff91cec01419c2991bfe474d94, type: 3}
   projectileSpeed: 20
+  DropExp: 10

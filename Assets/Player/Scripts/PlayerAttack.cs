@@ -3,7 +3,6 @@ using UnityEngine.EventSystems;
 
 public class PlayerAttack : MonoBehaviour
 {
-    // Refs
     public PlayerInput input;
     public PlayerStats player;
     public Camera cam;
@@ -13,21 +12,18 @@ public class PlayerAttack : MonoBehaviour
     public LayerMask enemyMask;
     public LayerMask worldMask;
 
-    // 애니메이션/락
     Animator animator;
     int attackHash;
     public float attackLockTime = 1.1f;
     float attackTimer;
     public bool IsAttacking { get; private set; }
 
-    // ===== Melee (LMB) : 무음/무이펙트 =====
     [Header("Melee (LMB)")]
     public float meleeRange = 2.5f;
     public float meleeRadius = 0.8f;
     public int meleeDamage = 20;
     public float hitDelay = 0f;
 
-    // ===== Skill 1 (Q) =====
     [Header("Skill #1 (Q)")]
     public int skillMpCost = 15;
     public int baseSkillDamage = 30;
@@ -39,12 +35,6 @@ public class PlayerAttack : MonoBehaviour
     public bool IsSkill1Ready => skill1Remain <= 0f;
     public float Skill1CooldownRatio => (skill1Cooldown <= 0f) ? 0f : Mathf.Clamp01(skill1Remain / skill1Cooldown);
 
-    [Header("SFX (Skill1 Cast)")]
-    public string castSfxName = "fireball_cast";
-    [Range(0, 1)] public float castSfxVolume = 1f;
-    public Vector2 castPitchRandom = new Vector2(0.98f, 1.02f);
-
-    // ===== Skill 2 (E) =====
     [Header("Skill #2 (E)")]
     public int skill2MpCost = 20;
     public int baseSkill2Damage = 45;
@@ -55,15 +45,6 @@ public class PlayerAttack : MonoBehaviour
     float skill2Remain;
     public bool IsSkill2Ready => skill2Remain <= 0f;
     public float Skill2CooldownRatio => (skill2Cooldown <= 0f) ? 0f : Mathf.Clamp01(skill2Remain / skill2Cooldown);
-
-    [Header("SFX (Skill2 Cast)")]
-    public string cast2SfxName = "spark_cast";
-    [Range(0, 1)] public float cast2SfxVolume = 1f;
-    public Vector2 cast2PitchRandom = new Vector2(0.98f, 1.02f);
-
-    [Header("Debug")]
-    public bool drawDebug = true;
-    public Color debugMeleeColor = Color.yellow;
 
     void Start()
     {
@@ -123,21 +104,19 @@ public class PlayerAttack : MonoBehaviour
         Vector3 origin = firePoint ? firePoint.position : transform.position + Vector3.up * 1.2f;
         Vector3 dir = transform.forward;
 
-        if (drawDebug) Debug.DrawRay(origin, dir * meleeRange, debugMeleeColor, 0.25f);
-
         if (Physics.SphereCast(origin, meleeRadius, dir, out var hit, meleeRange, enemyMask, QueryTriggerInteraction.Collide))
         {
-            var enemy = hit.collider.GetComponentInParent<EnemySimple>() ?? hit.collider.GetComponent<EnemySimple>();
-            if (enemy) enemy.TakeDamage(meleeDamage, player);
+            var target = hit.collider.GetComponentInParent<IDamageable>() ?? hit.collider.GetComponent<IDamageable>();
+            if (target != null) target.TakeDamage(meleeDamage);
         }
     }
 
     // ===== Skill1 (Q) =====
     void TryCastSkill1()
     {
-        if (!IsSkill1Ready) { Debug.Log($"스킬1 쿨 {skill1Remain:F1}s"); return; }
-        if (!projectilePrefab) { Debug.LogWarning("Skill1 프리팹 비었음"); return; }
-        if (!player || !player.SpendMP(skillMpCost)) { Debug.Log("MP 부족"); return; }
+        if (!IsSkill1Ready) return;
+        if (!projectilePrefab) { Debug.LogWarning("Skill1 prefab missing"); return; }
+        if (!player || !player.SpendMP(skillMpCost)) { Debug.Log("Not enough MP"); return; }
 
         CastSkill1();
         skill1Remain = skill1Cooldown;
@@ -153,19 +132,14 @@ public class PlayerAttack : MonoBehaviour
 
         var proj = Instantiate(projectilePrefab, origin, Quaternion.LookRotation(dir));
         proj.Launch(dmg, player, enemyMask, projectileSpeed, projectileMaxDistance);
-
-        float pitch = Random.Range(castPitchRandom.x, castPitchRandom.y);
-        SoundManager.Instance?.PlaySFX3D(castSfxName, origin, castSfxVolume, pitch);
-
-        ParticleManager.Instance?.Play(ParticleType.FireCast, origin, Quaternion.LookRotation(dir));
     }
 
     // ===== Skill2 (E) =====
     void TryCastSkill2()
     {
-        if (!IsSkill2Ready) { Debug.Log($"스킬2 쿨 {skill2Remain:F1}s"); return; }
-        if (!projectile2Prefab) { Debug.LogWarning("Skill2 프리팹 비었음"); return; }
-        if (!player || !player.SpendMP(skill2MpCost)) { Debug.Log("MP 부족"); return; }
+        if (!IsSkill2Ready) return;
+        if (!projectile2Prefab) { Debug.LogWarning("Skill2 prefab missing"); return; }
+        if (!player || !player.SpendMP(skill2MpCost)) { Debug.Log("Not enough MP"); return; }
 
         CastSkill2();
         skill2Remain = skill2Cooldown;
@@ -181,15 +155,8 @@ public class PlayerAttack : MonoBehaviour
 
         var proj = Instantiate(projectile2Prefab, origin, Quaternion.LookRotation(dir));
         proj.Launch(dmg, player, enemyMask, projectile2Speed, projectile2MaxDistance);
-
-        float pitch = Random.Range(cast2PitchRandom.x, cast2PitchRandom.y);
-        SoundManager.Instance?.PlaySFX3D(cast2SfxName, origin, cast2SfxVolume, pitch);
-
-        // 스파크 연출(원하면 FireCast로 유지 가능)
-        ParticleManager.Instance?.Play(ParticleType.SparkCast, origin, Quaternion.LookRotation(dir));
     }
 
-    // ===== 공용 =====
     Vector3 GetAimPoint(float maxDistance)
     {
         Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
