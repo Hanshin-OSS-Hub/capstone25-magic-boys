@@ -2,63 +2,65 @@ using UnityEngine;
 
 public class PlayerInput : MonoBehaviour
 {
-    // 외부(UI 등)에서 on/off
-    public bool Blocked { get; private set; } = false;
-    public void SetBlocked(bool on) => Blocked = on;
-
-    // 이동/시점
+    // ======= Movement / Basic Input =======
     public Vector2 MoveInput { get; private set; }
     public Vector2 MouseInput { get; private set; }
-
-    // 버튼(에지)
     public bool IsRunPressed { get; private set; }
     public bool IsCrouchPressed { get; private set; }
-    public bool IsJumpPressed { get; private set; }   // Space (Down)
-    public bool IsInteractPressed { get; private set; }   // F (Down)
-    public bool IsDropPressed { get; private set; }   // G (Down)
-    public bool IsAttackPressed { get; private set; }   // LMB (Down)
-    public bool IsSkill1Pressed { get; private set; }   // Q (Down)
-    public bool IsSkill2Pressed { get; private set; }   // E (Down)
-    public bool IsToggleStatsPressed { get; private set; } // K (Down)
+    public bool IsJumpPressed { get; private set; }
+    public bool IsAttackPressed { get; private set; }
 
-    // (옵션) 홀드 상태가 필요하면 이렇게도 노출
-    public bool IsRunHeld => Input.GetKey(KeyCode.LeftShift);
-    public bool IsCrouchHeld => Input.GetKey(KeyCode.LeftControl);
-    public bool IsAttackHeld => Input.GetButton("Fire1");
+    // ======= UI / Stats Panel Toggle =======
+    public bool IsToggleStatsPressed { get; private set; }   // ★ 추가됨
+
+    // ======= Voice-trigger queued state =======
+    bool _skill1Queued, _skill2Queued;
+    float _lastVoice1, _lastVoice2;
+    public float voiceDebounce = 0.3f;
+
+    // ======= External Trigger (from VoiceCommandSystem) =======
+    public void QueueSkill1FromVoice()
+    {
+        if (Time.unscaledTime - _lastVoice1 < voiceDebounce) return;
+        _skill1Queued = true;
+        _lastVoice1 = Time.unscaledTime;
+    }
+
+    public void QueueSkill2FromVoice()
+    {
+        if (Time.unscaledTime - _lastVoice2 < voiceDebounce) return;
+        _skill2Queued = true;
+        _lastVoice2 = Time.unscaledTime;
+    }
+
+    // ======= Consumed by PlayerAttack =======
+    public bool TryConsumeSkill1()
+    {
+        bool pressed = Input.GetKeyDown(KeyCode.Q) || _skill1Queued;
+        _skill1Queued = false;
+        return pressed;
+    }
+
+    public bool TryConsumeSkill2()
+    {
+        bool pressed = Input.GetKeyDown(KeyCode.E) || _skill2Queued;
+        _skill2Queued = false;
+        return pressed;
+    }
 
     void Update()
     {
-        if (Blocked)
-        {
-            // 패널 열렸을 때 깔끔히 모두 0으로
-            MoveInput = MouseInput = Vector2.zero;
-            IsRunPressed = IsCrouchPressed = IsJumpPressed =
-            IsInteractPressed = IsDropPressed = IsAttackPressed =
-            IsSkill1Pressed = IsSkill2Pressed = IsToggleStatsPressed = false;
-            return;
-        }
-
-        // 에지(Down)
-        IsJumpPressed = Input.GetKeyDown(KeyCode.Space);
-        IsInteractPressed = Input.GetKeyDown(KeyCode.F);
-        IsDropPressed = Input.GetKeyDown(KeyCode.G);
-        IsAttackPressed = Input.GetButtonDown("Fire1");
-        IsSkill1Pressed = Input.GetKeyDown(KeyCode.Q);
-        IsSkill2Pressed = Input.GetKeyDown(KeyCode.E);
-        IsToggleStatsPressed = Input.GetKeyDown(KeyCode.K);
-
-        // 홀드(프레임 내 안내용) — 필요하면 읽고, 아니면 무시
-        IsRunPressed = Input.GetKey(KeyCode.LeftShift);
-        IsCrouchPressed = Input.GetKey(KeyCode.LeftControl);
-
-        // 축
+        // 이동/시점 입력
         MoveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         MouseInput = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
 
+        // 기본 조작
+        IsJumpPressed = Input.GetKeyDown(KeyCode.Space);
+        IsAttackPressed = Input.GetButtonDown("Fire1");
+        IsRunPressed = Input.GetKey(KeyCode.LeftShift);
+        IsCrouchPressed = Input.GetKey(KeyCode.LeftControl);
 
-
-
-
-
+        // ★ 토글 입력 추가
+        IsToggleStatsPressed = Input.GetKeyDown(KeyCode.K);
     }
 }

@@ -85,23 +85,27 @@ public class PlayerAttack : MonoBehaviour
 
     void Update()
     {
-        if (StatsPanelToggle.UIBlocked) return;
-        if (EventSystem.current && EventSystem.current.IsPointerOverGameObject()) return;
         if (!input) return;
 
-        if (attackTimer > 0f)
-        {
-            attackTimer -= Time.deltaTime;
-            if (attackTimer <= 0f) IsAttacking = false;
-        }
+        // 근접 공격
+        if (input.IsAttackPressed && attackTimer <= 0f)
+            StartMelee();
 
-        if (skill1Remain > 0f) skill1Remain = Mathf.Max(0f, skill1Remain - Time.deltaTime);
-        if (skill2Remain > 0f) skill2Remain = Mathf.Max(0f, skill2Remain - Time.deltaTime);
+        // === 키보드 + 음성 통합 스킬 입력 ===
+        if (input.TryConsumeSkill1())
+            TryCastSkill1();
 
-        if (input.IsAttackPressed && attackTimer <= 0f) StartMelee();
-        if (input.IsSkill1Pressed) TryCastSkill1();
-        if (input.IsSkill2Pressed) TryCastSkill2();
+        if (input.TryConsumeSkill2())
+            TryCastSkill2();
+
+        // 쿨다운
+        if (skill1Remain > 0f)
+            skill1Remain -= Time.deltaTime;
+
+        if (skill2Remain > 0f)
+            skill2Remain -= Time.deltaTime;
     }
+
 
     // ===== Melee =====
     void StartMelee()
