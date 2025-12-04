@@ -3,7 +3,7 @@ using System;
 
 public enum StatType { STR, DEX, MAG, LUK }
 
-public class PlayerStats : MonoBehaviour
+public class PlayerStats : MonoBehaviour, IDamageable // 데미지를 받을 수 있는 객체에 IDamageble 인터페이스를 넣어야함
 {
     [Header("Base (before stat scaling)")]
     public int baseMaxHP = 100;
@@ -100,10 +100,10 @@ public class PlayerStats : MonoBehaviour
     }
 
     // ===== HP / MP =====
-    public void TakeDamage(int amount)
+    public void TakeDamage(float amount)
     {
         if (amount <= 0) return;
-        currentHP = Mathf.Max(0, currentHP - amount);
+        currentHP = Mathf.Max(0, currentHP - (int)amount); // 원래 인터페이스를 float로 설계를 했는데 임시로 형변환해서 int로 처리할게요(성민)
         OnHPChanged?.Invoke(currentHP, maxHP);
         if (currentHP <= 0) Die();
     }

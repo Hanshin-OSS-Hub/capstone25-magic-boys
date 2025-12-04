@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4666809791075569187}
   - component: {fileID: 9080909821476733531}
   - component: {fileID: 7841205922234268242}
-  m_Layer: 6
+  m_Layer: 10
   m_Name: Hall Slope
   m_TagString: Untagged
   m_Icon: {fileID: 0}

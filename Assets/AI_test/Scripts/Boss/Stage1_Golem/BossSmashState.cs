@@ -26,7 +26,13 @@ public class BossSmashState : IBossState
         // 플레이어 바라보기
         if (boss.playerTransform != null)
         {
-            boss.transform.LookAt(boss.playerTransform);
+            Vector3 targetPos = new Vector3(
+                boss.playerTransform.position.x,
+                boss.transform.position.y,      
+                boss.playerTransform.position.z
+            );
+
+            boss.transform.LookAt(targetPos);
         }
 
         // 장판 켜기 및 초기화

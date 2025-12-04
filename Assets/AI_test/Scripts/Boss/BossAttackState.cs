@@ -7,10 +7,16 @@ public class BossAttackState : IBossState
         // Debug.Log("보스: 공격 시작");
         boss.navMeshAgent.isStopped = true;
 
-        // 1. 플레이어 바라보기
+        // 플레이어 바라보기
         if (boss.playerTransform != null)
         {
-            boss.transform.LookAt(boss.playerTransform);
+            Vector3 targetPos = new Vector3(
+                boss.playerTransform.position.x,
+                boss.transform.position.y,
+                boss.playerTransform.position.z
+            );
+
+            boss.transform.LookAt(targetPos);
         }
 
         // 2. 쿨타임 리셋

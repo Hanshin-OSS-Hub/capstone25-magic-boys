@@ -35,10 +35,16 @@ public class BossRushState : IBossState
         {
             timer -= Time.deltaTime;
 
-            // 차징 중에는 플레이어를 계속 바라봄 (조준)
+            // 플레이어 바라보기
             if (boss.playerTransform != null)
             {
-                boss.transform.LookAt(boss.playerTransform);
+                Vector3 targetPos = new Vector3(
+                    boss.playerTransform.position.x,
+                    boss.transform.position.y,
+                    boss.playerTransform.position.z
+                );
+
+                boss.transform.LookAt(targetPos);
             }
 
             // 차징 끝 -> 돌진 시작!

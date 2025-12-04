@@ -84,8 +84,11 @@ public class DungeonGenerator : MonoBehaviour
             CollisionCheck();
             if (attempts >= maxAttempts) { break; }
         }
+
+
+
         //get all connectors within container that not already connected
-        foreach(Connector connector in container.GetComponentsInChildren<Connector>())
+        foreach (Connector connector in container.GetComponentsInChildren<Connector>())
         {
             if(!connector.isConnected)
             {
@@ -324,5 +327,5 @@ public class DungeonGenerator : MonoBehaviour
         return goTile.transform;
     }
 
-   
+
 }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6669614784716332129}
   - component: {fileID: 9060316911264328399}
   - component: {fileID: 950252686419720920}
-  m_Layer: 6
+  m_Layer: 10
   m_Name: Hall I
   m_TagString: Untagged
   m_Icon: {fileID: 0}

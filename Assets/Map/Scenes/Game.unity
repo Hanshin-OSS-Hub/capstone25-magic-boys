@@ -358,6 +358,7 @@ MonoBehaviour:
   - {fileID: 6572936773003228197, guid: 80465318efcf26347952a16299826668, type: 3}
   - {fileID: 6572936773003228197, guid: 688981e7d3d09ff4c8fa074e49244549, type: 3}
   - {fileID: 6572936773003228197, guid: 04f1a59667385454db66420a0d42fb8b, type: 3}
+  bossRoomPrefab: {fileID: 7708813933075236997, guid: 5186512f0a5d06c4c961f16d07a1365d, type: 3}
   useBoxColliders: 0
   useLightsForDebugging: 1
   restoreLightsAfterDebugging: 0
@@ -433,6 +434,53 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1169683048}
   m_SourcePrefab: {fileID: 100100000, guid: a5d7a737600b63040a1ec9bb3ee1e9dc, type: 3}
+--- !u!1 &1955412182
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1955412184}
+  - component: {fileID: 1955412183}
+  m_Layer: 0
+  m_Name: ObjectPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1955412183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1955412182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b64a35a9b1eac14784c036c494179ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  meleeEnemyPrefab: {fileID: 7509243798015521505, guid: efb8053f987df8f42adde5b495158eb3, type: 3}
+  rangedEnemyPrefab: {fileID: 8464927584394781076, guid: 8760a7514b8ac5b40ae55059cac7c73d, type: 3}
+  poolSize: 40
+--- !u!4 &1955412184
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1955412182}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -60.672466, y: -1.2013987, z: 88.48813}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -440,3 +488,4 @@ SceneRoots:
   - {fileID: 1044499212}
   - {fileID: 1243515456}
   - {fileID: 1297409514}
+  - {fileID: 1955412184}

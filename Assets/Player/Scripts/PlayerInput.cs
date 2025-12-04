@@ -54,5 +54,11 @@ public class PlayerInput : MonoBehaviour
         // 축
         MoveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         MouseInput = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
+
+
+
+
+
+
     }
 }

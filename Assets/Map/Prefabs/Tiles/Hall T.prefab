@@ -81,7 +81,7 @@ GameObject:
   - component: {fileID: 4557372027660493410}
   - component: {fileID: 7639421223334670895}
   - component: {fileID: 6144224281863639510}
-  m_Layer: 6
+  m_Layer: 10
   m_Name: Hall T
   m_TagString: Untagged
   m_Icon: {fileID: 0}
