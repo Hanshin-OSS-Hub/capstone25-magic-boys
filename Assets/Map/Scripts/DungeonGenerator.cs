@@ -125,8 +125,54 @@ public class DungeonGenerator : MonoBehaviour
         }
         LightRestoration();
         CleanupBoxes();
+        BlockedPassages();
+        SpawnDoors();
         goCamera.SetActive(false);
         goPlayer.SetActive(true);
+    }
+    void SpawnDoors()
+    {
+        if (doorPercent > 0)
+        {
+            Connector[] allConnectors = transform.GetComponentsInChildren<Connector>();
+            for (int i = 0; i < allConnectors.Length; i++)
+            {
+                Connector myconnector = allConnectors[i];
+                if (myconnector.isConnected)
+                {
+                    //random chance of spawning a door
+                    int roll = Random.Range(1, 101);
+                    if (roll <= doorPercent)
+                    {
+                        Vector3 halfExtents = new Vector3(myconnector.size.x, 1f, myconnector.size.x);
+                        Vector3 pos = myconnector.transform.position;
+                        Vector3 offset = myconnector.transform.up * 0.5f;
+                        Collider[] hits = Physics.OverlapBox(pos + offset, halfExtents, Quaternion.identity, LayerMask.GetMask("Door"));
+                        if (hits.Length == 0)
+                        {
+                            int doorIndex = Random.Range(0, doorPrefabs.Length);
+                            GameObject goDoor = Instantiate(doorPrefabs[doorIndex], pos, myconnector.transform.rotation, myconnector.transform) as GameObject;
+                            goDoor.name = doorPrefabs[doorIndex].name;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    void BlockedPassages()
+    {
+        foreach(Connector connector in transform.GetComponentsInChildren<Connector>())
+        {
+            if (!connector.isConnected)
+            {
+                Vector3 pos = connector.transform.position;
+                int walliIndex = Random.Range(0, blockedPrefabs.Length);
+                GameObject gowall = Instantiate(blockedPrefabs[walliIndex], pos, connector.transform.rotation, connector.transform) as GameObject;
+                gowall.name = blockedPrefabs[walliIndex].name;
+            }
+        }
+
     }
 
     void CollisionCheck() { 

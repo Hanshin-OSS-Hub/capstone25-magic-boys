@@ -5,11 +5,22 @@ public class Connector : MonoBehaviour
 {
 
     public Vector2 size = Vector2.one * 4f;
-    public bool isConnected = false;
+    public bool isConnected;
 
-    private void OnDrawGizmos()
+    public bool isPlaying;
+
+    void Start()
     {
-        Gizmos.color = Color.cyan;
+        isPlaying = true;
+    }
+    void OnDrawGizmos()
+    {
+        Gizmos.color = isConnected ? Color.green : Color.red;
+        if(!isPlaying)
+        {
+            Gizmos.color = Color.cyan;
+        }
+
         Vector2 halfsize = size * 0.5f;
         Vector3 offset = transform.position + transform.up * halfsize.y;
         Gizmos.DrawLine(offset, offset + transform.forward);
@@ -33,14 +44,6 @@ public class Connector : MonoBehaviour
         Gizmos.DrawLine(topLeft, bottomRight);
     }
 
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-
-
-    }
 
     // Update is called once per frame
     void Update()
