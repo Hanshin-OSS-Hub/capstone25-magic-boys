@@ -1,77 +1,87 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class BossChaseState : IBossState
 {
     public void EnterState(BossStateManager boss)
     {
+        boss.animator.SetBool("isMoving", true);
         boss.navMeshAgent.isStopped = false;
-        if (boss.animator != null) boss.animator.SetBool("isMoving", true);
-    }
-
-    public void ExitState(BossStateManager boss)
-    {
-        boss.navMeshAgent.isStopped = true;
-        if (boss.animator != null) boss.animator.SetBool("isMoving", false);
     }
 
     public void UpdateState(BossStateManager boss)
     {
         if (boss.playerTransform == null) return;
 
-        float distance = Vector3.Distance(boss.transform.position, boss.playerTransform.position);
+        float dist = Vector3.Distance(boss.transform.position, boss.playerTransform.position);
 
-        // ================================================================
-        // 1. [±Ù°Å¸® »óÈ²] °ø°Ý »ç°Å¸®(AttackRange) ¾È¿¡ µé¾î¿ÔÀ» ¶§
-        // ================================================================
-        if (distance <= boss.stats.AttackRange && boss.attackTimer <= 0)
+        float smashRange = 3.0f;
+        float attackRange = 2.5f;
+
+        if (boss.stats is GolemData data)
         {
-            int dice = Random.Range(0, 100);
+            smashRange = data.SmashRadius;
+            attackRange = data.AttackRange;
+        }
 
-            // [30% È®·ü] ´ëÁö ºÐ¼â (Smash)
-            if (dice < 30 && boss.stats is GolemData && boss.smashCooldownTimer <= 0)
+        // 1. [ê·¼ê±°ë¦¬/ì´ˆê·¼ì ‘] ì¼ë‹¨ ë©ˆì¶¤
+        // ê°€ê¹Œì´ ë¶™ì—ˆìœ¼ë©´ êµ³ì´ ë” ë°€ì§€ ë§ê³  ë©ˆì¶°ì„œ ì¿¨íƒ€ìž„(í‰íƒ€/ìŠ¤ë§¤ì‹œ) ê¸°ë‹¤ë¦¼
+        if (dist <= smashRange || dist <= attackRange)
+        {
+            StopAndLook(boss);
+            boss.SelectNextPattern();
+        }
+        // 2. [ì¤‘ê±°ë¦¬] ì¡°ê±´ë¶€ ì •ì§€
+        else if (dist <= 15.0f)
+        {
+            // ìŠ¤í‚¬ì„ ì“¸ ìˆ˜ ìžˆìœ¼ë©´ ì“°ê³ (true), ëª» ì“°ë©´(false) ê³„ì† ì«“ì•„ê°
+            bool skillUsed = boss.SelectNextPattern();
+
+            if (skillUsed)
             {
-                boss.TransitionToState(boss.SmashState);
             }
-            // [70% È®·ü] ±âº» ÆòÅ¸
             else
             {
-                boss.TransitionToState(boss.attackState);
+                ChasePlayer(boss);
             }
-            return;
         }
-
-        // ================================================================
-        // 2. [Áß°Å¸® »óÈ²] »ç°Å¸®º¸´Ù´Â ¸Ö°í, 15m º¸´Ù´Â °¡±î¿ï ¶§
-        // ================================================================
-        else if (distance > boss.stats.AttackRange && distance < 15f && boss.attackTimer <= 0)
+        // 3. [ì›ê±°ë¦¬] ê³„ì† ì¶”ì 
+        else
         {
-            int dice = Random.Range(0, 100);
-
-            // [40% È®·ü] µ¹Áø (Rush)
-            if (dice < 40 && boss.stats is GolemData && boss.rushCooldownTimer <= 0)
-            {
-                boss.TransitionToState(boss.RushState);
-            }
-            // [20% È®·ü] ¹ÙÀ§ ÅõÃ´ (Throw)
-            else if (dice < 60 && boss.throwCooldownTimer <= 0)
-            {
-                boss.TransitionToState(boss.throwState);
-
-                // ÅõÃ´ ÄðÅ¸ÀÓ ¸®¼Â
-                if (boss.stats is GolemData data)
-                    boss.throwCooldownTimer = data.ThrowCooldown;
-                else
-                    boss.throwCooldownTimer = 8f;
-            }
-            // [³ª¸ÓÁö 40%] ±×³É °è¼Ó ÂÑ¾Æ°¨(¾Æ·¡ ÂÑ¾Æ°¡´Â ÄÚµå ½ÇÇà, return ÇÏ¸é ¾ÈµÊ)
+            ChasePlayer(boss);
         }
+    }
 
-        // ================================================================
-        // 3. ÀÌµ¿ (ÃßÀû)
-        // ================================================================
-        if (boss.navMeshAgent.isOnNavMesh)
+    private void ChasePlayer(BossStateManager boss)
+    {
+        boss.navMeshAgent.isStopped = false;
+        boss.navMeshAgent.SetDestination(boss.playerTransform.position);
+        boss.animator.SetBool("isMoving", true);
+    }
+
+    public void ExitState(BossStateManager boss)
+    {
+        boss.navMeshAgent.isStopped = true;
+        boss.animator.SetBool("isMoving", false);
+    }
+
+    // [ì „íˆ¬ ëŒ€ê¸° ìƒíƒœ]
+    private void StopAndLook(BossStateManager boss)
+    {
+        // 1. ë¬¼ë¦¬ì  ì´ë™ ë©ˆì¶¤
+        boss.navMeshAgent.isStopped = true;
+        boss.navMeshAgent.velocity = Vector3.zero;
+
+        // 2. [ìˆ˜ì •] ì• ë‹ˆë©”ì´ì…˜ ë©ˆì¶¤ (Idleë¡œ ì „í™˜)
+        // isMovingì„ falseë¡œ êº¼ì•¼ Idle ìƒíƒœë¡œ ëŒì•„ê°
+        boss.animator.SetBool("isMoving", false);
+
+        // 3. í”Œë ˆì´ì–´ ë°”ë¼ë³´ê¸°
+        Vector3 dir = (boss.playerTransform.position - boss.transform.position).normalized;
+        dir.y = 0;
+        if (dir != Vector3.zero)
         {
-            boss.navMeshAgent.SetDestination(boss.playerTransform.position);
+            Quaternion lookRot = Quaternion.LookRotation(dir);
+            boss.transform.rotation = Quaternion.Slerp(boss.transform.rotation, lookRot, Time.deltaTime * 5f);
         }
     }
 }

@@ -1,4 +1,4 @@
-public interface IBossState
+﻿public interface IBossState
 {
     void EnterState(BossStateManager boss);
     void UpdateState(BossStateManager boss);

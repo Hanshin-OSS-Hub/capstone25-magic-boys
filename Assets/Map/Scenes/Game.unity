@@ -858,6 +858,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d2098a425138ea4c9b2d7897b017cfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 5
   maxHP: 100
   currentHP: 10
   currentExp: 10
@@ -8770,7 +8771,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   meleeEnemyPrefab: {fileID: 7509243798015521505, guid: efb8053f987df8f42adde5b495158eb3, type: 3}
-  rangedEnemyPrefab: {fileID: 8464927584394781076, guid: 8760a7514b8ac5b40ae55059cac7c73d, type: 3}
+  rangedEnemyPrefab: {fileID: 7509243798015521505, guid: efb8053f987df8f42adde5b495158eb3, type: 3}
   poolSize: 40
 --- !u!4 &1955412184
 Transform:

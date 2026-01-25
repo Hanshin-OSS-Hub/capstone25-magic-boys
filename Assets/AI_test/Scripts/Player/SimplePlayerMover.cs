@@ -1,8 +1,8 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SimplePlayerMover : MonoBehaviour, IDamageable
 {
-    // public float moveSpeed = 5f;
+     public float moveSpeed = 5f;
     public float maxHP = 100f;
     public float currentHP;
     public int currentExp = 0;
@@ -15,19 +15,19 @@ public class SimplePlayerMover : MonoBehaviour, IDamageable
 
     void Update()
     {
-        // // 1. Ű���� �Է� �ޱ� (W,A,S,D)
-        // float horizontal = Input.GetAxis("Horizontal"); // A, D
-        // float vertical = Input.GetAxis("Vertical");     // W, S
+ 
+         float horizontal = Input.GetAxis("Horizontal"); // A, D
+        float vertical = Input.GetAxis("Vertical");     // W, S
 
-        // // 2. �̵� ���� ��� (�÷��̾��� "����" ���� ����)
-        // Vector3 moveDirection = new Vector3(horizontal, 0, vertical);
+       
+         Vector3 moveDirection = new Vector3(horizontal, 0, vertical);
 
-        // // 3. ���� �̵� (Space.Self�� ����ؾ� '���� ���� ����'���� �̵�)
-        // transform.Translate(moveDirection * moveSpeed * Time.deltaTime, Space.Self);
+
+         transform.Translate(moveDirection * moveSpeed * Time.deltaTime, Space.Self);
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            // ī�޶� �þ��� ���߾�(0.5, 0.5)���� ������ ����
+            
             Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
 
             RaycastHit hit;
@@ -37,7 +37,7 @@ public class SimplePlayerMover : MonoBehaviour, IDamageable
                 if (target != null)
                 {
                     target.TakeDamage(4);
-                    Debug.Log("�÷��̾� ����! " + hit.collider.name + "���� 4 ������!");
+                    Debug.Log("공격! " + hit.collider.name + "에게 데미지");
                 }
             }
         }
@@ -47,17 +47,17 @@ public class SimplePlayerMover : MonoBehaviour, IDamageable
     public void TakeDamage(float damage)
     {
         currentHP -= damage;
-        Debug.Log($"�÷��̾� �ǰ�, ���� HP: {currentHP}");
+        Debug.Log($"남은 HP: {currentHP}");
         if (currentHP <= 0)
         {
-            Debug.Log("�÷��̾� ���");
+            Debug.Log("사망");
         }
     }
 
     public void AddExp(int amount)
     {
         currentExp += amount;
-        Debug.Log($"����ġ ȹ��! +{amount} (���� �� ����ġ: {currentExp})");
+        Debug.Log($"경험치 획득! +{amount} 현재 경험치: {currentExp})");
 
     }
 

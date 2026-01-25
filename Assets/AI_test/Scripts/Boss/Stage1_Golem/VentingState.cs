@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class VentingState : IBossState
 {
@@ -6,10 +6,10 @@ public class VentingState : IBossState
 
     public void EnterState(BossStateManager boss)
     {
-        Debug.Log("º¸½º: °ú¿­! ³Ã°¢ ¸ğµå (¾àÁ¡ ³ëÃâ)");
+        Debug.Log("ë³´ìŠ¤: ê³¼ì—´! ëƒ‰ê° ëª¨ë“œ (ì•½ì  ë…¸ì¶œ)");
         boss.navMeshAgent.isStopped = true;
 
-        // ¾àÁ¡ È°¼ºÈ­
+        // ì•½ì  í™œì„±í™”
         if (boss.weakPointObject != null) boss.weakPointObject.SetActive(true);
 
         if (boss.stats is GolemData data)
@@ -18,7 +18,7 @@ public class VentingState : IBossState
         }
         else
         {
-            timer = 5f; // ±âº»°ª ÃÊ±âÈ­
+            timer = 5f; // ê¸°ë³¸ê°’ ì´ˆê¸°í™”
         }
         
     }
@@ -27,7 +27,7 @@ public class VentingState : IBossState
     {
         timer -= Time.deltaTime;
 
-        // ½Ã°£ÀÌ ´Ù µÇ¸é ´Ù½Ã ÃßÀû »óÅÂ·Î
+        // ì‹œê°„ì´ ë‹¤ ë˜ë©´ ë‹¤ì‹œ ì¶”ì  ìƒíƒœë¡œ
         if (timer <= 0)
         {
             boss.TransitionToState(boss.chaseState);
@@ -39,14 +39,14 @@ public class VentingState : IBossState
         if (boss.weakPointObject != null) boss.weakPointObject.SetActive(false);
         boss.navMeshAgent.isStopped = false;
 
-        // Å¸ÀÌ¸Ó ¸®¼Â Çüº¯È¯
+        // íƒ€ì´ë¨¸ ë¦¬ì…‹ í˜•ë³€í™˜
         if (boss.stats is GolemData data)
         {
             boss.heatTimer = data.OverheatInterval;
         }
         else
         {
-            boss.heatTimer = 10f; // ±âº»°ª ÃÊ±âÈ­
+            boss.heatTimer = 10f; // ê¸°ë³¸ê°’ ì´ˆê¸°í™”
         }
         
     }

@@ -1,4 +1,4 @@
-
+ï»¿
 using UnityEngine;
 
 public class MouseLook2 : MonoBehaviour
@@ -7,10 +7,10 @@ public class MouseLook2 : MonoBehaviour
     public float mouseSensitivity = 100f;
 
     [Header("Object References")]
-    public Transform playerBody;      // ÇÃ·¹ÀÌ¾îÀÇ ¸öÃ¼ (ÁÂ¿ì È¸Àü¿ë)
-    public Transform cameraTransform; // Ä«¸Ş¶ó (»óÇÏ È¸Àü¿ë)
+    public Transform playerBody;      // í”Œë ˆì´ì–´ì˜ ëª¸ì²´ (ì¢Œìš° íšŒì „ìš©)
+    public Transform cameraTransform; // ì¹´ë©”ë¼ (ìƒí•˜ íšŒì „ìš©)
 
-    private float xRotation = 0f; // Ä«¸Ş¶óÀÇ »óÇÏ È¸Àü(²ô´öÀÓ)
+    private float xRotation = 0f; // ì¹´ë©”ë¼ì˜ ìƒí•˜ íšŒì „(ë„ë•ì„)
 
     void Start()
     {
@@ -20,16 +20,16 @@ public class MouseLook2 : MonoBehaviour
 
     void Update()
     {
-        // 1. ¸¶¿ì½º ÀÔ·Â ¹Ş±â
+        // 1. ë§ˆìš°ìŠ¤ ì…ë ¥ ë°›ê¸°
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-        // 2. Ä«¸Ş¶ó »óÇÏ È¸Àü (²ô´öÀÓ)
+        // 2. ì¹´ë©”ë¼ ìƒí•˜ íšŒì „ (ë„ë•ì„)
         xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f); // 90µµ °íÁ¤
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f); // 90ë„ ê³ ì •
         cameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
 
-        // 3. ÇÃ·¹ÀÌ¾î ¸öÃ¼ ÁÂ¿ì È¸Àü
+        // 3. í”Œë ˆì´ì–´ ëª¸ì²´ ì¢Œìš° íšŒì „
         playerBody.Rotate(Vector3.up * mouseX);
     }
 }

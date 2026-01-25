@@ -1,15 +1,18 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.AI;
 
 public class DeadState : IEnemyState
 {
     public void EnterState(EnemyStateManager enemy)
     {
-        Debug.Log("¿¡³Ê¹Ì »ç¸Á");
-        enemy.navMeshAgent.isStopped = true; // ÀÌµ¿ ºñÈ°¼ºÈ­
-        enemy.navMeshAgent.enabled = false; // ¶¥ °íÁ¤ ºñÈ°¼ºÈ­
+        enemy.animator.SetTrigger("dead");
+        enemy.navMeshAgent.isStopped = true; // ì´ë™ ë¹„í™œì„±í™”
+        enemy.navMeshAgent.velocity = Vector3.zero;
+
+        Collider col = enemy.GetComponent<Collider>();
+        if (col != null) col.enabled = false;
+
         enemy.StartDeathSequence();
-        enemy.GetComponent<Collider>().enabled = false;
     }
 
     public void ExitState(EnemyStateManager enemy)

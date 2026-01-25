@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class OverloadState : IBossState
 {
@@ -6,7 +6,7 @@ public class OverloadState : IBossState
 
     public void EnterState(BossStateManager boss)
     {
-        Debug.Log("º¸½º: ½Ã½ºÅÛ °úºÎÇÏ! (½ºÅÏ)");
+        Debug.Log("ë³´ìŠ¤: ì‹œìŠ¤í…œ ê³¼ë¶€í•˜! (ìŠ¤í„´)");
         boss.navMeshAgent.isStopped = true;
 
         if (boss.stats is GolemData data)

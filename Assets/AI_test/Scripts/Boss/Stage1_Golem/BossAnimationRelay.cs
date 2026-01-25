@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class BossAnimationRelay : MonoBehaviour
 {
@@ -12,13 +12,13 @@ public class BossAnimationRelay : MonoBehaviour
         }
     }
 
-    //  °ø°İ Á¾·á ½ÅÈ£ 
+    //  ê³µê²© ì¢…ë£Œ ì‹ í˜¸ 
     public void OnBossAttackFinished()
     {
         if (bossManager != null) bossManager.OnBossAttackFinished();
     }
 
-    //  ÆòÅ¸ °ø°İ ÆÇÁ¤ ½ÅÈ£
+    //  í‰íƒ€ ê³µê²© íŒì • ì‹ í˜¸
     public void PerformBasicAttack()
     {
         if (bossManager != null)
