@@ -13,14 +13,24 @@ public class PlayerAttack : MonoBehaviour
     public LayerMask enemyMask;
     public LayerMask worldMask;
 
-    // 애니메이션/락
+    // Animator / lock
     Animator animator;
     int attackHash;
     public float attackLockTime = 1.1f;
     float attackTimer;
     public bool IsAttacking { get; private set; }
 
-    // ===== Melee (LMB) : 무음/무이펙트 =====
+    // ===== Roll guard =====
+    [Header("Roll Guard")]
+    [Tooltip("애니메이터의 '롤' 상태 이름 (정확히 일치해야 함)")]
+    public string rollStateName = "Roll";
+    [Tooltip("롤 종료 후 잠깐 평타를 막는 시간")]
+    public float postRollBlock = 0.15f;
+
+    bool isRolling;           // 현재 롤 중인지
+    float rollBlockTimer;     // 롤 종료 후 블록 타이머
+
+    // ===== Melee (LMB) =====
     [Header("Melee (LMB)")]
     public float meleeRange = 2.5f;
     public float meleeRadius = 0.8f;
@@ -38,11 +48,11 @@ public class PlayerAttack : MonoBehaviour
     float skill1Remain;
     public bool IsSkill1Ready => skill1Remain <= 0f;
     public float Skill1CooldownRatio => (skill1Cooldown <= 0f) ? 0f : Mathf.Clamp01(skill1Remain / skill1Cooldown);
-
-    [Header("SFX (Skill1 Cast)")]
+    [Header("Cast FX (Q)")]
     public string castSfxName = "fireball_cast";
     [Range(0, 1)] public float castSfxVolume = 1f;
     public Vector2 castPitchRandom = new Vector2(0.98f, 1.02f);
+    public ParticleType castParticle1 = ParticleType.FireCast;
 
     // ===== Skill 2 (E) =====
     [Header("Skill #2 (E)")]
@@ -55,11 +65,11 @@ public class PlayerAttack : MonoBehaviour
     float skill2Remain;
     public bool IsSkill2Ready => skill2Remain <= 0f;
     public float Skill2CooldownRatio => (skill2Cooldown <= 0f) ? 0f : Mathf.Clamp01(skill2Remain / skill2Cooldown);
-
-    [Header("SFX (Skill2 Cast)")]
+    [Header("Cast FX (E)")]
     public string cast2SfxName = "spark_cast";
     [Range(0, 1)] public float cast2SfxVolume = 1f;
     public Vector2 cast2PitchRandom = new Vector2(0.98f, 1.02f);
+    public ParticleType castParticle2 = ParticleType.SparkCast;
 
     [Header("Debug")]
     public bool drawDebug = true;
@@ -89,18 +99,53 @@ public class PlayerAttack : MonoBehaviour
         if (EventSystem.current && EventSystem.current.IsPointerOverGameObject()) return;
         if (!input) return;
 
+        // 공격 락 타이머/애니 락
         if (attackTimer > 0f)
         {
             attackTimer -= Time.deltaTime;
             if (attackTimer <= 0f) IsAttacking = false;
         }
 
+        // 쿨다운
         if (skill1Remain > 0f) skill1Remain = Mathf.Max(0f, skill1Remain - Time.deltaTime);
         if (skill2Remain > 0f) skill2Remain = Mathf.Max(0f, skill2Remain - Time.deltaTime);
 
-        if (input.IsAttackPressed && attackTimer <= 0f) StartMelee();
+        // ===== 롤 상태 감지 & 공격 차단 =====
+        UpdateRollGuard();
+
+        // 입력 처리 (롤 중/직후에는 평타 금지)
+        if (!isRolling && rollBlockTimer <= 0f && input.IsAttackPressed && attackTimer <= 0f)
+            StartMelee();
+
         if (input.IsSkill1Pressed) TryCastSkill1();
         if (input.IsSkill2Pressed) TryCastSkill2();
+    }
+
+    void UpdateRollGuard()
+    {
+        if (!animator) return;
+
+        bool nowRoll = animator.GetCurrentAnimatorStateInfo(0).IsName(rollStateName);
+
+        // 롤 시작 감지
+        if (nowRoll && !isRolling)
+        {
+            isRolling = true;
+            // 혹시 남아있을 Attack 트리거/상태를 정리
+            animator.ResetTrigger(attackHash);
+            IsAttacking = false;
+        }
+        // 롤 종료 감지
+        else if (!nowRoll && isRolling)
+        {
+            isRolling = false;
+            rollBlockTimer = postRollBlock;
+            // 안전하게 한 번 더 트리거 정리
+            animator.ResetTrigger(attackHash);
+        }
+
+        // 롤 종료 후 블록 타이머 감소
+        if (rollBlockTimer > 0f) rollBlockTimer -= Time.deltaTime;
     }
 
     // ===== Melee =====
@@ -123,6 +168,10 @@ public class PlayerAttack : MonoBehaviour
 
         if (Physics.SphereCast(origin, meleeRadius, dir, out var hit, meleeRange, enemyMask, QueryTriggerInteraction.Collide))
         {
+            // IDamageable 우선, 없으면 EnemySimple
+            var dmgable = hit.collider.GetComponentInParent<IDamageable>();
+            if (dmgable != null) { dmgable.TakeDamage(meleeDamage); return; }
+
             var enemy = hit.collider.GetComponentInParent<EnemySimple>() ?? hit.collider.GetComponent<EnemySimple>();
             if (enemy) enemy.TakeDamage(meleeDamage, player);
         }
@@ -151,9 +200,8 @@ public class PlayerAttack : MonoBehaviour
         proj.Launch(dmg, player, enemyMask, projectileSpeed, projectileMaxDistance);
 
         float pitch = Random.Range(castPitchRandom.x, castPitchRandom.y);
-        SoundManager.Instance?.PlaySFX3D(castSfxName, origin, castSfxVolume, pitch);
-
-        ParticleManager.Instance?.Play(ParticleType.FireCast, origin, Quaternion.LookRotation(dir));
+        SoundManager.Instance?.PlaySFX2D(castSfxName, castSfxVolume, pitch);
+        ParticleManager.Instance?.Play(castParticle1, origin, Quaternion.LookRotation(dir));
     }
 
     // ===== Skill2 (E) =====
@@ -178,11 +226,9 @@ public class PlayerAttack : MonoBehaviour
         var proj = Instantiate(projectile2Prefab, origin, Quaternion.LookRotation(dir));
         proj.Launch(dmg, player, enemyMask, projectile2Speed, projectile2MaxDistance);
 
-        float pitch = Random.Range(cast2PitchRandom.x, cast2PitchRandom.y);
-        SoundManager.Instance?.PlaySFX3D(cast2SfxName, origin, cast2SfxVolume, pitch);
-
-        // 스파크 연출(원하면 FireCast로 유지 가능)
-        ParticleManager.Instance?.Play(ParticleType.SparkCast, origin, Quaternion.LookRotation(dir));
+        float pitch2 = Random.Range(cast2PitchRandom.x, cast2PitchRandom.y);
+        SoundManager.Instance?.PlaySFX2D(cast2SfxName, cast2SfxVolume, pitch2);
+        ParticleManager.Instance?.Play(castParticle2, origin, Quaternion.LookRotation(dir));
     }
 
     // ===== 공용 =====

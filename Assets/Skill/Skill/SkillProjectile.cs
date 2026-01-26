@@ -15,10 +15,13 @@ public class SkillProjectile : MonoBehaviour
     Rigidbody rb;
     Collider col;
 
-    [Header("Hit SFX")]
-    public string hitSfxName = "fireball_hit";
+    [Header("Hit SFX/VFX")]
+    public string hitSfxName;
+    public AudioClip hitSfxClip;
     [Range(0, 1)] public float hitSfxVolume = 1f;
     public Vector2 hitPitchRandom = new Vector2(0.95f, 1.05f);
+    public ParticleType hitParticle = ParticleType.FireHit;   // 프리팹별로 선택
+    public GameObject hitVfxOverride; // (선택) 개별 프리팹에서 직접 프리팹 사용하고 싶으면 지정
 
     public void Launch(int damage, PlayerStats owner, LayerMask enemyMask, float speed, float maxDistance)
     {
@@ -28,8 +31,8 @@ public class SkillProjectile : MonoBehaviour
         this.speed = speed;
         this.remainDistance = maxDistance;
 
-        if (!rb) rb = GetComponent<Rigidbody>();
-        if (!col) col = GetComponent<Collider>();
+        rb = GetComponent<Rigidbody>();
+        col = GetComponent<Collider>();
 
         rb.isKinematic = true;
         rb.useGravity = false;
@@ -54,19 +57,38 @@ public class SkillProjectile : MonoBehaviour
         if (!launched) return;
         if (((1 << other.gameObject.layer) & enemyMask) == 0) return;
 
-        var enemy = other.GetComponentInParent<EnemySimple>() ?? other.GetComponent<EnemySimple>();
-        if (!enemy) return;
+        // 타격 대상 찾기 (IDamageable 우선, 없으면 EnemySimple)
+        var dmgable = other.GetComponentInParent<IDamageable>();
+        var simple = (dmgable == null) ? (other.GetComponentInParent<EnemySimple>() ?? other.GetComponent<EnemySimple>()) : null;
+        if (dmgable == null && simple == null) return;
 
-        // 트리거에서 내부로 파고들어 숨는 문제 방지용 보정
-        Vector3 hitPos = transform.position - transform.forward * 0.08f;
+        Vector3 hitPos = other.ClosestPoint(transform.position);
         Quaternion hitRot = Quaternion.LookRotation(-transform.forward);
 
+        // 사운드
         float pitch = Random.Range(hitPitchRandom.x, hitPitchRandom.y);
-        SoundManager.Instance?.PlaySFX3D(hitSfxName, hitPos, hitSfxVolume, pitch);
+        if (!string.IsNullOrEmpty(hitSfxName))
+            SoundManager.Instance?.PlaySFX3D(hitSfxName, hitPos, hitSfxVolume, pitch);
+        else if (hitSfxClip)
+            SoundManager.Instance?.PlaySFX3D(hitSfxClip, hitPos, hitSfxVolume, pitch);
 
-        ParticleManager.Instance?.Play(ParticleType.FireHit, hitPos, hitRot);
+        // 파티클
+        if (hitVfxOverride)
+        {
+            var go = Instantiate(hitVfxOverride, hitPos, hitRot);
+            var ps = go.GetComponentInChildren<ParticleSystem>();
+            if (ps) Destroy(go, ps.main.duration + ps.main.startLifetimeMultiplier + 0.25f);
+            else Destroy(go, 2f);
+        }
+        else
+        {
+            ParticleManager.Instance?.Play(hitParticle, hitPos, hitRot);
+        }
 
-        enemy.TakeDamage(damage, owner);
+        // 데미지 적용
+        if (dmgable != null) dmgable.TakeDamage(damage);
+        else simple.TakeDamage(damage, owner);
+
         Destroy(gameObject);
     }
 }
