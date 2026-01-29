@@ -7,34 +7,44 @@ using System.Xml;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+public enum DungeonGenState
+{
+    inactive, generatingMain, generatingBranches, cleanup, completed
+}
+
 public class DungeonGenerator : MonoBehaviour
 {
-    public GameObject[] tilePrefabs;
-    public GameObject[] startPrefabs;
-    public GameObject[] exitPrefabs;
-    public GameObject[] blockedPrefabs;
-    public GameObject[] doorPrefabs;
+    [SerializeField] GameObject[] tilePrefabs;
+    [SerializeField] GameObject[] startPrefabs;
+    [SerializeField] GameObject[] exitPrefabs;
+    [SerializeField] GameObject[] blockedPrefabs;
+    [SerializeField] GameObject[] doorPrefabs;
 
     [Header("Debugging Options")]
-    public bool useBoxColliders;
-    public bool useLightsForDebugging;
-    public bool restoreLightsAfterDebugging;
+    [SerializeField] bool useBoxColliders;
+    [SerializeField] bool useLightsForDebugging;
+    [SerializeField] bool restoreLightsAfterDebugging;
 
 
     [Header("Key Bindings")]
-    public KeyCode reloadKey = KeyCode.Backspace;
-    public KeyCode toggleMapKey = KeyCode.M;
+    [SerializeField] KeyCode reloadKey = KeyCode.Backspace;
+    [SerializeField] KeyCode toggleMapKey = KeyCode.M;
 
 
     [Header("Generation Limits")]
-    [UnityEngine.Range(2,100)]public int mainLength = 10;
-    [UnityEngine.Range(0, 50)] public int branchLength = 5;
-    [UnityEngine.Range(0, 25)] public int numBranches = 10;
-    [UnityEngine.Range(0, 100)] public int doorPercent = 25;
-    [UnityEngine.Range(0, 1f)] public float constructionDelay;
+    [UnityEngine.Range(2,100)][SerializeField] int mainLength = 10;
+    [UnityEngine.Range(0, 50)][SerializeField] int branchLength = 5;
+    [UnityEngine.Range(0, 25)][SerializeField] int numBranches = 10;
+    [UnityEngine.Range(0, 100)][SerializeField] int doorPercent = 25;
+    [UnityEngine.Range(0, 1f)][SerializeField] float constructionDelay;
 
     [Header("Availabe at Runtime")]
     public List<Tile> genneratedTiles = new List<Tile>();
+
+    [HideInInspector]
+    public DungeonGenState dungeonState = DungeonGenState.inactive;
+    
+    
 
     GameObject goCamera, goPlayer;
     List<Connector> availableConnectors = new List<Connector>();
@@ -74,6 +84,7 @@ public class DungeonGenerator : MonoBehaviour
         tileRoot = CreateStartTile();
         DebugRoomLighting(tileRoot, Color.blue);
         tileTo = tileRoot;
+        dungeonState = DungeonGenState.generatingMain;
         for (int i = 0; i < mainLength - 1; i++)
         {
             yield return new WaitForSeconds(constructionDelay);
@@ -99,6 +110,7 @@ public class DungeonGenerator : MonoBehaviour
             }
         }
         //branching
+        dungeonState = DungeonGenState.generatingBranches;
         for (int b = 0; b < numBranches; b++)
         {
             if (availableConnectors.Count > 0)
@@ -123,10 +135,13 @@ public class DungeonGenerator : MonoBehaviour
             }
             else { break; }
         }
+        dungeonState = DungeonGenState.cleanup;
         LightRestoration();
         CleanupBoxes();
         BlockedPassages();
         SpawnDoors();
+        dungeonState = DungeonGenState.completed;
+        yield return null;
         goCamera.SetActive(false);
         goPlayer.SetActive(true);
     }
