@@ -11,14 +11,17 @@ public class PlayerInput : MonoBehaviour
     public Vector2 MouseInput { get; private set; }
 
     // 에지(Down) 입력
-    public bool IsJumpPressed { get; private set; }  // Space
-    public bool IsInteractPressed { get; private set; }  // F
-    public bool IsDropPressed { get; private set; }  // G
-    public bool IsAttackPressed { get; private set; }  // LMB (Fire1)
-    public bool IsSkill1Pressed { get; private set; }  // Q
-    public bool IsSkill2Pressed { get; private set; }  // E
-    public bool IsToggleStatsPressed { get; private set; }  // K
-    public bool IsRollPressed { get; private set; }  // LeftCtrl (구르기)
+    public bool IsJumpPressed { get; private set; }          // Space
+    public bool IsInteractPressed { get; private set; }      // F
+    public bool IsDropPressed { get; private set; }          // G
+    public bool IsAttackPressed { get; private set; }        // LMB (Fire1)
+    public bool IsSkill1Pressed { get; private set; }        // Q
+    public bool IsSkill2Pressed { get; private set; }        // E
+    public bool IsSkill3Pressed { get; private set; }        // R
+    public bool IsSkill4Pressed { get; private set; }        // T
+    public bool IsSkill5Pressed { get; private set; }        // Y
+    public bool IsToggleStatsPressed { get; private set; }   // K
+    public bool IsRollPressed { get; private set; }          // LeftCtrl (구르기)
 
     // 홀드 상태가 필요한 것들
     public bool IsRunHeld => Input.GetKey(KeyCode.LeftShift);
@@ -27,10 +30,13 @@ public class PlayerInput : MonoBehaviour
 
     void Update()
     {
-        // 패널 열림(전역) 또는 외부 차단 플래그면 입력 모두 0/false
+        // ✅ 토글(K)은 UI가 열려 있어도 항상 읽는다 (닫기 가능하게)
+        IsToggleStatsPressed = Input.GetKeyDown(KeyCode.K);
+
+        // 패널 열림(전역) 또는 외부 차단 플래그면 "나머지 입력"만 0/false
         if (Blocked || StatsPanelToggle.UIBlocked)
         {
-            ClearAll();
+            ClearAllExceptToggle();
             return;
         }
 
@@ -38,10 +44,15 @@ public class PlayerInput : MonoBehaviour
         IsJumpPressed = Input.GetKeyDown(KeyCode.Space);
         IsInteractPressed = Input.GetKeyDown(KeyCode.F);
         IsDropPressed = Input.GetKeyDown(KeyCode.G);
+
         IsAttackPressed = Input.GetButtonDown("Fire1");
+
         IsSkill1Pressed = Input.GetKeyDown(KeyCode.Q);
         IsSkill2Pressed = Input.GetKeyDown(KeyCode.E);
-        IsToggleStatsPressed = Input.GetKeyDown(KeyCode.K);
+        IsSkill3Pressed = Input.GetKeyDown(KeyCode.R);
+        IsSkill4Pressed = Input.GetKeyDown(KeyCode.T);
+        IsSkill5Pressed = Input.GetKeyDown(KeyCode.Y);
+
         IsRollPressed = Input.GetKeyDown(KeyCode.LeftControl);
 
         // --- 축 ---
@@ -49,12 +60,23 @@ public class PlayerInput : MonoBehaviour
         MouseInput = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
     }
 
-    void ClearAll()
+    void ClearAllExceptToggle()
     {
         MoveInput = MouseInput = Vector2.zero;
 
-        IsJumpPressed = IsInteractPressed = IsDropPressed =
-        IsAttackPressed = IsSkill1Pressed = IsSkill2Pressed =
-        IsToggleStatsPressed = IsRollPressed = false;
+        IsJumpPressed = false;
+        IsInteractPressed = false;
+        IsDropPressed = false;
+        IsAttackPressed = false;
+
+        IsSkill1Pressed = false;
+        IsSkill2Pressed = false;
+        IsSkill3Pressed = false;
+        IsSkill4Pressed = false;
+        IsSkill5Pressed = false;
+
+        IsRollPressed = false;
+
+        // IsToggleStatsPressed 는 여기서 건드리지 않음!
     }
 }

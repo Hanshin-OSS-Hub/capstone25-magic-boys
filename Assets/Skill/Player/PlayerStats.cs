@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System;
 
 public enum StatType { STR, DEX, MAG, LUK }
@@ -12,7 +12,7 @@ public class PlayerStats : MonoBehaviour
     public int baseMagicATK = 10;
     public float baseMPRegenPerSec = 1f;
     public float baseMoveSpeed = 5f;          // m/s
-    public float baseAttacksPerSecond = 1.5f; // ÃÊ´ç °ø°İ¼ö (°ø°İ¼Óµµ)
+    public float baseAttacksPerSecond = 1.5f; // ì´ˆë‹¹ ê³µê²©ìˆ˜ (ê³µê²©ì†ë„)
 
     [Header("Runtime Resources")]
     public int maxHP;
@@ -27,10 +27,10 @@ public class PlayerStats : MonoBehaviour
     public int statPoints = 0;
 
     [Header("Allocated Stats")]
-    public int STR = 0;  // Èû: HP/¹°¸®°ø°İ ¡è
-    public int DEX = 0;  // ¹ÎÃ¸: °ø°İ¼Óµµ/ÀÌµ¿¼Óµµ ¡è
-    public int MAG = 0;  // ¸¶·Â: MPÃÖ´ë/ÀÚ¿¬È¸º¹/¸¶¹ı°ø°İ ¡è
-    public int LUK = 0;  // ¿î: Å©¸®È®·ü/Å©¸®¹è¼ö ¡è
+    public int STR = 0;  // í˜: HP/ë¬¼ë¦¬ê³µê²© â†‘
+    public int DEX = 0;  // ë¯¼ì²©: ê³µê²©ì†ë„/ì´ë™ì†ë„ â†‘
+    public int MAG = 0;  // ë§ˆë ¥: MPìµœëŒ€/ìì—°íšŒë³µ/ë§ˆë²•ê³µê²© â†‘
+    public int LUK = 0;  // ìš´: í¬ë¦¬í™•ë¥ /í¬ë¦¬ë°°ìˆ˜ â†‘
 
     [Header("Derived (auto)")]
     public int physicalATK;
@@ -46,7 +46,7 @@ public class PlayerStats : MonoBehaviour
     [Range(0, 1)] public float baseCritChance = 0.05f;  // 5%
     public float baseCritMultiplier = 1.5f;            // 1.5x
 
-    // Events (UI µî)
+    // Events (UI ë“±)
     public event Action<int, int> OnHPChanged;
     public event Action<int, int> OnMPChanged;
     public event Action<int, int, int> OnExpChanged;
@@ -55,17 +55,47 @@ public class PlayerStats : MonoBehaviour
 
     float _mpRegenCarry;
 
+    // ===== PlayerPrefs Keys =====
+    const string K_LV = "PS_LV";
+    const string K_EXP = "PS_EXP";
+    const string K_EXP_NEXT = "PS_EXP_NEXT";
+    const string K_SP = "PS_SP";
+    const string K_STR = "PS_STR";
+    const string K_DEX = "PS_DEX";
+    const string K_MAG = "PS_MAG";
+    const string K_LUK = "PS_LUK";
+    const string K_HP = "PS_HP";
+    const string K_MP = "PS_MP";
+
     void Awake()
     {
-        RecalculateDerived();
-        currentHP = maxHP;
-        currentMP = maxMP;
-        BroadcastAll();
+        // âœ… ë¨¼ì € ë¡œë“œ ì‹œë„
+        bool loaded = Load();
+
+        // ë¡œë“œ ì‹¤íŒ¨(ìƒˆ ê²Œì„)ë©´ ê¸°ë³¸ ì„¸íŒ…
+        if (!loaded)
+        {
+            RecalculateDerived();
+            currentHP = maxHP;
+            currentMP = maxMP;
+            BroadcastAll();
+        }
     }
 
     void Update()
     {
         TickMPRegen(Time.deltaTime);
+    }
+
+    void OnApplicationQuit()
+    {
+        Save();
+    }
+
+    void OnDisable()
+    {
+        // ì”¬ ì „í™˜/ë¹„í™œì„±ì—ì„œë„ ì €ì¥(ì›ì¹˜ ì•Šìœ¼ë©´ ì£¼ì„ ì²˜ë¦¬)
+        Save();
     }
 
     void BroadcastAll()
@@ -76,7 +106,7 @@ public class PlayerStats : MonoBehaviour
         OnStatPointChanged?.Invoke(statPoints);
     }
 
-    // ===== Derived rules (°£´Ü ¹ë·±½º) =====
+    // ===== Derived rules (ê°„ë‹¨ ë°¸ëŸ°ìŠ¤) =====
     public void RecalculateDerived()
     {
         maxHP = baseMaxHP + STR * 10;
@@ -105,12 +135,17 @@ public class PlayerStats : MonoBehaviour
         if (amount <= 0) return;
         currentHP = Mathf.Max(0, currentHP - amount);
         OnHPChanged?.Invoke(currentHP, maxHP);
+
+        Save(); //ë³€í™” ì‹œ ì €ì¥(ì›ì¹˜ ì•Šìœ¼ë©´ ì£¼ì„)
+
         if (currentHP <= 0) Die();
     }
+
     public void Heal(int amount)
     {
         currentHP = Mathf.Min(maxHP, currentHP + amount);
         OnHPChanged?.Invoke(currentHP, maxHP);
+        Save();
     }
 
     public bool SpendMP(int amount)
@@ -119,13 +154,17 @@ public class PlayerStats : MonoBehaviour
         if (currentMP < amount) return false;
         currentMP -= amount;
         OnMPChanged?.Invoke(currentMP, maxMP);
+        Save();
         return true;
     }
+
     public void RestoreMP(int amount)
     {
         currentMP = Mathf.Min(maxMP, currentMP + amount);
         OnMPChanged?.Invoke(currentMP, maxMP);
+        Save();
     }
+
     void TickMPRegen(float dt)
     {
         if (mpRegenPerSec <= 0f || currentMP >= maxMP) return;
@@ -134,7 +173,9 @@ public class PlayerStats : MonoBehaviour
         if (gain > 0)
         {
             _mpRegenCarry -= gain;
-            RestoreMP(gain);
+            // ìì—°íšŒë³µì€ ì €ì¥ ë„ˆë¬´ ì¦ì„ ìˆ˜ ìˆìœ¼ë‹ˆ Save() ì•ˆ í•¨
+            currentMP = Mathf.Min(maxMP, currentMP + gain);
+            OnMPChanged?.Invoke(currentMP, maxMP);
         }
     }
 
@@ -143,15 +184,22 @@ public class PlayerStats : MonoBehaviour
     {
         if (amount <= 0) return;
         currentExp += amount;
+
+        bool leveledUp = false;
+
         while (currentExp >= expToNext)
         {
             currentExp -= expToNext;
             level++;
-            statPoints += 1; // ¡Ú ·¹º§¾÷ ½Ã Æ÷ÀÎÆ® Áö±Ş
+            statPoints += 1; // ë ˆë²¨ì—… ì‹œ í¬ì¸íŠ¸ ì§€ê¸‰
             expToNext = Mathf.RoundToInt(expToNext * 1.2f);
             OnStatPointChanged?.Invoke(statPoints);
+            leveledUp = true;
         }
+
         OnExpChanged?.Invoke(currentExp, expToNext, level);
+
+        if (leveledUp) Save(); // ë ˆë²¨ì—… ê°™ì€ í° ë³€í™”ì—ì„œ ì €ì¥
     }
 
     void Die()
@@ -164,6 +212,7 @@ public class PlayerStats : MonoBehaviour
     public bool AllocateStat(StatType type)
     {
         if (statPoints <= 0) return false;
+
         switch (type)
         {
             case StatType.STR: STR++; break;
@@ -171,11 +220,15 @@ public class PlayerStats : MonoBehaviour
             case StatType.MAG: MAG++; break;
             case StatType.LUK: LUK++; break;
         }
+
         statPoints--;
+
         RecalculateDerived();
         OnStatPointChanged?.Invoke(statPoints);
         OnHPChanged?.Invoke(currentHP, maxHP);
         OnMPChanged?.Invoke(currentMP, maxMP);
+
+        Save(); // âœ… ìŠ¤íƒ¯ ë¶„ë°°ëŠ” ì €ì¥ í•„ìˆ˜
         return true;
     }
 
@@ -186,15 +239,75 @@ public class PlayerStats : MonoBehaviour
         ApplyCrit(ref dmg);
         return Mathf.Max(0, Mathf.RoundToInt(dmg));
     }
+
     public int GetMagicDamage(int baseSkill = 0)
     {
         float dmg = baseSkill + magicATK;
         ApplyCrit(ref dmg);
         return Mathf.Max(0, Mathf.RoundToInt(dmg));
     }
+
     void ApplyCrit(ref float dmg)
     {
         if (UnityEngine.Random.value < critChance)
             dmg *= critMultiplier;
+    }
+
+    // ===== Save / Load =====
+    public void Save()
+    {
+        PlayerPrefs.SetInt(K_LV, level);
+        PlayerPrefs.SetInt(K_EXP, currentExp);
+        PlayerPrefs.SetInt(K_EXP_NEXT, expToNext);
+        PlayerPrefs.SetInt(K_SP, statPoints);
+
+        PlayerPrefs.SetInt(K_STR, STR);
+        PlayerPrefs.SetInt(K_DEX, DEX);
+        PlayerPrefs.SetInt(K_MAG, MAG);
+        PlayerPrefs.SetInt(K_LUK, LUK);
+
+        PlayerPrefs.SetInt(K_HP, currentHP);
+        PlayerPrefs.SetInt(K_MP, currentMP);
+
+        PlayerPrefs.Save();
+    }
+
+    public bool Load()
+    {
+        if (!PlayerPrefs.HasKey(K_LV)) return false;
+
+        level = PlayerPrefs.GetInt(K_LV, 1);
+        currentExp = PlayerPrefs.GetInt(K_EXP, 0);
+        expToNext = PlayerPrefs.GetInt(K_EXP_NEXT, 50);
+        statPoints = PlayerPrefs.GetInt(K_SP, 0);
+
+        STR = PlayerPrefs.GetInt(K_STR, 0);
+        DEX = PlayerPrefs.GetInt(K_DEX, 0);
+        MAG = PlayerPrefs.GetInt(K_MAG, 0);
+        LUK = PlayerPrefs.GetInt(K_LUK, 0);
+
+        RecalculateDerived();
+
+        currentHP = Mathf.Clamp(PlayerPrefs.GetInt(K_HP, maxHP), 0, maxHP);
+        currentMP = Mathf.Clamp(PlayerPrefs.GetInt(K_MP, maxMP), 0, maxMP);
+
+        BroadcastAll();
+        return true;
+    }
+
+    // (ì„ íƒ) ìƒˆ ê²Œì„ ì´ˆê¸°í™”ìš©
+    public static void ResetSavedData()
+    {
+        PlayerPrefs.DeleteKey(K_LV);
+        PlayerPrefs.DeleteKey(K_EXP);
+        PlayerPrefs.DeleteKey(K_EXP_NEXT);
+        PlayerPrefs.DeleteKey(K_SP);
+        PlayerPrefs.DeleteKey(K_STR);
+        PlayerPrefs.DeleteKey(K_DEX);
+        PlayerPrefs.DeleteKey(K_MAG);
+        PlayerPrefs.DeleteKey(K_LUK);
+        PlayerPrefs.DeleteKey(K_HP);
+        PlayerPrefs.DeleteKey(K_MP);
+        PlayerPrefs.Save();
     }
 }

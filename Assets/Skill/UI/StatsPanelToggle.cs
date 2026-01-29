@@ -1,7 +1,4 @@
-using TMPro;
-using UnityEngine;
-
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
@@ -10,8 +7,8 @@ public class StatsPanelToggle : MonoBehaviour
     public static bool UIBlocked { get; private set; }
 
     [Header("Refs")]
-    public PlayerInput input;           // ¡ç »õ·Î Ãß°¡ (¾ÀÀÇ PlayerInput ÂüÁ¶)
-    public GameObject statsPanel;       // ¿­°í ´İÀ» ÆĞ³Î
+    public PlayerInput input;     // ì”¬ì˜ PlayerInput ì°¸ì¡°
+    public GameObject statsPanel; // ì—´ê³  ë‹«ì„ íŒ¨ë„
     public PlayerStats player;
 
     [Header("UI (optional)")]
@@ -49,10 +46,8 @@ public class StatsPanelToggle : MonoBehaviour
 
         if (statsPanel) statsPanel.SetActive(on);
 
-        // °ÔÀÓ Á¤Áö/Àç°³
         Time.timeScale = on ? 0f : 1f;
 
-        // Ä¿¼­ ÀüÈ¯(ÄÁÆ®·Ñ·¯ ÀÇÁ¸ Á¦°Å)
         Cursor.lockState = on ? CursorLockMode.None : CursorLockMode.Locked;
         Cursor.visible = on;
 
@@ -87,9 +82,17 @@ public class StatsPanelToggle : MonoBehaviour
     {
         if (player) player.OnStatPointChanged += OnPointChanged;
     }
+
     void OnDisable()
     {
         if (player) player.OnStatPointChanged -= OnPointChanged;
     }
+
     void OnPointChanged(int _) => RefreshUI();
+
+    //  ë²„íŠ¼ OnClick ì—°ê²°ìš© (ì›í•˜ë©´ ì‚¬ìš©)
+    public void ClickSTR() { if (player && player.AllocateStat(StatType.STR)) player.Save(); }
+    public void ClickDEX() { if (player && player.AllocateStat(StatType.DEX)) player.Save(); }
+    public void ClickMAG() { if (player && player.AllocateStat(StatType.MAG)) player.Save(); }
+    public void ClickLUK() { if (player && player.AllocateStat(StatType.LUK)) player.Save(); }
 }
