@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Xml;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -85,15 +86,25 @@ public class DungeonGenerator : MonoBehaviour
         DebugRoomLighting(tileRoot, Color.blue);
         tileTo = tileRoot;
         dungeonState = DungeonGenState.generatingMain;
-        for (int i = 0; i < mainLength - 1; i++)
+        while(genneratedTiles.Count < mainLength)
         {
             yield return new WaitForSeconds(constructionDelay);
             tileFrom = tileTo;
-            tileTo = CreateTile();
-            DebugRoomLighting(tileTo, Color.yellow);
+            if (genneratedTiles.Count == mainLength - 1)
+            {
+                //exit room
+                tileTo = CreateExitTile();
+                DebugRoomLighting(tileTo, Color.magenta);
+            }
+            else
+            {
+                tileTo = CreateTile();
+                DebugRoomLighting(tileTo, Color.yellow);
+
+            }
             ConnectTiles();
             CollisionCheck();
-            if (attempts >= maxAttempts) { break; }
+           
         }
 
 
@@ -268,9 +279,20 @@ public class DungeonGenerator : MonoBehaviour
                 //retry
                 if (tileFrom != null)
                 {
-                    tileTo = CreateTile();
-                    Color retryColor = container.name.Contains("Branch") ? Color.green : Color.yellow;
-                    DebugRoomLighting(tileTo, retryColor * 2f);
+                    if (genneratedTiles.Count == mainLength - 1)
+                    {
+                        //exit room
+                        tileTo = CreateExitTile();
+                        DebugRoomLighting(tileTo, Color.magenta);
+                    }
+                    else
+                    {
+                        tileTo = CreateTile();
+                        Color retryColor = container.name.Contains("Branch") ? Color.green : Color.yellow;
+                        DebugRoomLighting(tileTo, retryColor * 2f);
+
+                    }
+
                     ConnectTiles();
                     CollisionCheck();
                 }
@@ -370,6 +392,16 @@ public class DungeonGenerator : MonoBehaviour
         int index = Random.Range(0, tilePrefabs.Length);
         GameObject goTile = Instantiate(tilePrefabs[index], Vector3.zero, Quaternion.identity, container) as GameObject;
         goTile.name = tilePrefabs[index].name;
+        Transform origin = genneratedTiles[genneratedTiles.FindIndex(x => x.tile == tileFrom)].tile;
+        genneratedTiles.Add(new Tile(goTile.transform, origin));
+        return goTile.transform;
+    }
+
+    Transform CreateExitTile()
+    {
+        int index = Random.Range(0, exitPrefabs.Length);
+        GameObject goTile = Instantiate(exitPrefabs[index], Vector3.zero, Quaternion.identity, container) as GameObject;
+        goTile.name = "Exit Room";
         Transform origin = genneratedTiles[genneratedTiles.FindIndex(x => x.tile == tileFrom)].tile;
         genneratedTiles.Add(new Tile(goTile.transform, origin));
         return goTile.transform;
