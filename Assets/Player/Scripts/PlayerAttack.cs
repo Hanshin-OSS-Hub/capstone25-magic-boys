@@ -5,7 +5,7 @@ public class PlayerAttack : MonoBehaviour
     private Animator animator;
     private int attackHash;
 
-    public float attackLockTime = 1.1f;
+    public float attackLockTime = 1.8f;
     private float attackTimer = 0f;
 
     //  이동을 막기 위한 플래그
