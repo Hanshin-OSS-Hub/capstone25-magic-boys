@@ -110,6 +110,13 @@ public class EnemyStateManager : MonoBehaviour, IDamageable
             GiveExpToPlayer();
             TransitionToState(deadState);
         }
+        else
+        {
+            if (playerTransform != null && currentState == idleState)
+            {
+                TransitionToState(chaseState);
+            }
+        }
     }
 
     public void TriggerHitVisual()
