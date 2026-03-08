@@ -14,7 +14,7 @@ public class PlayerAttack : MonoBehaviour
     public LayerMask worldMask;
 
     [Header("Breakables")]
-    public LayerMask breakableMask;   // ✅ 상자 레이어(예: Breakable)
+    public LayerMask breakableMask;   // 상자 레이어(예: Breakable)
 
     // Animator / lock
     Animator animator;

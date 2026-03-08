@@ -30,7 +30,7 @@ public class PlayerInput : MonoBehaviour
 
     void Update()
     {
-        // ✅ 토글(K)은 UI가 열려 있어도 항상 읽는다 (닫기 가능하게)
+        //토글(K)은 UI가 열려 있어도 항상 읽는다 (닫기 가능하게)
         IsToggleStatsPressed = Input.GetKeyDown(KeyCode.K);
 
         // 패널 열림(전역) 또는 외부 차단 플래그면 "나머지 입력"만 0/false
