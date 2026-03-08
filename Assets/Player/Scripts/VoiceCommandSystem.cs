@@ -15,10 +15,10 @@ public class VoiceCommandSystem : MonoBehaviour
         text = text.ToLower().Trim();
 
         if (text.Contains("fire"))
-            input.QueueSkill1FromVoice();
+            
 
         if (text.Contains("spark"))
-            input.QueueSkill2FromVoice();
+            
 
         whisper.ClearText();
     }
