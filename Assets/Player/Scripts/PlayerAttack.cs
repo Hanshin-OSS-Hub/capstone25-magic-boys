@@ -8,6 +8,7 @@ public class PlayerAttack : MonoBehaviour
     public Camera cam;
     public Transform firePoint;
 
+<<<<<<< HEAD
     [Header("Layers")]
     public LayerMask enemyMask;
     public LayerMask worldMask;
@@ -16,6 +17,12 @@ public class PlayerAttack : MonoBehaviour
     int attackHash;
     public float attackLockTime = 1.1f;
     float attackTimer;
+=======
+    public float attackLockTime = 1.8f;
+    private float attackTimer = 0f;
+
+    //  이동을 막기 위한 플래그
+>>>>>>> Player_test
     public bool IsAttacking { get; private set; }
 
     [Header("Melee (LMB)")]
