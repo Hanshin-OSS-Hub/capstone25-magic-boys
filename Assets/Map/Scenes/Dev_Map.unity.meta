@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Map/Scenes/Dev_Map.unity.meta
 guid: b707650403b51c34a8bef206d30233c7
+========
+guid: 53076760569ee374da22bc0bb0b4c15e
+>>>>>>>> origin/roguelike_test:Assets/SineVFX/TopDownEffects/Scenes/DemoScene_GridEffects_v2.unity.meta
 DefaultImporter:
   externalObjects: {}
   userData: 

@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Map/Prefabs/Tiles/Room I/Random Decor3.prefab.meta
 guid: 63abca16f616ad242b7b3337c9ff0fac
+========
+guid: eaea4463a3644a50954d62d01e05c26c
+>>>>>>>> origin/roguelike_test:Assets/SineVFX/TopDownEffects/CompleteEffects/DivineJudgment.prefab.meta
 PrefabImporter:
   externalObjects: {}
   userData: 

@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Map/Animatiion/Door/Door_close.anim.meta
 guid: da50cfceccee3804a996e9b78f2bff5d
+========
+guid: 6df3cd8809464a64ca511da9f8ab6bd6
+>>>>>>>> origin/roguelike_test:Assets/SineVFX/TopDownEffects/AssetResources/Materials/GridEffects_v2/GridExample_01/GridExample_01_01.mat.meta
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 7400000

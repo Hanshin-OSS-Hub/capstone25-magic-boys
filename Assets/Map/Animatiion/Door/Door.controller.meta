@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Map/Animatiion/Door/Door.controller.meta
 guid: 1b9eac146b8805e4391cc172491c88b4
+========
+guid: 7489b544ec9868e409a23dd95c6f5594
+>>>>>>>> origin/roguelike_test:Assets/SineVFX/TopDownEffects/AssetResources/Materials/GridEffects_v2/GridExample_01/GridExample_01_02.mat.meta
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 9100000

@@ -1,8 +1,13 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Player/Kevin Iglesias/Human Animations/Unity Demo Scenes/Human Melee Animations/Materials.meta
 guid: 1cfc206db7e673f4fa59fa889ed9c549
+========
+guid: e31bab9346a3995469aa2e1c824853bb
+>>>>>>>> origin/roguelike_test:Assets/SineVFX/TopDownEffects/AssetResources/Environment/EnvMeshes/Materials.meta
 folderAsset: yes
+timeCreated: 1533315072
+licenseType: Free
 DefaultImporter:
-  externalObjects: {}
   userData: 
   assetBundleName: 
   assetBundleVariant: 

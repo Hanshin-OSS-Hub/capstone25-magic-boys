@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Shaders.meta
 guid: 9059232af4c05a34d9f2178971c5537a
+========
+guid: 11035f415a4bd9c4c87382a43e2ab5df
+>>>>>>>> origin/roguelike_test:Assets/SineVFX.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Player/Kevin Iglesias.meta
 guid: ac85a27d88d8fbd468ae779372069497
+========
+guid: 34297721cd6aa7f4094518e32f70f255
+>>>>>>>> origin/roguelike_test:Assets/SineVFX/TopDownEffects/AssetResources/Animations/BarrelOfConfusion.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Player/Plane.controller.meta
+guid: dcac43d6c795c3749b289226e44025f4
+========
+guid: 5cf01c3020205314a9ab768c76785669
+>>>>>>>> origin/roguelike_test:Assets/SineVFX/TopDownEffects/AssetResources/Animations/BarrelOfConfusion/BarrelOfConfusion_GasBarrel_Animated.controller.meta
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

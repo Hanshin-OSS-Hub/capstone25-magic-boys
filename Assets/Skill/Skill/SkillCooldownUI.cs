@@ -1,62 +1,122 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
 [RequireComponent(typeof(Image))]
 public class SkillCooldownUI : MonoBehaviour
 {
-    public enum Which { Skill1, Skill2 }
-    public Which which = Which.Skill2;
+    public enum Which { Skill1, Skill2, Skill3, Skill4, Skill5 }
+    public Which which = Which.Skill1;
 
-    public PlayerAttack attack;          // PlayerAttack¸¸ µå·¡±×
-    public TMP_Text secondsText;         // ¼±ÅÃ
+    public PlayerAttack attack;          // PlayerAttack ë“œë˜ê·¸ (ì—†ìœ¼ë©´ ìë™ íƒìƒ‰)
+    public TMP_Text secondsText;         // ì„ íƒ
     public bool debugLog = false;
 
     Image img;
-    float baseAlpha = 0.6f; // µ¤°³ ±âº» ¾ËÆÄ(¿øÇÏ´Â °ª)
+    float baseAlpha = 0.6f; // ë®ê°œ ê¸°ë³¸ ì•ŒíŒŒ(ì›í•˜ëŠ” ê°’)
 
     void Awake()
     {
         img = GetComponent<Image>();
         if (!attack) attack = FindObjectOfType<PlayerAttack>();
 
-        // µ¤°³ Ç¥ÁØ ¼³Á¤
+        // ë®ê°œ í‘œì¤€ ì„¤ì •
         img.type = Image.Type.Filled;
         img.fillMethod = Image.FillMethod.Radial360;
         img.fillOrigin = (int)Image.Origin360.Top;
         img.fillClockwise = true;
         img.raycastTarget = false;
 
-        // ÃÊ±â »óÅÂ: º¸ÀÌÁö ¾Ê°Ô(¾ËÆÄ 0), fill 0
+        // ì´ˆê¸° ìƒíƒœ: ë³´ì´ì§€ ì•Šê²Œ(ì•ŒíŒŒ 0), fill 0
         var c = img.color;
-        if (c.a > 0f) baseAlpha = c.a;   // ÀÎ½ºÆåÅÍ¿¡¼­ ÁØ ¾ËÆÄ°¡ ÀÖÀ¸¸é ±× °ª »ç¿ë
+        if (c.a > 0f) baseAlpha = c.a;   // ì¸ìŠ¤í™í„° ì•ŒíŒŒê°€ ìˆìœ¼ë©´ ê·¸ ê°’ ì‚¬ìš©
         SetRatio(0f);
+        if (secondsText) secondsText.text = "";
     }
 
     void Update()
     {
         if (!attack) return;
 
-        float r = which == Which.Skill1
-            ? attack.Skill1CooldownRatio
-            : attack.Skill2CooldownRatio;
+        int slotIndex = GetSlotIndex0Based(which);
 
-        r = Mathf.Clamp01(r);
-        SetRatio(r);
+        //  ì ê¸ˆ ìƒíƒœë©´ ì¿¨ UI ìˆ¨ê¹€
+        if (!IsUnlocked(slotIndex))
+        {
+            SetRatio(0f);
+            if (secondsText) secondsText.text = "";
+            return;
+        }
+
+        float ratio = GetCooldownRatio(which);
+        ratio = Mathf.Clamp01(ratio);
+        SetRatio(ratio);
 
         if (secondsText)
         {
-            float cd = which == Which.Skill1 ? attack.skill1Cooldown : attack.skill2Cooldown;
-            secondsText.text = r > 0f ? Mathf.Ceil(cd * r).ToString() : "";
+            float cd = GetCooldownDuration(which);
+            secondsText.text = ratio > 0f ? Mathf.Ceil(cd * ratio).ToString() : "";
         }
 
-        if (debugLog) Debug.Log($"[CooldownUI-{which}] ratio={r:0.00}");
+        if (debugLog) Debug.Log($"[CooldownUI-{which}] ratio={ratio:0.00}");
+    }
+
+    bool IsUnlocked(int slotIndex0Based)
+    {
+        // SkillProgressionManager ì—†ìœ¼ë©´(ì„¸íŒ… ì „) ì¼ë‹¨ ì ê¸ˆìœ¼ë¡œ ì·¨ê¸‰í•˜ì§€ ì•Šê³  í‘œì‹œ
+        if (SkillProgressionManager.Instance == null) return true;
+        return SkillProgressionManager.Instance.IsUnlocked(slotIndex0Based);
+    }
+
+    int GetSlotIndex0Based(Which w)
+    {
+        switch (w)
+        {
+            case Which.Skill1: return 0;
+            case Which.Skill2: return 1;
+            case Which.Skill3: return 2;
+            case Which.Skill4: return 3;
+            case Which.Skill5: return 4;
+        }
+        return 0;
+    }
+
+    float GetCooldownRatio(Which w)
+    {
+        // âœ… PlayerAttackì— ì•„ë˜ í”„ë¡œí¼í‹°ë“¤ì´ ìˆì–´ì•¼ í•¨:
+        // Skill1CooldownRatio ... Skill5CooldownRatio
+        switch (w)
+        {
+            case Which.Skill1: return attack.Skill1CooldownRatio;
+            case Which.Skill2: return attack.Skill2CooldownRatio;
+            case Which.Skill3: return attack.Skill3CooldownRatio;
+            case Which.Skill4: return attack.Skill4CooldownRatio;
+            case Which.Skill5: return attack.Skill5CooldownRatio;
+        }
+        return 0f;
+    }
+
+    float GetCooldownDuration(Which w)
+    {
+        //  PlayerAttackì— ì•„ë˜ í•„ë“œê°€ ìˆì–´ì•¼ í•¨:
+        // skill1Cooldown ... skill5Cooldown
+        switch (w)
+        {
+            case Which.Skill1: return attack.skill1Cooldown;
+            case Which.Skill2: return attack.skill2Cooldown;
+            case Which.Skill3: return attack.skill3Cooldown;
+            case Which.Skill4: return attack.skill4Cooldown;
+            case Which.Skill5: return attack.skill5Cooldown;
+        }
+        return 0f;
     }
 
     void SetRatio(float r)
     {
-        // Àı´ë ºñÈ°¼ºÈ­/SetActive ÇÏÁö ¾ÊÀ½ ¡æ ¾ÆÀÌÄÜÀº Ç×»ó º¸ÀÌ°í, µ¤°³¸¸ Åõ¸íµµ/Ã¤¿òÀ¸·Î Á¦¾î
+        // ì•„ì´ì½˜ì€ í•­ìƒ ë³´ì´ê³ , ë®ê°œë§Œ íˆ¬ëª…ë„/ì±„ì›€ìœ¼ë¡œ ì œì–´
         img.fillAmount = r;
-        var c = img.color; c.a = (r > 0f) ? baseAlpha : 0f; img.color = c;
+        var c = img.color;
+        c.a = (r > 0f) ? baseAlpha : 0f;
+        img.color = c;
     }
 }

@@ -1,11 +1,15 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Player/Kevin Iglesias/Human Animations/Unity Demo Scenes/Human Melee Animations/Models/Human_Dagger.fbx.meta
 guid: 6621997c29e39374fb059ab949e34f94
+========
+guid: d6f6f3d46127eed4c83e12c089320c01
+>>>>>>>> origin/roguelike_test:Assets/SineVFX/TopDownEffects/AssetResources/Meshes/ForVFX/EmitterMesh_FlameWall_02v2.fbx.meta
 ModelImporter:
-  serializedVersion: 22200
+  serializedVersion: 21300
   internalIDToNameTable: []
   externalObjects: {}
   materials:
-    materialImportMode: 0
+    materialImportMode: 2
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -40,7 +44,6 @@ ModelImporter:
     addColliders: 0
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
-    importPhysicalCameras: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
@@ -68,7 +71,10 @@ ModelImporter:
     secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
+<<<<<<<< HEAD:Assets/Player/Kevin Iglesias/Human Animations/Unity Demo Scenes/Human Melee Animations/Models/Human_Dagger.fbx.meta
     strictVertexDataChecks: 0
+========
+>>>>>>>> origin/roguelike_test:Assets/SineVFX/TopDownEffects/AssetResources/Meshes/ForVFX/EmitterMesh_FlameWall_02v2.fbx.meta
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -78,7 +84,7 @@ ModelImporter:
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
   referencedClips: []
-  importAnimation: 0
+  importAnimation: 1
   humanDescription:
     serializedVersion: 3
     human: []
@@ -97,16 +103,20 @@ ModelImporter:
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   autoGenerateAvatarMappingIfUnspecified: 1
-  animationType: 0
+  animationType: 2
   humanoidOversampling: 1
   avatarSetup: 0
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+<<<<<<<< HEAD:Assets/Player/Kevin Iglesias/Human Animations/Unity Demo Scenes/Human Melee Animations/Models/Human_Dagger.fbx.meta
   importBlendShapeDeformPercent: 1
+========
+>>>>>>>> origin/roguelike_test:Assets/SineVFX/TopDownEffects/AssetResources/Meshes/ForVFX/EmitterMesh_FlameWall_02v2.fbx.meta
   remapMaterialsIfMaterialImportModeIsNone: 0
   additionalBone: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+<<<<<<<< HEAD:Assets/Player/Kevin Iglesias/Human Animations/Unity Demo Scenes/Human Melee Animations/Models/Human_Dagger.fbx.meta
 AssetOrigin:
   serializedVersion: 1
   productId: 165785
@@ -115,3 +125,5 @@ AssetOrigin:
   assetPath: Assets/Kevin Iglesias/Human Animations/Unity Demo Scenes/Human Melee
     Animations/Models/Human_Dagger.fbx
   uploadId: 825254
+========
+>>>>>>>> origin/roguelike_test:Assets/SineVFX/TopDownEffects/AssetResources/Meshes/ForVFX/EmitterMesh_FlameWall_02v2.fbx.meta

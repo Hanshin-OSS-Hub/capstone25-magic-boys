@@ -14,16 +14,24 @@ public class SkillProjectile : MonoBehaviour
     Rigidbody rb;
     Collider col;
 
+    [Header("Hit SFX/VFX")]
+    public string hitSfxName;
+    public AudioClip hitSfxClip;
+    [Range(0, 1)] public float hitSfxVolume = 1f;
+    public Vector2 hitPitchRandom = new Vector2(0.95f, 1.05f);
+    public ParticleType hitParticle = ParticleType.FireHit;   // ï¿½ï¿½ï¿½ï¿½ï¿½Õºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    public GameObject hitVfxOverride; // (ï¿½ï¿½ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+
     public void Launch(int damage, PlayerStats owner, LayerMask enemyMask, float speed, float maxDistance)
     {
         this.damage = damage;
-        this.owner = owner;                 // Áö±ÝÀº ¹Ì»ç¿ë(ÇÊ¿ä½Ã È÷Æ®·Î±×/°¡½Ã¼º)
+        this.owner = owner;                 // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì»ï¿½ï¿½(ï¿½Ê¿ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½Î±ï¿½/ï¿½ï¿½ï¿½Ã¼ï¿½)
         this.enemyMask = enemyMask;
         this.speed = speed;
         this.remainDistance = maxDistance;
 
-        if (!rb) rb = GetComponent<Rigidbody>();
-        if (!col) col = GetComponent<Collider>();
+        rb = GetComponent<Rigidbody>();
+        col = GetComponent<Collider>();
 
         rb.isKinematic = true;
         rb.useGravity = false;
@@ -48,12 +56,38 @@ public class SkillProjectile : MonoBehaviour
         if (!launched) return;
         if (((1 << other.gameObject.layer) & enemyMask) == 0) return;
 
-        // ¡å EnemySimple ¡æ IDamageable
-        var dmg = other.GetComponentInParent<IDamageable>() ?? other.GetComponent<IDamageable>();
-        if (dmg != null)
+        // Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½ (IDamageable ï¿½ì¼±, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ EnemySimple)
+        var dmgable = other.GetComponentInParent<IDamageable>();
+        var simple = (dmgable == null) ? (other.GetComponentInParent<EnemySimple>() ?? other.GetComponent<EnemySimple>()) : null;
+        if (dmgable == null && simple == null) return;
+
+        Vector3 hitPos = other.ClosestPoint(transform.position);
+        Quaternion hitRot = Quaternion.LookRotation(-transform.forward);
+
+        // ï¿½ï¿½ï¿½ï¿½
+        float pitch = Random.Range(hitPitchRandom.x, hitPitchRandom.y);
+        if (!string.IsNullOrEmpty(hitSfxName))
+            SoundManager.Instance?.PlaySFX3D(hitSfxName, hitPos, hitSfxVolume, pitch);
+        else if (hitSfxClip)
+            SoundManager.Instance?.PlaySFX3D(hitSfxClip, hitPos, hitSfxVolume, pitch);
+
+        // ï¿½ï¿½Æ¼Å¬
+        if (hitVfxOverride)
         {
-            dmg.TakeDamage(damage);
-            Destroy(gameObject);
+            var go = Instantiate(hitVfxOverride, hitPos, hitRot);
+            var ps = go.GetComponentInChildren<ParticleSystem>();
+            if (ps) Destroy(go, ps.main.duration + ps.main.startLifetimeMultiplier + 0.25f);
+            else Destroy(go, 2f);
         }
+        else
+        {
+            ParticleManager.Instance?.Play(hitParticle, hitPos, hitRot);
+        }
+
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        if (dmgable != null) dmgable.TakeDamage(damage);
+        else simple.TakeDamage(damage, owner);
+
+        Destroy(gameObject);
     }
 }

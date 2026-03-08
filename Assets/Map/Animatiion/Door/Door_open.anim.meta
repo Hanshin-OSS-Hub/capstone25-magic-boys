@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Map/Animatiion/Door/Door_open.anim.meta
 guid: 650479f5b774f6c45b29f584a99e0b6b
+========
+guid: 0e8ff6dcccb540b4d94aa243b4e52c44
+>>>>>>>> origin/roguelike_test:Assets/SineVFX/TopDownEffects/AssetResources/Environment/EnvMaterials/PrototypeGridQuadV2_01_v2.mat.meta
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 7400000

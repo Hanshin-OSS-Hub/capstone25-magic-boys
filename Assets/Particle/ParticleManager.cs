@@ -8,11 +8,8 @@ public class ParticleManager : MonoBehaviour
 {
     public static ParticleManager Instance { get; private set; }
 
-
     [Header("Prefabs")]
-    public GameObject fireCastVFX;
-    public GameObject fireHitVFX;
-    public GameObject sparkCastVFX, sparkHitVFX;
+    public GameObject fireCastVFX, fireHitVFX, sparkCastVFX, sparkHitVFX;
 
     [Header("Pool")]
     public int poolSize = 20;
@@ -30,11 +27,10 @@ public class ParticleManager : MonoBehaviour
 
         prefabs[ParticleType.FireCast] = fireCastVFX;
         prefabs[ParticleType.FireHit] = fireHitVFX;
-        prefabs[ParticleType.SparkCast] = sparkCastVFX;                     
+        prefabs[ParticleType.SparkCast] = sparkCastVFX;
         prefabs[ParticleType.SparkHit] = sparkHitVFX;
 
-        foreach (var kv in prefabs)
-            CreatePool(kv.Key, kv.Value, poolSize);
+        foreach (var kv in prefabs) CreatePool(kv.Key, kv.Value, poolSize);
     }
 
     void CreatePool(ParticleType t, GameObject prefab, int count)
@@ -44,7 +40,7 @@ public class ParticleManager : MonoBehaviour
         if (!prefab) return;
         for (int i = 0; i < count; i++)
         {
-            var go = Instantiate(prefab);
+            var go = Instantiate(prefab, transform);
             go.SetActive(false);
             q.Enqueue(go);
         }
@@ -55,14 +51,15 @@ public class ParticleManager : MonoBehaviour
         if (!pools.TryGetValue(t, out var q)) { q = new Queue<GameObject>(); pools[t] = q; }
         if (q.Count > 0) return q.Dequeue();
         if (!prefabs.TryGetValue(t, out var prefab) || !prefab || !expandIfEmpty) return null;
-        var go = Instantiate(prefab); go.SetActive(false); return go;
+        var go = Instantiate(prefab, transform);
+        go.SetActive(false);
+        return go;
     }
 
     public void Play(ParticleType t, Vector3 pos, Quaternion rot, float? lifetimeOverride = null)
     {
         var go = Get(t);
         if (!go) return;
-
         go.transform.SetPositionAndRotation(pos, rot);
         go.SetActive(true);
 
@@ -71,17 +68,16 @@ public class ParticleManager : MonoBehaviour
         else { StartCoroutine(ReturnAfter(t, go, lifetimeOverride ?? defaultLifetime)); }
     }
 
-    IEnumerator ReturnWhenDone(ParticleType t, GameObject go, ParticleSystem ps, float? lifeOverride)
+    IEnumerator ReturnWhenDone(ParticleType t, GameObject go, ParticleSystem ps, float? life)
     {
-        if (lifeOverride.HasValue) yield return new WaitForSeconds(lifeOverride.Value);
+        if (life.HasValue) yield return new WaitForSeconds(life.Value);
         else yield return new WaitWhile(() => ps.IsAlive(true));
-
         go.SetActive(false);
         pools[t].Enqueue(go);
     }
-    IEnumerator ReturnAfter(ParticleType t, GameObject go, float seconds)
+    IEnumerator ReturnAfter(ParticleType t, GameObject go, float sec)
     {
-        yield return new WaitForSeconds(seconds);
+        yield return new WaitForSeconds(sec);
         go.SetActive(false);
         pools[t].Enqueue(go);
     }

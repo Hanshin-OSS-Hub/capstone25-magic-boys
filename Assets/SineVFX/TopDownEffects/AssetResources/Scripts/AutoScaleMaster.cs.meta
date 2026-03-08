@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Whisper/Samples/OpenAI Unity/0.2.2/Whisper/VoiceCommandAdapter.cs.meta
+guid: 4241309f9b4a9f14bb83f4b83df361a9
+========
+guid: 4a66255140a50a543a4494d47bec97b8
+>>>>>>>> origin/roguelike_test:Assets/SineVFX/TopDownEffects/AssetResources/Scripts/AutoScaleMaster.cs.meta
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 400
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

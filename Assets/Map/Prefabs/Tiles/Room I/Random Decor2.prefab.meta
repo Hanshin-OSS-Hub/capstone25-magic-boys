@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Map/Prefabs/Tiles/Room I/Random Decor2.prefab.meta
 guid: e468ea47f738b3546b0acdcd8299d4c8
+========
+guid: c65700d66e8844c4955c3b1cde3357bc
+>>>>>>>> origin/roguelike_test:Assets/SineVFX/TopDownEffects/CompleteEffects/ConjureWaterPool.prefab.meta
 PrefabImporter:
   externalObjects: {}
   userData: 

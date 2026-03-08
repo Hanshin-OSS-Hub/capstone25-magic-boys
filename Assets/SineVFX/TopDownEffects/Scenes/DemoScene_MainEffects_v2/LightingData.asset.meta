@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Map/Prefabs/Tiles/NavMesh-Room Cap.asset.meta
+guid: b7ff05c41a12c4c4d90c6a8f7b2021ce
+========
+guid: 34acaea7ad7dcf94dbbc299e4a4b093c
+>>>>>>>> origin/roguelike_test:Assets/SineVFX/TopDownEffects/Scenes/DemoScene_MainEffects_v2/LightingData.asset.meta
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 112000000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
