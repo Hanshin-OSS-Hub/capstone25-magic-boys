@@ -19,7 +19,7 @@ MonoBehaviour:
   DetectionRange: 5
   AttackRange: 5
   AttackCooldown: 2
-  OverheatInterval: 10
+  OverheatInterval: 5
   VentingDuration: 5
   OverloadDuration: 8
   SmashDamage: 20
