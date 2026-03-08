@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ee9e8f84ad206049a69848b8755c83d, type: 3}
+  m_Name: Golem Data
+  m_EditorClassIdentifier: 
+  BossName: Golem
+  MaxHP: 300
+  MoveSpeed: 4
+  Damage: 10
+  DetectionRange: 5
+  AttackRange: 5
+  AttackCooldown: 5
+  OverheatInterval: 10
+  VentingDuration: 5
+  OverloadDuration: 5
+  SmashDamage: 20
+  SmashRadius: 8
+  SmashCastTime: 1.5
+  KnockbackForce: 15
+  SmashCooldown: 8
+  RockPrefab: {fileID: 5706761011004535645, guid: 3bbde130ac7ab7a4381b1323e27fd1d2, type: 3}
+  ThrowDamage: 20
+  ThrowSpeed: 15
+  ThrowCastTime: 1.5
+  ThrowCooldown: 8
+  RushChargeTime: 1
+  RushSpeed: 20
+  RushDamage: 15
+  RushKnockback: 15
+  RushDistanceError: 1
+  RushCooldown: 10
