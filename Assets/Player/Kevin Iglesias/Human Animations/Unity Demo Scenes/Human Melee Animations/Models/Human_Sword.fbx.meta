@@ -1,15 +1,11 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/Player/Kevin Iglesias/Human Animations/Unity Demo Scenes/Human Melee Animations/Models/Human_Sword.fbx.meta
 guid: d9cb89b0bc352ec4a8a17c56c39dbefb
-========
-guid: bc9bb14afde835f409ba19d4331bba85
->>>>>>>> origin/roguelike_test:Assets/SineVFX/TopDownEffects/AssetResources/Meshes/ForVFX/EmitterMesh_FlameWall_02.fbx.meta
 ModelImporter:
-  serializedVersion: 21300
+  serializedVersion: 22200
   internalIDToNameTable: []
   externalObjects: {}
   materials:
-    materialImportMode: 2
+    materialImportMode: 0
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -44,6 +40,7 @@ ModelImporter:
     addColliders: 0
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
+    importPhysicalCameras: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
@@ -71,10 +68,7 @@ ModelImporter:
     secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
-<<<<<<<< HEAD:Assets/Player/Kevin Iglesias/Human Animations/Unity Demo Scenes/Human Melee Animations/Models/Human_Sword.fbx.meta
     strictVertexDataChecks: 0
-========
->>>>>>>> origin/roguelike_test:Assets/SineVFX/TopDownEffects/AssetResources/Meshes/ForVFX/EmitterMesh_FlameWall_02.fbx.meta
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -84,7 +78,7 @@ ModelImporter:
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
   referencedClips: []
-  importAnimation: 1
+  importAnimation: 0
   humanDescription:
     serializedVersion: 3
     human: []
@@ -103,20 +97,16 @@ ModelImporter:
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   autoGenerateAvatarMappingIfUnspecified: 1
-  animationType: 2
+  animationType: 0
   humanoidOversampling: 1
   avatarSetup: 0
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
-<<<<<<<< HEAD:Assets/Player/Kevin Iglesias/Human Animations/Unity Demo Scenes/Human Melee Animations/Models/Human_Sword.fbx.meta
   importBlendShapeDeformPercent: 1
-========
->>>>>>>> origin/roguelike_test:Assets/SineVFX/TopDownEffects/AssetResources/Meshes/ForVFX/EmitterMesh_FlameWall_02.fbx.meta
   remapMaterialsIfMaterialImportModeIsNone: 0
   additionalBone: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-<<<<<<<< HEAD:Assets/Player/Kevin Iglesias/Human Animations/Unity Demo Scenes/Human Melee Animations/Models/Human_Sword.fbx.meta
 AssetOrigin:
   serializedVersion: 1
   productId: 165785
@@ -125,5 +115,3 @@ AssetOrigin:
   assetPath: Assets/Kevin Iglesias/Human Animations/Unity Demo Scenes/Human Melee
     Animations/Models/Human_Sword.fbx
   uploadId: 825254
-========
->>>>>>>> origin/roguelike_test:Assets/SineVFX/TopDownEffects/AssetResources/Meshes/ForVFX/EmitterMesh_FlameWall_02.fbx.meta

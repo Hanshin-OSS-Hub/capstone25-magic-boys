@@ -1,42 +1,26 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
-<<<<<<<< HEAD:Assets/Player/Kevin Iglesias/Human Animations/Unity Demo Scenes/Human Melee Animations/AnimatorControllers/Male/1H/HumanM@Run_Backward - 1H.controller
 --- !u!1102 &-6681345279564073268
-========
---- !u!1102 &-5711609330252568336
->>>>>>>> origin/roguelike_test:Assets/SineVFX/TopDownEffects/AssetResources/Animations/FocusedExplosion_02/FocusedSphere_01.controller
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-<<<<<<<< HEAD:Assets/Player/Kevin Iglesias/Human Animations/Unity Demo Scenes/Human Melee Animations/AnimatorControllers/Male/1H/HumanM@Run_Backward - 1H.controller
   m_Name: Run Backward
-========
-  m_Name: New State
->>>>>>>> origin/roguelike_test:Assets/SineVFX/TopDownEffects/AssetResources/Animations/FocusedExplosion_02/FocusedSphere_01.controller
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
-<<<<<<<< HEAD:Assets/Player/Kevin Iglesias/Human Animations/Unity Demo Scenes/Human Melee Animations/AnimatorControllers/Male/1H/HumanM@Run_Backward - 1H.controller
   m_IKOnFeet: 1
-========
-  m_IKOnFeet: 0
->>>>>>>> origin/roguelike_test:Assets/SineVFX/TopDownEffects/AssetResources/Animations/FocusedExplosion_02/FocusedSphere_01.controller
   m_WriteDefaultValues: 1
   m_Mirror: 0
   m_SpeedParameterActive: 0
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-<<<<<<<< HEAD:Assets/Player/Kevin Iglesias/Human Animations/Unity Demo Scenes/Human Melee Animations/AnimatorControllers/Male/1H/HumanM@Run_Backward - 1H.controller
   m_Motion: {fileID: 3094330708855449807, guid: a8e6c7cf678a13541a726c2ae9ec00e3, type: 3}
-========
-  m_Motion: {fileID: 8436031671775733797, guid: b4a3d82577a3f1941b3fee89a782b5b0, type: 3}
->>>>>>>> origin/roguelike_test:Assets/SineVFX/TopDownEffects/AssetResources/Animations/FocusedExplosion_02/FocusedSphere_01.controller
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -48,21 +32,13 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-<<<<<<<< HEAD:Assets/Player/Kevin Iglesias/Human Animations/Unity Demo Scenes/Human Melee Animations/AnimatorControllers/Male/1H/HumanM@Run_Backward - 1H.controller
   m_Name: HumanM@Run_Backward - 1H
-========
-  m_Name: FocusedSphere_01
->>>>>>>> origin/roguelike_test:Assets/SineVFX/TopDownEffects/AssetResources/Animations/FocusedExplosion_02/FocusedSphere_01.controller
   serializedVersion: 5
   m_AnimatorParameters: []
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
-<<<<<<<< HEAD:Assets/Player/Kevin Iglesias/Human Animations/Unity Demo Scenes/Human Melee Animations/AnimatorControllers/Male/1H/HumanM@Run_Backward - 1H.controller
     m_StateMachine: {fileID: 2026944230511977041}
-========
-    m_StateMachine: {fileID: 7401946668984763975}
->>>>>>>> origin/roguelike_test:Assets/SineVFX/TopDownEffects/AssetResources/Animations/FocusedExplosion_02/FocusedSphere_01.controller
     m_Mask: {fileID: 0}
     m_Motions: []
     m_Behaviours: []
@@ -72,11 +48,7 @@ AnimatorController:
     m_IKPass: 0
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
-<<<<<<<< HEAD:Assets/Player/Kevin Iglesias/Human Animations/Unity Demo Scenes/Human Melee Animations/AnimatorControllers/Male/1H/HumanM@Run_Backward - 1H.controller
 --- !u!1107 &2026944230511977041
-========
---- !u!1107 &7401946668984763975
->>>>>>>> origin/roguelike_test:Assets/SineVFX/TopDownEffects/AssetResources/Animations/FocusedExplosion_02/FocusedSphere_01.controller
 AnimatorStateMachine:
   serializedVersion: 6
   m_ObjectHideFlags: 1
@@ -86,13 +58,8 @@ AnimatorStateMachine:
   m_Name: Base Layer
   m_ChildStates:
   - serializedVersion: 1
-<<<<<<<< HEAD:Assets/Player/Kevin Iglesias/Human Animations/Unity Demo Scenes/Human Melee Animations/AnimatorControllers/Male/1H/HumanM@Run_Backward - 1H.controller
     m_State: {fileID: -6681345279564073268}
     m_Position: {x: 390, y: 40, z: 0}
-========
-    m_State: {fileID: -5711609330252568336}
-    m_Position: {x: 276.25952, y: 63.091583, z: 0}
->>>>>>>> origin/roguelike_test:Assets/SineVFX/TopDownEffects/AssetResources/Animations/FocusedExplosion_02/FocusedSphere_01.controller
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -102,8 +69,4 @@ AnimatorStateMachine:
   m_EntryPosition: {x: 50, y: 120, z: 0}
   m_ExitPosition: {x: 800, y: 120, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
-<<<<<<<< HEAD:Assets/Player/Kevin Iglesias/Human Animations/Unity Demo Scenes/Human Melee Animations/AnimatorControllers/Male/1H/HumanM@Run_Backward - 1H.controller
   m_DefaultState: {fileID: -6681345279564073268}
-========
-  m_DefaultState: {fileID: -5711609330252568336}
->>>>>>>> origin/roguelike_test:Assets/SineVFX/TopDownEffects/AssetResources/Animations/FocusedExplosion_02/FocusedSphere_01.controller

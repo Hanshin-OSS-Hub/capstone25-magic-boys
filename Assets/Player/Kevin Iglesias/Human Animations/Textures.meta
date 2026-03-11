@@ -1,13 +1,8 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/Player/Kevin Iglesias/Human Animations/Textures.meta
 guid: 9062e0d614ae38b458231f34f36af0e8
-========
-guid: 5ce48765857447c38687a528001c17a2
->>>>>>>> origin/roguelike_test:Assets/SineVFX/TopDownEffects/AssetResources/Textures.meta
 folderAsset: yes
-timeCreated: 1568613557
-licenseType: Free
 DefaultImporter:
+  externalObjects: {}
   userData: 
   assetBundleName: 
   assetBundleVariant: 
