@@ -2,34 +2,35 @@ using UnityEngine;
 
 public class BreakableChest : MonoBehaviour
 {
-    public int hp = 1;
-    private StagePuzzleChestReward reward;
+    public int hp = 3;
+
+    [Header("Optional VFX")]
+    public GameObject breakVfx;
+
+    bool broken;
+    StagePuzzleChestReward reward;
 
     void Awake()
     {
         reward = GetComponent<StagePuzzleChestReward>();
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int dmg)
     {
-        hp -= damage;
-        Debug.Log("상자 데미지 받음, 현재 hp: " + hp);
+        if (broken) return;
+        if (dmg <= 0) return;
 
+        hp -= dmg;
         if (hp <= 0)
         {
-            BreakChest();
+            broken = true;
+
+            if (breakVfx)
+                Instantiate(breakVfx, transform.position, Quaternion.identity);
+
+            reward?.GiveReward();
+
+            Destroy(gameObject);
         }
-    }
-
-    void BreakChest()
-    {
-        Debug.Log("상자 파괴됨");
-
-        if (reward != null)
-            reward.GiveReward();
-        else
-            Debug.LogWarning("StagePuzzleChestReward 없음");
-
-        Destroy(gameObject);
     }
 }
