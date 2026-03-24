@@ -19,13 +19,13 @@ public class SkillProjectile : MonoBehaviour
     public AudioClip hitSfxClip;
     [Range(0, 1)] public float hitSfxVolume = 1f;
     public Vector2 hitPitchRandom = new Vector2(0.95f, 1.05f);
-    public ParticleType hitParticle = ParticleType.FireHit;   // �����պ��� ����
-    public GameObject hitVfxOverride; // (����) ���� �����տ��� ���� ������ ����ϰ� ������ ����
+    public ParticleType hitParticle = ParticleType.FireHit;  
+    public GameObject hitVfxOverride;
 
     public void Launch(int damage, PlayerStats owner, LayerMask enemyMask, float speed, float maxDistance)
     {
         this.damage = damage;
-        this.owner = owner;                 // ������ �̻��(�ʿ�� ��Ʈ�α�/���ü�)
+        this.owner = owner;              
         this.enemyMask = enemyMask;
         this.speed = speed;
         this.remainDistance = maxDistance;
@@ -56,7 +56,6 @@ public class SkillProjectile : MonoBehaviour
         if (!launched) return;
         if (((1 << other.gameObject.layer) & enemyMask) == 0) return;
 
-        // Ÿ�� ��� ã�� (IDamageable �켱, ������ EnemySimple)
         var dmgable = other.GetComponentInParent<IDamageable>();
         var simple = (dmgable == null) ? (other.GetComponentInParent<EnemySimple>() ?? other.GetComponent<EnemySimple>()) : null;
         if (dmgable == null && simple == null) return;
@@ -64,14 +63,13 @@ public class SkillProjectile : MonoBehaviour
         Vector3 hitPos = other.ClosestPoint(transform.position);
         Quaternion hitRot = Quaternion.LookRotation(-transform.forward);
 
-        // ����
+ 
         float pitch = Random.Range(hitPitchRandom.x, hitPitchRandom.y);
         if (!string.IsNullOrEmpty(hitSfxName))
             SoundManager.Instance?.PlaySFX3D(hitSfxName, hitPos, hitSfxVolume, pitch);
         else if (hitSfxClip)
             SoundManager.Instance?.PlaySFX3D(hitSfxClip, hitPos, hitSfxVolume, pitch);
 
-        // ��ƼŬ
         if (hitVfxOverride)
         {
             var go = Instantiate(hitVfxOverride, hitPos, hitRot);
@@ -84,7 +82,6 @@ public class SkillProjectile : MonoBehaviour
             ParticleManager.Instance?.Play(hitParticle, hitPos, hitRot);
         }
 
-        // ������ ����
         if (dmgable != null) dmgable.TakeDamage(damage);
         else simple.TakeDamage(damage, owner);
 
