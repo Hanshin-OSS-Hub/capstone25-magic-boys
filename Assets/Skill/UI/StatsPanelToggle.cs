@@ -7,7 +7,6 @@ public class StatsPanelToggle : MonoBehaviour
     public static bool UIBlocked { get; private set; }
 
     [Header("Refs")]
-    public PlayerInput input;     // 씬의 PlayerInput 참조
     public GameObject statsPanel; // 열고 닫을 패널
     public PlayerStats player;
 
@@ -18,11 +17,10 @@ public class StatsPanelToggle : MonoBehaviour
     [Header("Disable when open (optional)")]
     public MonoBehaviour[] disableDuringMenu;
 
-    bool paused = false;
+    private bool paused = false;
 
     void Awake()
     {
-        if (!input) input = FindObjectOfType<PlayerInput>();
         if (!player) player = FindObjectOfType<PlayerStats>();
 
         if (!statsPanel)
@@ -36,7 +34,7 @@ public class StatsPanelToggle : MonoBehaviour
 
     void Update()
     {
-        if (input != null && input.IsToggleStatsPressed)
+        if (Input.GetKeyDown(KeyCode.K))
             Show(!paused);
     }
 
@@ -56,7 +54,9 @@ public class StatsPanelToggle : MonoBehaviour
         if (disableDuringMenu != null)
         {
             foreach (var c in disableDuringMenu)
+            {
                 if (c) c.enabled = !on;
+            }
         }
 
         RefreshUI();
@@ -90,7 +90,6 @@ public class StatsPanelToggle : MonoBehaviour
 
     void OnPointChanged(int _) => RefreshUI();
 
-    //  버튼 OnClick 연결용 (원하면 사용)
     public void ClickSTR() { if (player && player.AllocateStat(StatType.STR)) player.Save(); }
     public void ClickDEX() { if (player && player.AllocateStat(StatType.DEX)) player.Save(); }
     public void ClickMAG() { if (player && player.AllocateStat(StatType.MAG)) player.Save(); }
