@@ -1,11 +1,10 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ThunderRainSkill : MonoBehaviour
 {
-    public GameObject strikeVfx;
-    public GameObject warningVfx;
+    public GameObject strikeVfx;   // 여기엔 SummonStorm 넣기
+    public GameObject warningVfx;  // 안 쓰면 None
 
     PlayerStats owner;
     LayerMask enemyMask;
@@ -33,41 +32,32 @@ public class ThunderRainSkill : MonoBehaviour
     IEnumerator CoThunderRain()
     {
         if (warningVfx)
-            warningVfx.SetActive(true);
+            Instantiate(warningVfx, transform.position, Quaternion.identity);
 
         if (warningDuration > 0f)
             yield return new WaitForSeconds(warningDuration);
 
-        if (warningVfx)
-            warningVfx.SetActive(false);
+        // 완성형 폭풍 프리팹은 한 번만 생성
+        if (strikeVfx)
+            Instantiate(strikeVfx, transform.position, Quaternion.identity);
 
         float interval = totalStrikeDuration / strikeCount;
 
         for (int i = 0; i < strikeCount; i++)
         {
-            StrikeOnce();
+            DealDamageOnce();
             yield return new WaitForSeconds(interval);
         }
 
         Destroy(gameObject);
     }
 
-    void StrikeOnce()
+    void DealDamageOnce()
     {
-        Vector2 circle = Random.insideUnitCircle * areaRadius;
-        Vector3 strikePos = transform.position + new Vector3(circle.x, 0f, circle.y);
-
-        if (strikeVfx)
-            Instantiate(strikeVfx, strikePos, Quaternion.identity);
-
-        Collider[] hits = Physics.OverlapSphere(strikePos, singleStrikeRadius, enemyMask, QueryTriggerInteraction.Collide);
-        HashSet<Transform> damagedRoots = new HashSet<Transform>();
+        Collider[] hits = Physics.OverlapSphere(transform.position, areaRadius, enemyMask, QueryTriggerInteraction.Collide);
 
         foreach (var hit in hits)
         {
-            Transform root = hit.transform.root;
-            if (!damagedRoots.Add(root)) continue;
-
             var dmgable = hit.GetComponentInParent<IDamageable>();
             var simple = (dmgable == null) ? (hit.GetComponentInParent<EnemySimple>() ?? hit.GetComponent<EnemySimple>()) : null;
 

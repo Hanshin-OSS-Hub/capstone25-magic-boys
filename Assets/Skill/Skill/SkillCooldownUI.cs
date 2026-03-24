@@ -8,7 +8,7 @@ public class SkillCooldownUI : MonoBehaviour
     public enum Which { Q, E, R, T, Y }
     public Which which = Which.Q;
 
-    public MagicAttack magicAttack;   // PlayerAttack 말고 MagicAttack 연결
+    public MagicAttack magicAttack;
     public TMP_Text secondsText;
 
     private Image img;
@@ -19,7 +19,7 @@ public class SkillCooldownUI : MonoBehaviour
         img = GetComponent<Image>();
 
         if (!magicAttack)
-            magicAttack = FindObjectOfType<MagicAttack>();
+            magicAttack = Object.FindFirstObjectByType<MagicAttack>();
 
         img.type = Image.Type.Filled;
         img.fillMethod = Image.FillMethod.Radial360;
@@ -42,7 +42,6 @@ public class SkillCooldownUI : MonoBehaviour
 
         int slotIndex = (int)which;
 
-        // 잠금 상태면 쿨 UI 숨김
         if (SkillProgressionManager.Instance != null &&
             !SkillProgressionManager.Instance.IsUnlocked(slotIndex))
         {

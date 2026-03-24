@@ -22,6 +22,7 @@ public class MagicAttack : MonoBehaviour
     public int qBaseDamage = 8;
     public float qProjectileSpeed = 14f;
     public float qMaxDistance = 20f;
+    public Vector3 qSpawnOffset = new Vector3(0f, -0.4f, 0f);
 
     [Header("E - Water Field")]
     public GameObject eWaterFieldPrefab;
@@ -39,7 +40,6 @@ public class MagicAttack : MonoBehaviour
     public float rCooldown = 8f;
     public int rBaseDamage = 10;
     public float rLifeTime = 5f;
-    public float rSpawnDistance = 2.5f;
 
     [Header("T - Thunder Rain")]
     public GameObject tThunderRainPrefab;
@@ -148,6 +148,7 @@ public class MagicAttack : MonoBehaviour
 
         Quaternion rot = GetFlatLookRotation();
         Vector3 pos = qSpawnPoint ? qSpawnPoint.position : GetDefaultSpawnPosition();
+        pos += transform.TransformDirection(qSpawnOffset);
 
         GameObject go = Instantiate(qProjectilePrefab, pos, rot);
         SkillProjectile projectile = go.GetComponent<SkillProjectile>();
@@ -197,18 +198,16 @@ public class MagicAttack : MonoBehaviour
         if (!rEarthWallPrefab) return;
         if (!TrySpendMP(rMpCost, "R")) return;
 
+        if (!TryGetAimPoint(out Vector3 point))
+            point = transform.position;
+
         Vector3 forward = Vector3.ProjectOnPlane(transform.forward, Vector3.up).normalized;
         if (forward.sqrMagnitude < 0.001f)
             forward = transform.forward;
 
-        Vector3 spawnPos = transform.position + forward * rSpawnDistance;
-        Ray downRay = new Ray(spawnPos + Vector3.up * 5f, Vector3.down);
-
-        if (Physics.Raycast(downRay, out RaycastHit groundHit, 10f, groundMask, QueryTriggerInteraction.Ignore))
-            spawnPos = groundHit.point;
-
         Quaternion rot = Quaternion.LookRotation(forward, Vector3.up);
-        GameObject go = Instantiate(rEarthWallPrefab, spawnPos, rot);
+
+        GameObject go = Instantiate(rEarthWallPrefab, point, rot);
         EarthWallSkill wall = go.GetComponent<EarthWallSkill>();
 
         if (!wall)
@@ -219,7 +218,7 @@ public class MagicAttack : MonoBehaviour
         }
 
         int damage = playerStats.GetMagicDamage(rBaseDamage);
-        wall.Init(playerStats, enemyMask, damage, rLifeTime);
+        wall.Init(playerStats, enemyMask, damage, rLifeTime, transform.root);
 
         rRemain = rCooldown;
     }
