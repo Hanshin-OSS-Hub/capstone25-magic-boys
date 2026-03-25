@@ -1164,12 +1164,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50a0a9cb6cc5c0141a58d17b5283d475, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lockOverlays:
-  - {fileID: 1433067121}
-  - {fileID: 135478508}
-  - {fileID: 716689815}
-  - {fileID: 2065923604}
-  - {fileID: 1750382288}
 --- !u!114 &410571998
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4036,6 +4030,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BreakableChest
   hp: 1
+  breakVfx: {fileID: 0}
 --- !u!65 &1163534346
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4686,7 +4681,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   which: 3
-  magicAttack: {fileID: 6982812146369565143}
+  magicAttack: {fileID: 0}
   secondsText: {fileID: 0}
 --- !u!114 &1215234078
 MonoBehaviour:
@@ -5068,7 +5063,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   which: 4
-  magicAttack: {fileID: 6982812146369565143}
+  magicAttack: {fileID: 0}
   secondsText: {fileID: 0}
 --- !u!114 &1282403725
 MonoBehaviour:
@@ -5322,7 +5317,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   which: 2
-  magicAttack: {fileID: 6982812146369565143}
+  magicAttack: {fileID: 0}
   secondsText: {fileID: 0}
 --- !u!114 &1376529524
 MonoBehaviour:
@@ -6294,7 +6289,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   which: 1
-  magicAttack: {fileID: 6982812146369565143}
+  magicAttack: {fileID: 0}
   secondsText: {fileID: 0}
 --- !u!114 &1716431089
 MonoBehaviour:
@@ -6678,7 +6673,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   which: 0
-  magicAttack: {fileID: 6982812146369565143}
+  magicAttack: {fileID: 0}
   secondsText: {fileID: 0}
 --- !u!114 &1775547194
 MonoBehaviour:
@@ -8240,6 +8235,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   statsPanel: {fileID: 1690038321}
+  player: {fileID: 0}
+  pointText: {fileID: 0}
+  btnSTR: {fileID: 0}
+  btnDEX: {fileID: 0}
+  btnMAG: {fileID: 0}
+  btnLUK: {fileID: 0}
+  disableDuringMenu: []
 --- !u!114 &2092869552
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9979,8 +9981,8 @@ GameObject:
   - component: {fileID: 6982812146369565140}
   - component: {fileID: 6982812146369565141}
   - component: {fileID: 6982812146369565142}
-  - component: {fileID: 6982812146369565143}
   - component: {fileID: 6982812146369565144}
+  - component: {fileID: 6982812146369565145}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -10867,62 +10869,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bossTag: Boss
   toggleKey: 103
---- !u!114 &6982812146369565143
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4416926081692045587}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 27c954ef7da8cdd4283eb6fbd6b21f58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MagicAttack
-  playerInput: {fileID: 1128240026}
-  playerStats: {fileID: 6982812146369565144}
-  aimCamera: {fileID: 1842651708}
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 256
-  enemyMask:
-    serializedVersion: 2
-    m_Bits: 4672
-  maxAimDistance: 25
-  spawnForwardOffset: 0.8
-  spawnHeightOffset: 1.2
-  qSpawnPoint: {fileID: 9186500496365194913}
-  qProjectilePrefab: {fileID: 1361920804652561843, guid: f9187c7e27a92e74eacfa3f1aa8fdc93, type: 3}
-  qMpCost: 5
-  qCooldown: 1.2
-  qBaseDamage: 8
-  qProjectileSpeed: 14
-  qMaxDistance: 20
-  eWaterFieldPrefab: {fileID: 509412756994637923, guid: d28fce3b24ad1294e83caae512341773, type: 3}
-  eMpCost: 12
-  eCooldown: 6
-  eBaseTickDamage: 4
-  eDuration: 4
-  eTickInterval: 0.5
-  eSlowMultiplier: 0.6
-  eSlowDuration: 0.7
-  rEarthWallPrefab: {fileID: 4314491717161609544, guid: eabd2b88945ae474f9fbe21a632de1d1, type: 3}
-  rMpCost: 15
-  rCooldown: 8
-  rBaseDamage: 10
-  rLifeTime: 5
-  rSpawnDistance: 2.5
-  tThunderRainPrefab: {fileID: 9190732251731332281, guid: a6cf37740ea3d77498185ab1a3180944, type: 3}
-  tMpCost: 18
-  tCooldown: 10
-  tBaseDamagePerStrike: 6
-  tAreaRadius: 4
-  tSingleStrikeRadius: 1.3
-  tStrikeCount: 8
-  tWarningDuration: 0.7
-  tTotalStrikeDuration: 2.4
-  yMpCost: 20
-  yCooldown: 12
 --- !u!114 &6982812146369565144
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10964,6 +10910,62 @@ MonoBehaviour:
   critMultiplier: 0
   baseCritChance: 0.05
   baseCritMultiplier: 1.5
+--- !u!114 &6982812146369565145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4416926081692045587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82ff75fcce9ec1e42aca0f088eeb6f76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MagicAttack
+  playerInput: {fileID: 1128240026}
+  playerStats: {fileID: 6982812146369565144}
+  aimCamera: {fileID: 1842651708}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  enemyMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  maxAimDistance: 25
+  spawnForwardOffset: 0.8
+  spawnHeightOffset: 1.2
+  qSpawnPoint: {fileID: 1064781881}
+  qProjectilePrefab: {fileID: 1361920804652561843, guid: f9187c7e27a92e74eacfa3f1aa8fdc93, type: 3}
+  qMpCost: 5
+  qCooldown: 1.2
+  qBaseDamage: 8
+  qProjectileSpeed: 14
+  qMaxDistance: 20
+  qSpawnOffset: {x: 0, y: -0.4, z: 0}
+  eWaterFieldPrefab: {fileID: 0}
+  eMpCost: 12
+  eCooldown: 6
+  eBaseTickDamage: 4
+  eDuration: 4
+  eTickInterval: 0.5
+  eSlowMultiplier: 0.6
+  eSlowDuration: 0.7
+  rEarthWallPrefab: {fileID: 0}
+  rMpCost: 15
+  rCooldown: 8
+  rBaseDamage: 10
+  rLifeTime: 5
+  tThunderRainPrefab: {fileID: 0}
+  tMpCost: 18
+  tCooldown: 10
+  tBaseDamagePerStrike: 6
+  tAreaRadius: 4
+  tSingleStrikeRadius: 1.3
+  tStrikeCount: 8
+  tWarningDuration: 0.7
+  tTotalStrikeDuration: 2.4
+  yMpCost: 20
+  yCooldown: 12
 --- !u!4 &6983258932159916298
 Transform:
   m_ObjectHideFlags: 0
