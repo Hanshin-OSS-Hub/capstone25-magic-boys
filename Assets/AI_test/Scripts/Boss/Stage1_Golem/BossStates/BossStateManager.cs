@@ -207,7 +207,7 @@ public class BossStateManager : MonoBehaviour, IDamageable
 
     private IEnumerator DeathCoroutine()
     {
-        yield return new WaitForSeconds(3.0f); // 애니메이션 대기
+        yield return new WaitForSeconds(7.0f); // 애니메이션 대기
         Destroy(gameObject);
     }
 
