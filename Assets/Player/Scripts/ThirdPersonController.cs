@@ -348,18 +348,18 @@ namespace StarterAssets
     }
 
     // 공격 중에는 제자리에서 중력만 적용
-    if (_attack != null && _attack.IsAttacking)
+    if (_attack != null && _attack.IsAttacking && Grounded)
+{
+    _controller.Move(new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+
+    if (_hasAnimator)
     {
-        _controller.Move(new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
-
-        if (_hasAnimator)
-        {
-            _animator.SetFloat(_animIDSpeed, 0.0f);
-            _animator.SetFloat(_animIDMotionSpeed, 0.0f);
-        }
-
-        return;
+        _animator.SetFloat(_animIDSpeed, 0.0f);
+        _animator.SetFloat(_animIDMotionSpeed, 0.0f);
     }
+
+    return;
+}
 
     //평상시 이동 처리
     float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
