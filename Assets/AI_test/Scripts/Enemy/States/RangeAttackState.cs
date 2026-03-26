@@ -7,7 +7,7 @@ public class RangeAttackState : IEnemyState
 
     public void EnterState(EnemyStateManager enemy)
     {
-        Debug.Log("원거리 공격 시작!");
+        //Debug.Log("원거리 공격 시작!");
         enemy.navMeshAgent.isStopped = true;
         enemy.transform.LookAt(enemy.playerTransform);
 
@@ -18,7 +18,7 @@ public class RangeAttackState : IEnemyState
 
     public void ExitState(EnemyStateManager enemy)
     {
-        Debug.Log("원거리 공격 종료.");
+        //Debug.Log("원거리 공격 종료.");
     }
 
     public void UpdateState(EnemyStateManager enemy)
