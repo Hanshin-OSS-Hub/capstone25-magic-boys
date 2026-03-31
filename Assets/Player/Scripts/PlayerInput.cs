@@ -28,7 +28,7 @@ public class PlayerInput : MonoBehaviour
         IsInteractPressed = Input.GetKeyDown(KeyCode.F);
         IsDropPressed = Input.GetKeyDown(KeyCode.G);
 
-        IsAttackPressed = Input.GetButtonDown("Fire1");
+        IsAttackPressed = Input.GetMouseButtonDown(0);
 
         IsSkillQPressed = Input.GetKeyDown(KeyCode.Q);
         IsSkillEPressed = Input.GetKeyDown(KeyCode.E);
