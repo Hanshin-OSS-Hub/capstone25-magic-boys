@@ -10881,13 +10881,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MagicAttack
   playerInput: {fileID: 1128240026}
   playerStats: {fileID: 6982812146369565144}
-  aimCamera: {fileID: 1842651708}
+  aimCamera: {fileID: 0}
   groundMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 4294967295
   enemyMask:
     serializedVersion: 2
-    m_Bits: 4672
+    m_Bits: 576
   maxAimDistance: 25
   spawnForwardOffset: 0.8
   spawnHeightOffset: 1.2
@@ -10898,6 +10898,7 @@ MonoBehaviour:
   qBaseDamage: 8
   qProjectileSpeed: 14
   qMaxDistance: 20
+  qSpawnOffset: {x: 0, y: -0.4, z: 0}
   eWaterFieldPrefab: {fileID: 509412756994637923, guid: d28fce3b24ad1294e83caae512341773, type: 3}
   eMpCost: 12
   eCooldown: 6
@@ -10911,7 +10912,6 @@ MonoBehaviour:
   rCooldown: 8
   rBaseDamage: 10
   rLifeTime: 5
-  rSpawnDistance: 2.5
   tThunderRainPrefab: {fileID: 9190732251731332281, guid: a6cf37740ea3d77498185ab1a3180944, type: 3}
   tMpCost: 18
   tCooldown: 10

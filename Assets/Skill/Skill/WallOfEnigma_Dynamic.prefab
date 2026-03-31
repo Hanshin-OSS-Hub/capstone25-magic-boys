@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5355188390198102621}
   - component: {fileID: 6665771718239256418}
   - component: {fileID: 3608582674328783687}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: DamageBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -99,7 +99,7 @@ GameObject:
   - component: {fileID: 4314491717064025664}
   - component: {fileID: 4314491717064025666}
   - component: {fileID: 4314491717064025665}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: WallOfEnigma_EdgeFlamesMesh_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5011,7 +5011,7 @@ GameObject:
   - component: {fileID: 4314491717161609545}
   - component: {fileID: 6011205843604538642}
   - component: {fileID: -4067636178159801396}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: WallOfEnigma_Dynamic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5104,7 +5104,7 @@ GameObject:
   - component: {fileID: 4314491717223299402}
   - component: {fileID: 4314491717223299404}
   - component: {fileID: 4314491717223299403}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: WallOfEnigma_ElectricBursts_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10010,7 +10010,7 @@ GameObject:
   - component: {fileID: 4314491717328730745}
   - component: {fileID: 4314491717328730747}
   - component: {fileID: 4314491717328730746}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: WallOfEnigma_Voxels_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14952,7 +14952,7 @@ GameObject:
   - component: {fileID: 4314491717371696638}
   - component: {fileID: 4314491717371696608}
   - component: {fileID: 4314491717371696639}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: WallOfEnigma_EdgeFlamesMesh_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19855,7 +19855,7 @@ GameObject:
   - component: {fileID: 4314491717545000744}
   - component: {fileID: 4314491717545000746}
   - component: {fileID: 4314491717545000745}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: WallOfEnigma_Sparks_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24770,7 +24770,7 @@ GameObject:
   - component: {fileID: 4314491717753591175}
   - component: {fileID: 4314491717753591177}
   - component: {fileID: 4314491717753591176}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: WallOfEnigma_FillFlamesMesh_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29673,7 +29673,7 @@ GameObject:
   - component: {fileID: 4314491717855210116}
   - component: {fileID: 4314491717855210118}
   - component: {fileID: 4314491717855210117}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: WallOfEnigma_Indicator_Emissive_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34579,7 +34579,7 @@ GameObject:
   - component: {fileID: 4314491717883152575}
   - component: {fileID: 4314491717883152545}
   - component: {fileID: 4314491717883152544}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: WallOfEnigma_FillFlamesMesh_04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39482,7 +39482,7 @@ GameObject:
   - component: {fileID: 4314491717984693248}
   - component: {fileID: 4314491717984693250}
   - component: {fileID: 4314491717984693249}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: WallOfEnigma_Indicator_Darkening_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44388,7 +44388,7 @@ GameObject:
   - component: {fileID: 4314491718133620706}
   - component: {fileID: 4314491718133620708}
   - component: {fileID: 4314491718133620707}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: WallOfEnigma_EdgeFlamesMesh_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -49289,7 +49289,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4314491718195124036}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: --------AppearVFX--------
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -49322,7 +49322,7 @@ GameObject:
   - component: {fileID: 4314491718318225125}
   - component: {fileID: 4314491718318225127}
   - component: {fileID: 4314491718318225126}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: WallOfEnigma_Sparks_Control_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -54182,7 +54182,7 @@ GameObject:
   - component: {fileID: 4314491718372771079}
   - component: {fileID: 4314491718372771081}
   - component: {fileID: 4314491718372771080}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: WallOfEnigma_FillFlamesMesh_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -59094,7 +59094,7 @@ GameObject:
   - component: {fileID: 4314491718448764367}
   - component: {fileID: 4314491718448764401}
   - component: {fileID: 4314491718448764400}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: WallOfEnigma_SparksAndTrails_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -64014,7 +64014,7 @@ GameObject:
   - component: {fileID: 4314491718474232147}
   - component: {fileID: 4314491718474232149}
   - component: {fileID: 4314491718474232148}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: WallOfEnigma_ElectricBursts_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -68920,7 +68920,7 @@ GameObject:
   - component: {fileID: 4314491718596187829}
   - component: {fileID: 4314491718596187831}
   - component: {fileID: 4314491718596187830}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: WallOfEnigma_VoxelSparks_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73835,7 +73835,7 @@ GameObject:
   - component: {fileID: 4314491718770234113}
   - component: {fileID: 4314491718770234115}
   - component: {fileID: 4314491718770234114}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: WallOfEnigma_Wave_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -78729,7 +78729,7 @@ GameObject:
   - component: {fileID: 4314491718931054432}
   - component: {fileID: 4314491718931054434}
   - component: {fileID: 4314491718931054433}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: WallOfEnigma_Indicator_Emissive_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -83665,7 +83665,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8861906375786675698}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ---------CoreVFX---------
   m_TagString: Untagged
   m_Icon: {fileID: 0}
