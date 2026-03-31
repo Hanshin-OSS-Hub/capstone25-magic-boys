@@ -915,7 +915,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b35e1bf387f211444bf3630d71164145, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
+  player: {fileID: 6982812146369565144}
   strText: {fileID: 800375016}
   dexText: {fileID: 2004606297}
   magText: {fileID: 1979426193}
