@@ -9,7 +9,11 @@ public class RangeAttackState : IEnemyState
     {
         //Debug.Log("원거리 공격 시작!");
         enemy.navMeshAgent.isStopped = true;
-        enemy.transform.LookAt(enemy.playerTransform);
+
+        Vector3 targetPos = enemy.playerTransform.position;
+        targetPos.y += 1.0f;
+
+        enemy.transform.LookAt(targetPos);
 
         enemy.attackTimer = enemy.stats.AttackCooldown;
 
@@ -23,7 +27,9 @@ public class RangeAttackState : IEnemyState
 
     public void UpdateState(EnemyStateManager enemy)
     {
-        enemy.transform.LookAt(enemy.playerTransform);
+        Vector3 targetPos = enemy.playerTransform.position;
+        targetPos.y += 1.0f;
+        enemy.transform.LookAt(targetPos);
 
         attackAnimationTimer -= Time.deltaTime;
         if (attackAnimationTimer <= 0)
