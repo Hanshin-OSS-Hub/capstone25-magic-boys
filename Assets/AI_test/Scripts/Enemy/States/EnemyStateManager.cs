@@ -87,7 +87,7 @@ public class EnemyStateManager : MonoBehaviour, IDamageable
             if (target != null)
             {
                 target.TakeDamage(stats.Damage);
-                Debug.Log("거미 공격 적중!");
+                //Debug.Log("공격 적중!");
             }
         }
     }

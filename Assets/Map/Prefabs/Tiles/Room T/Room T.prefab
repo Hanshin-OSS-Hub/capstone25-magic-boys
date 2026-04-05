@@ -86,7 +86,6 @@ GameObject:
   - component: {fileID: 7345382810811518942}
   - component: {fileID: 2205380959425590646}
   - component: {fileID: 3258542505370829282}
-  - component: {fileID: 1449709981629758765}
   - component: {fileID: 44345362318992002}
   m_Layer: 10
   m_Name: Room T
@@ -140,6 +139,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -161,9 +162,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!64 &3258542505370829282
 MeshCollider:
@@ -187,25 +190,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -1996072114398378729, guid: 27b0fba21cb7ab14e8054430ac0c3e70, type: 3}
---- !u!114 &1449709981629758765
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8882557962436901764}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 483f0b6f5e79a5d44815d4da1341248a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyType: 1
-  spawnCount: 3
-  spawnPoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!114 &44345362318992002
 MonoBehaviour:
   m_ObjectHideFlags: 0
