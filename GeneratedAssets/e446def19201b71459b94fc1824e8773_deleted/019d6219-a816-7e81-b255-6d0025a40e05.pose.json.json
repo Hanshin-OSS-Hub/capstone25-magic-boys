@@ -1,0 +1,12 @@
+{
+    "asset": "e446def19201b71459b94fc1824e8773",
+    "fileName": "019d6219-a816-7e81-b255-6d0025a40e05.pose.json",
+    "prompt": "having ball on left hand and throw",
+    "negativePrompt": "",
+    "model": "9e46c009-67d8-4254-a3a0-32e3168247ee",
+    "modelName": "Text to Motion",
+    "customSeed": 1681967745,
+    "w3CTraceId": "34d517b67b59a5d02b084dbf1e74d9fa",
+    "feedback": 0,
+    "isTrimmed": false
+}

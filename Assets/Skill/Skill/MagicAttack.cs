@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[DefaultExecutionOrder(-1)]
 public class MagicAttack : MonoBehaviour
 {
     [Header("Refs")]
@@ -14,7 +15,7 @@ public class MagicAttack : MonoBehaviour
     public float spawnForwardOffset = 0.8f;
     public float spawnHeightOffset = 1.2f;
 
-    [Header("Q - Fireball")]
+    [Header("Skill 1 - Fireball")]
     public Transform qSpawnPoint;
     public GameObject qProjectilePrefab;
     public int qMpCost = 5;
@@ -24,7 +25,7 @@ public class MagicAttack : MonoBehaviour
     public float qMaxDistance = 20f;
     public Vector3 qSpawnOffset = new Vector3(0f, -0.4f, 0f);
 
-    [Header("E - Water Field")]
+    [Header("Skill 2 - Water Field")]
     public GameObject eWaterFieldPrefab;
     public int eMpCost = 12;
     public float eCooldown = 6f;
@@ -34,14 +35,14 @@ public class MagicAttack : MonoBehaviour
     [Range(0.1f, 1f)] public float eSlowMultiplier = 0.6f;
     public float eSlowDuration = 0.7f;
 
-    [Header("R - Earth Wall")]
+    [Header("Skill 3 - Earth Wall")]
     public GameObject rEarthWallPrefab;
     public int rMpCost = 15;
     public float rCooldown = 8f;
     public int rBaseDamage = 10;
     public float rLifeTime = 5f;
 
-    [Header("T - Thunder Rain")]
+    [Header("Skill 4 - Thunder Rain")]
     public GameObject tThunderRainPrefab;
     public int tMpCost = 18;
     public float tCooldown = 10f;
@@ -52,7 +53,7 @@ public class MagicAttack : MonoBehaviour
     public float tWarningDuration = 0.7f;
     public float tTotalStrikeDuration = 2.4f;
 
-    [Header("Y - Reserved")]
+    [Header("Skill 5 - Reserved")]
     public int yMpCost = 20;
     public float yCooldown = 12f;
 
@@ -61,6 +62,10 @@ public class MagicAttack : MonoBehaviour
     private float rRemain;
     private float tRemain;
     private float yRemain;
+
+    private int _preparedSkillIndex = -1;
+    private bool _skillExecutedThisFrame = false;
+    public bool IsSkillPrepared => _preparedSkillIndex != -1 || _skillExecutedThisFrame;
 
     void Awake()
     {
@@ -71,16 +76,42 @@ public class MagicAttack : MonoBehaviour
 
     void Update()
     {
+        _skillExecutedThisFrame = false;
         TickCooldowns();
 
         if (StatsPanelToggle.UIBlocked) return;
         if (!playerInput || !playerStats) return;
 
-        if (playerInput.IsSkillQPressed) TryCastQ();
-        if (playerInput.IsSkillEPressed) TryCastE();
-        if (playerInput.IsSkillRPressed) TryCastR();
-        if (playerInput.IsSkillTPressed) TryCastT();
-        if (playerInput.IsSkillYPressed) TryCastY();
+        // 1. Selection Phase: Pressing 1-5 sets the prepared skill
+        if (playerInput.IsSkill1Pressed) { _preparedSkillIndex = 0; Debug.Log("Skill 1 (Fireball) Prepared. Left-click to cast, Right-click to cancel."); }
+        if (playerInput.IsSkill2Pressed) { _preparedSkillIndex = 1; Debug.Log("Skill 2 (Water Field) Prepared. Left-click to cast, Right-click to cancel."); }
+        if (playerInput.IsSkill3Pressed) { _preparedSkillIndex = 2; Debug.Log("Skill 3 (Earth Wall) Prepared. Left-click to cast, Right-click to cancel."); }
+        if (playerInput.IsSkill4Pressed) { _preparedSkillIndex = 3; Debug.Log("Skill 4 (Thunder Rain) Prepared. Left-click to cast, Right-click to cancel."); }
+        if (playerInput.IsSkill5Pressed) { _preparedSkillIndex = 4; Debug.Log("Skill 5 (Reserved) Prepared. Left-click to cast, Right-click to cancel."); }
+
+        // 2. Activation/Cancellation Phase
+        if (_preparedSkillIndex != -1)
+        {
+            if (playerInput.IsAttackPressed)
+            {
+                // Execute the selected skill
+                switch (_preparedSkillIndex)
+                {
+                    case 0: TryCastQ(); break;
+                    case 1: TryCastE(); break;
+                    case 2: TryCastR(); break;
+                    case 3: TryCastT(); break;
+                    case 4: TryCastY(); break;
+                }
+                _preparedSkillIndex = -1;
+                _skillExecutedThisFrame = true;
+            }
+            else if (playerInput.IsRightClickPressed)
+            {
+                Debug.Log("Skill Selection Cancelled.");
+                _preparedSkillIndex = -1;
+            }
+        }
     }
 
     void TickCooldowns()
@@ -102,7 +133,7 @@ public class MagicAttack : MonoBehaviour
     {
         if (playerStats.SpendMP(amount)) return true;
 
-        Debug.Log($"{skillName} MP ºÎÁ·");
+        Debug.Log($"{skillName} MP ï¿½ï¿½ï¿½ï¿½");
         return false;
     }
 
@@ -155,7 +186,7 @@ public class MagicAttack : MonoBehaviour
 
         if (!projectile)
         {
-            Debug.LogWarning("Q ÇÁ¸®ÆÕ¿¡ SkillProjectileÀÌ ¾øÀ½");
+            Debug.LogWarning("Q ï¿½ï¿½ï¿½ï¿½ï¿½Õ¿ï¿½ SkillProjectileï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
             Destroy(go);
             return;
         }
@@ -180,7 +211,7 @@ public class MagicAttack : MonoBehaviour
 
         if (!water)
         {
-            Debug.LogWarning("E ÇÁ¸®ÆÕ¿¡ WaterFieldSkillÀÌ ¾øÀ½");
+            Debug.LogWarning("E ï¿½ï¿½ï¿½ï¿½ï¿½Õ¿ï¿½ WaterFieldSkillï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
             Destroy(go);
             return;
         }
@@ -212,7 +243,7 @@ public class MagicAttack : MonoBehaviour
 
         if (!wall)
         {
-            Debug.LogWarning("R ÇÁ¸®ÆÕ¿¡ EarthWallSkillÀÌ ¾øÀ½");
+            Debug.LogWarning("R ï¿½ï¿½ï¿½ï¿½ï¿½Õ¿ï¿½ EarthWallSkillï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
             Destroy(go);
             return;
         }
@@ -237,7 +268,7 @@ public class MagicAttack : MonoBehaviour
 
         if (!thunder)
         {
-            Debug.LogWarning("T ÇÁ¸®ÆÕ¿¡ ThunderRainSkillÀÌ ¾øÀ½");
+            Debug.LogWarning("T ï¿½ï¿½ï¿½ï¿½ï¿½Õ¿ï¿½ ThunderRainSkillï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
             Destroy(go);
             return;
         }
@@ -253,7 +284,7 @@ public class MagicAttack : MonoBehaviour
         if (!IsUnlocked(4)) return;
         if (yRemain > 0f) return;
 
-        Debug.Log("Y ½ºÅ³Àº ¾ÆÁ÷ ¹ÌÁ¤");
+        Debug.Log("Y ï¿½ï¿½Å³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
         yRemain = yCooldown;
     }
 

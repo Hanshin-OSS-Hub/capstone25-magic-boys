@@ -1,0 +1,12 @@
+{
+    "asset": "e446def19201b71459b94fc1824e8773",
+    "fileName": "019d621d-e87a-776f-b09f-4d92a5103885.pose.json",
+    "prompt": "A fantasy mage casting a spell with movements inspired by an orchestra conductor, subtle and precise hand gestures controlling invisible energy, rhythmic motion, one hand guiding flow while the other stabilizes, calm and focused expression, smooth and controlled animation, minimal body movement, elegant and deliberate timing",
+    "negativePrompt": "",
+    "model": "9e46c009-67d8-4254-a3a0-32e3168247ee",
+    "modelName": "Text to Motion",
+    "customSeed": 1246450248,
+    "w3CTraceId": "35fc9b07f676aff5030d722e0714638a",
+    "feedback": 0,
+    "isTrimmed": false
+}

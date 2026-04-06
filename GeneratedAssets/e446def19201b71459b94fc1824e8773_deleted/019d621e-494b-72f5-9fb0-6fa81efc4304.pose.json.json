@@ -1,0 +1,12 @@
+{
+    "asset": "e446def19201b71459b94fc1824e8773",
+    "fileName": "019d621e-494b-72f5-9fb0-6fa81efc4304.pose.json",
+    "prompt": "A loopable spell casting animation inspired by conducting music, continuous subtle hand motions, steady rhythm, controlled breathing, small precise gestures, maintaining flow of invisible magical energy, calm and focused stance, smooth and seamless loop",
+    "negativePrompt": "",
+    "model": "9e46c009-67d8-4254-a3a0-32e3168247ee",
+    "modelName": "Text to Motion",
+    "customSeed": 541615065,
+    "w3CTraceId": "1cf2e99cc87d19b562eb847b1888496a",
+    "feedback": 0,
+    "isTrimmed": false
+}

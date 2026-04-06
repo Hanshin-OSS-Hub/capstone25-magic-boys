@@ -1,0 +1,12 @@
+{
+    "asset": "0b5cee46b9bf0f94fa32562fbe9255a4",
+    "fileName": "019d620d-1f5f-70e0-a2f6-7ba414943931.pose.json",
+    "prompt": "walking grab his weapon",
+    "negativePrompt": "",
+    "model": "9e46c009-67d8-4254-a3a0-32e3168247ee",
+    "modelName": "Text to Motion",
+    "customSeed": 1147310984,
+    "w3CTraceId": "cf4cc722398aba03a786380d04d6f837",
+    "feedback": 0,
+    "isTrimmed": false
+}

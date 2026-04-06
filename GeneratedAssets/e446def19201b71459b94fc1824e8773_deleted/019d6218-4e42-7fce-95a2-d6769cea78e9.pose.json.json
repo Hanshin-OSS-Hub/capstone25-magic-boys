@@ -1,0 +1,12 @@
+{
+    "asset": "e446def19201b71459b94fc1824e8773",
+    "fileName": "019d6218-4e42-7fce-95a2-d6769cea78e9.pose.json",
+    "prompt": "magic spell with one hand",
+    "negativePrompt": "",
+    "model": "9e46c009-67d8-4254-a3a0-32e3168247ee",
+    "modelName": "Text to Motion",
+    "customSeed": 1249336611,
+    "w3CTraceId": "f4a7e4035f64bb00c16bee5bb2d78aea",
+    "feedback": 0,
+    "isTrimmed": false
+}

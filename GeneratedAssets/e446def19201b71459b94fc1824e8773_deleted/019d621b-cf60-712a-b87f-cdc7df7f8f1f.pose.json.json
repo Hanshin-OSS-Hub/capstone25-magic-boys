@@ -1,0 +1,12 @@
+{
+    "asset": "e446def19201b71459b94fc1824e8773",
+    "fileName": "019d621b-cf60-712a-b87f-cdc7df7f8f1f.pose.json",
+    "prompt": "having ball on left hand and shot like Kamehameha",
+    "negativePrompt": "",
+    "model": "9e46c009-67d8-4254-a3a0-32e3168247ee",
+    "modelName": "Text to Motion",
+    "customSeed": 194853264,
+    "w3CTraceId": "563ca6583e840542712888953e5e3848",
+    "feedback": 0,
+    "isTrimmed": false
+}

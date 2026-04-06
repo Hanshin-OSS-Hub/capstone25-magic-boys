@@ -12,6 +12,7 @@ public class PlayerAttack : MonoBehaviour
     public bool IsAttacking { get; private set; }
 
     private PlayerInput playerInput;
+    private MagicAttack magicAttack;
 
     [Header("Chest Hit")]
     public Camera playerCamera;
@@ -23,6 +24,7 @@ public class PlayerAttack : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         attackHash = Animator.StringToHash("Attack");
         playerInput = GetComponent<PlayerInput>();
+        magicAttack = GetComponent<MagicAttack>();
 
         if (!playerCamera)
             playerCamera = Camera.main;
@@ -35,6 +37,10 @@ public class PlayerAttack : MonoBehaviour
         if (StatsPanelToggle.UIBlocked) return;
 
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            return;
+
+        // Skip normal attack if a magic skill is currently being prepared/aimed
+        if (magicAttack != null && magicAttack.IsSkillPrepared)
             return;
 
         if (attackTimer > 0f)
@@ -65,7 +71,7 @@ public class PlayerAttack : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit, chestHitRange))
         {
-            Debug.Log("¸ÂÀº ¿ÀºêÁ§Æ®: " + hit.collider.name);
+            Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®: " + hit.collider.name);
 
             BreakableChest chest = hit.collider.GetComponentInParent<BreakableChest>();
             if (chest != null)

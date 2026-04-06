@@ -1,0 +1,12 @@
+{
+    "asset": "e446def19201b71459b94fc1824e8773",
+    "fileName": "019d621a-9b26-75aa-a884-a837b16c9d76.pose.json",
+    "prompt": "having ball on left hand and throw like shotput slightly down",
+    "negativePrompt": "",
+    "model": "9e46c009-67d8-4254-a3a0-32e3168247ee",
+    "modelName": "Text to Motion",
+    "customSeed": 1710197554,
+    "w3CTraceId": "2d53ebae521047a01507ea310926b824",
+    "feedback": 0,
+    "isTrimmed": false
+}

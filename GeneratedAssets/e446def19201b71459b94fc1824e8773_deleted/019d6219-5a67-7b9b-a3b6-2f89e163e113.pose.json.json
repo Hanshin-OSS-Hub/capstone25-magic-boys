@@ -1,0 +1,12 @@
+{
+    "asset": "e446def19201b71459b94fc1824e8773",
+    "fileName": "019d6219-5a67-7b9b-a3b6-2f89e163e113.pose.json",
+    "prompt": "having apple on left hand and throw",
+    "negativePrompt": "",
+    "model": "9e46c009-67d8-4254-a3a0-32e3168247ee",
+    "modelName": "Text to Motion",
+    "customSeed": 2033113559,
+    "w3CTraceId": "cbcf32a74ff52bca47b5c7247146678f",
+    "feedback": 0,
+    "isTrimmed": false
+}

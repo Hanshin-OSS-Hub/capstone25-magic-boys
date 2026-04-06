@@ -1,0 +1,12 @@
+{
+    "asset": "079e2c09a374af1428fe888088c2da87",
+    "fileName": "019d61fd-463b-7818-82ae-e1dbaf2fd420.pose.json",
+    "prompt": "first he grab is weapon by two hands. when spell casting, slowly raise left hand while the other hand let down grabing his weapon",
+    "negativePrompt": "",
+    "model": "9e46c009-67d8-4254-a3a0-32e3168247ee",
+    "modelName": "Text to Motion",
+    "customSeed": 1184815959,
+    "w3CTraceId": "0f07ab53cadbcd8be50533a956d5abca",
+    "feedback": 0,
+    "isTrimmed": false
+}

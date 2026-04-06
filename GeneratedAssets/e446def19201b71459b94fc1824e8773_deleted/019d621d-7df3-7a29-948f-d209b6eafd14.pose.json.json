@@ -1,0 +1,12 @@
+{
+    "asset": "e446def19201b71459b94fc1824e8773",
+    "fileName": "019d621d-7df3-7a29-948f-d209b6eafd14.pose.json",
+    "prompt": "movements inspired by an orchestra conductor",
+    "negativePrompt": "",
+    "model": "9e46c009-67d8-4254-a3a0-32e3168247ee",
+    "modelName": "Text to Motion",
+    "customSeed": 313689562,
+    "w3CTraceId": "860e34c6acc090f3e217a6916314c59e",
+    "feedback": 0,
+    "isTrimmed": false
+}

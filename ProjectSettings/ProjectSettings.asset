@@ -838,7 +838,7 @@ PlayerSettings:
     PS4: UNITY_POST_PROCESSING_STACK_V2
     PS5: UNITY_POST_PROCESSING_STACK_V2
     QNX: UNITY_POST_PROCESSING_STACK_V2
-    Standalone: UNITY_POST_PROCESSING_STACK_V2
+    Standalone: UNITY_POST_PROCESSING_STACK_V2;SENTIS_ANALYTICS_ENABLED
     VisionOS: UNITY_POST_PROCESSING_STACK_V2
     WebGL: UNITY_POST_PROCESSING_STACK_V2
     XboxOne: UNITY_POST_PROCESSING_STACK_V2
@@ -941,11 +941,11 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: b1785f9f-c0e8-4c4f-9d99-e6ed7ebe5d01
+  cloudProjectId: 3efdefc3-111a-4af7-b9be-c1e4eae51130
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: MagicBoys 2025-09-25_13-54-52
-  organizationId: noehc
+  projectName: MainMenu
+  organizationId: spfh
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}

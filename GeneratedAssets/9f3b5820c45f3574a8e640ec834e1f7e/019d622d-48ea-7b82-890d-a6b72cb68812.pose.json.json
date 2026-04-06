@@ -1,0 +1,12 @@
+{
+    "asset": "9f3b5820c45f3574a8e640ec834e1f7e",
+    "fileName": "019d622d-48ea-7b82-890d-a6b72cb68812.pose.json",
+    "prompt": " warrior swings a sword",
+    "negativePrompt": "",
+    "model": "9e46c009-67d8-4254-a3a0-32e3168247ee",
+    "modelName": "Text to Motion",
+    "customSeed": 1509821243,
+    "w3CTraceId": "a4c824c3bb4814cd26685459f6532962",
+    "feedback": 0,
+    "isTrimmed": false
+}

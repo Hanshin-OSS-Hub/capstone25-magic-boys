@@ -1,0 +1,12 @@
+{
+    "asset": "079e2c09a374af1428fe888088c2da87",
+    "fileName": "019d61fb-babb-781a-bd17-b2bfb1a97322.pose.json",
+    "prompt": "spell casting slowlt raising left hand while the other hand let down grabing his weapon",
+    "negativePrompt": "",
+    "model": "9e46c009-67d8-4254-a3a0-32e3168247ee",
+    "modelName": "Text to Motion",
+    "customSeed": 1026797466,
+    "w3CTraceId": "6512b09f8c160d4c62f12601a380a747",
+    "feedback": 0,
+    "isTrimmed": false
+}

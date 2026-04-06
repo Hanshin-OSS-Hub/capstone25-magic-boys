@@ -1,0 +1,12 @@
+{
+    "asset": "f8b123ab50adfa24f83c2745570a80af",
+    "fileName": "019d6214-6db6-7303-a7a9-a23606f80450.pose.json",
+    "prompt": "a man idling grabing his weapon by two hand",
+    "negativePrompt": "",
+    "model": "9e46c009-67d8-4254-a3a0-32e3168247ee",
+    "modelName": "Text to Motion",
+    "customSeed": 1147310984,
+    "w3CTraceId": "489767513fb41951f1891620e25306ce",
+    "feedback": 0,
+    "isTrimmed": false
+}

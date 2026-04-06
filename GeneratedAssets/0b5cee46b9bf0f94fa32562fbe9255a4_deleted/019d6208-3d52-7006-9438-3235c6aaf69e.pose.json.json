@@ -1,0 +1,12 @@
+{
+    "asset": "0b5cee46b9bf0f94fa32562fbe9255a4",
+    "fileName": "019d6208-3d52-7006-9438-3235c6aaf69e.pose.json",
+    "prompt": "idel, grabing two handed hammer",
+    "negativePrompt": "",
+    "model": "9e46c009-67d8-4254-a3a0-32e3168247ee",
+    "modelName": "Text to Motion",
+    "customSeed": 1147310984,
+    "w3CTraceId": "5714f4088e4df36c9b88500b729cd336",
+    "feedback": 0,
+    "isTrimmed": false
+}

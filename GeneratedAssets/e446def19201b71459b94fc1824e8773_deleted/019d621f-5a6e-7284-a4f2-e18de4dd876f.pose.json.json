@@ -1,0 +1,12 @@
+{
+    "asset": "e446def19201b71459b94fc1824e8773",
+    "fileName": "019d621f-5a6e-7284-a4f2-e18de4dd876f.pose.json",
+    "prompt": "A battle-ready mage holding a two-handed blunt weapon with one hand, performing a spell incantation with the free hand, subtle and precise finger and wrist movements, minimal upper body motion, maintaining grip on the weapon, controlled breathing, focused expression, no large gestures, no casting release, smooth and game-ready animation",
+    "negativePrompt": "",
+    "model": "9e46c009-67d8-4254-a3a0-32e3168247ee",
+    "modelName": "Text to Motion",
+    "customSeed": 1411972511,
+    "w3CTraceId": "7dd7cc04aa5ee40735686a99164abd59",
+    "feedback": 0,
+    "isTrimmed": false
+}

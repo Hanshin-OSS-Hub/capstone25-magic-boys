@@ -1,0 +1,12 @@
+{
+    "asset": "e446def19201b71459b94fc1824e8773",
+    "fileName": "019d621a-f8a7-71ff-8fb9-e054bf3e7607.pose.json",
+    "prompt": "having ball on left hand and throw vertically",
+    "negativePrompt": "",
+    "model": "9e46c009-67d8-4254-a3a0-32e3168247ee",
+    "modelName": "Text to Motion",
+    "customSeed": 2021917868,
+    "w3CTraceId": "4fd45cce438476c89b2e9447ae163b0f",
+    "feedback": 0,
+    "isTrimmed": false
+}
