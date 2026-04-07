@@ -1,5 +1,7 @@
-﻿using Unity.VisualScripting.Antlr3.Runtime.Misc;
+﻿using StarterAssets;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
+using StarterAssets;
 
 public class BossRushState : IBossState
 {
@@ -104,43 +106,45 @@ public class BossRushState : IBossState
         // 이동 명령
         boss.navMeshAgent.SetDestination(rushTargetPos);
     }
-
     private void CheckCollision(BossStateManager boss)
     {
         if (hasHitPlayer || boss.playerTransform == null) return;
 
-        // 충돌 범위 체크 (2m)
         float distance = Vector3.Distance(boss.transform.position, boss.playerTransform.position);
 
-        if (distance <= 2.0f) // 부딪힘
+        if (distance <= 2.0f)
         {
             hasHitPlayer = true;
 
-            // 1. 데미지
+            boss.navMeshAgent.speed = 2.0f; // 속도를 거의 멈추다시피 줄임
+
             IDamageable target = boss.playerTransform.GetComponent<IDamageable>();
             if (target != null) target.TakeDamage(data.RushDamage);
 
-            // 2. 넉백
-            Rigidbody playerRb = boss.playerTransform.GetComponent<Rigidbody>();
-            if (playerRb != null)
+            ThirdPersonController playerController = boss.playerTransform.GetComponent<ThirdPersonController>();
+            if (playerController != null)
             {
-                // (1) 밀어낼 방향 계산
-                // 보스의 진행 방향(forward)과 플레이어의 위치 관계를 계산
                 Vector3 dirToPlayer = (boss.playerTransform.position - boss.transform.position).normalized;
-
-                // 내적(Dot)을 사용해 플레이어가 보스의 오른쪽에 있는지 왼쪽에 있는지 판별
                 float dot = Vector3.Dot(boss.transform.right, dirToPlayer);
 
-                // dot > 0 이면 오른쪽, 아니면 왼쪽 방향 선택
                 Vector3 pushDir = (dot > 0) ? boss.transform.right : -boss.transform.right;
 
-                // 약간 위쪽(+Up)으로 띄워야 바닥 마찰 없이 잘 날아감
-                Vector3 finalVelocity = (pushDir + Vector3.up * 0.5f).normalized;
 
-                // (2) 힘 적용 (Impulse: 순간적인 힘)
-                playerRb.AddForce(finalVelocity * data.RushKnockback, ForceMode.Impulse);
+                pushDir = (pushDir + boss.transform.forward * 0.2f).normalized;
+                pushDir.y = 0;
 
-                Debug.Log(dot > 0 ? "오른쪽으로 튕겨냄!" : "왼쪽으로 튕겨냄!");
+                // 수평 속도
+                Vector3 horizontalVelocity = pushDir * data.RushKnockback;
+
+                // 수직 속도 (확실하게 공중으로 쏘아 올림)
+                Vector3 verticalVelocity = Vector3.up * 12f;
+
+                Vector3 finalKnockbackVelocity = horizontalVelocity + verticalVelocity;
+
+                // 넉백 실행
+                playerController.TakeKnockback(finalKnockbackVelocity, 0.7f);
+
+                Debug.Log(dot > 0 ? "오른쪽 대각선으로 쳐냄!" : "왼쪽 대각선으로 쳐냄!");
             }
         }
     }

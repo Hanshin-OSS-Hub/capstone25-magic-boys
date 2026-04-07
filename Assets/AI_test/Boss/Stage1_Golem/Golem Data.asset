@@ -35,6 +35,6 @@ MonoBehaviour:
   RushChargeTime: 1
   RushSpeed: 30
   RushDamage: 15
-  RushKnockback: 15
+  RushKnockback: 30
   RushDistanceError: 1
   RushCooldown: 10

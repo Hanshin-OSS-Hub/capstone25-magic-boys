@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-
+using StarterAssets;
 public class BossSmashState : IBossState
 {
     private float timer;
@@ -103,7 +103,7 @@ public class BossSmashState : IBossState
         // 프레임에 따라 장판이 완전히 커지도록 보정
         if (fillRect != null) fillRect.localScale = Vector3.one;
 
-        // 타격 시점에 맞춰 장판 즉시 끄기
+        // 장판 즉시 끄기
         if (boss.smashIndicator != null)
         {
             boss.smashIndicator.SetActive(false);
@@ -113,17 +113,30 @@ public class BossSmashState : IBossState
         {
             // OverlapSphere: 반경 내의 모든 충돌체 검사
             Collider[] hitColliders = Physics.OverlapSphere(boss.transform.position, data.SmashRadius);
+
             foreach (var hitCollider in hitColliders)
             {
                 if (hitCollider.CompareTag("Player"))
                 {
+                    // 1. 데미지 처리
                     IDamageable target = hitCollider.GetComponent<IDamageable>();
-                    if (target != null) target.TakeDamage(data.SmashDamage);
-
-                    Rigidbody rb = hitCollider.GetComponent<Rigidbody>();
-                    if (rb != null)
+                    if (target != null)
                     {
-                        rb.AddExplosionForce(data.KnockbackForce * 100f, boss.transform.position, data.SmashRadius, 10.0f);
+                        target.TakeDamage(data.SmashDamage);
+                    }
+
+                    // 2. 넉백 처리 (수정된 부분)
+                    ThirdPersonController playerController = hitCollider.GetComponent<ThirdPersonController>();
+                    if (playerController != null)
+                    {
+                        // 중심에서 바깥쪽으로 밀어내는 방향 계산
+                        Vector3 explosionDir = (hitCollider.transform.position - boss.transform.position).normalized;
+
+                        // Y축은 위로 띄우는 속도값 (예: 15f), XZ축은 밀어내는 방향
+                        Vector3 knockbackVelocity = (explosionDir + Vector3.up * 1.5f).normalized * 15f;
+
+                        // 스매쉬는 높이 뜨므로 체공 시간을 0.8초로 넉넉하게 설정
+                        playerController.TakeKnockback(knockbackVelocity, 0.8f);
                     }
                 }
             }
