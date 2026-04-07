@@ -87,7 +87,6 @@ GameObject:
   - component: {fileID: 4044886683966010831}
   - component: {fileID: 2122792386331627899}
   - component: {fileID: 982836799672716970}
-  - component: {fileID: 3075133445550916956}
   - component: {fileID: -7183494705922901959}
   - component: {fileID: 6060154416349599321}
   m_Layer: 10
@@ -142,6 +141,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -163,9 +164,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!64 &982836799672716970
 MeshCollider:
@@ -189,25 +192,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 6707568283904490557, guid: 27b0fba21cb7ab14e8054430ac0c3e70, type: 3}
---- !u!114 &3075133445550916956
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9153126633575684432}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 483f0b6f5e79a5d44815d4da1341248a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyType: 0
-  spawnCount: 3
-  spawnPoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!114 &-7183494705922901959
 MonoBehaviour:
   m_ObjectHideFlags: 0
