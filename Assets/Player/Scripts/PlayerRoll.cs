@@ -1,29 +1,15 @@
 using UnityEngine;
-using StarterAssets;
-
-public enum moveState
-{
-    None,
-    W,
-    A,
-    S,
-    D
-}
+using StarterAssets;   // StarterAssetsInputs 사용하려고 필요
 
 public class PlayerRoll : MonoBehaviour
 {
     [Header("입력 설정")]
-    public float doubleTapTime = 0.25f;
+    public float doubleTapTime = 0.25f; // 스페이스 두 번 누르는 최대 시간
     private float lastSpaceTime = -999f;
 
-    [Header("방향 선입력 버퍼")]
-    public float directionBufferTime = 0.15f;
-
     [Header("구르기 설정")]
-    public float rollDuration = 0.8f;
-
-    public moveState mvstate = moveState.None;
-
+    public float rollDuration = 0.8f;   // 구르기 지속시간
+    
     private Animator animator;
     private int rollHash;
 
@@ -32,10 +18,9 @@ public class PlayerRoll : MonoBehaviour
 
     private Vector3 rollDirection;
 
+
     private StarterAssetsInputs _input;
     private Transform _cameraTransform;
-
-    private float lastDirectionInputTime = -999f;
 
     void Awake()
     {
@@ -45,6 +30,7 @@ public class PlayerRoll : MonoBehaviour
             Debug.LogError("PlayerRoll: StarterAssetsInputs를 찾지 못했습니다.");
         }
 
+        // 메인 카메라 Transform
         if (Camera.main != null)
         {
             _cameraTransform = Camera.main.transform;
@@ -59,8 +45,7 @@ public class PlayerRoll : MonoBehaviour
 
     void Update()
     {
-        UpdateMoveState();
-
+        // 구르는 중이면 타이머만 감소
         if (IsRolling)
         {
             rollTimer -= Time.deltaTime;
@@ -69,19 +54,21 @@ public class PlayerRoll : MonoBehaviour
             return;
         }
 
+        // Ctrl 눌렀을 때 즉시 구르기
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
             TryRoll();
             return;
         }
 
+        // 스페이스 더블탭 구르기
         if (Input.GetKeyDown(KeyCode.Space))
         {
             float now = Time.time;
             if (now - lastSpaceTime <= doubleTapTime)
             {
                 TryRoll();
-                lastSpaceTime = -999f;
+                lastSpaceTime = -999f; // 중복 인식 방지
                 return;
             }
 
@@ -89,68 +76,19 @@ public class PlayerRoll : MonoBehaviour
         }
     }
 
-    void UpdateMoveState()
-    {
-        // 가장 최근에 눌린 방향을 우선 저장
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            mvstate = moveState.W;
-            lastDirectionInputTime = Time.time;
-            return;
-        }
-
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            mvstate = moveState.A;
-            lastDirectionInputTime = Time.time;
-            return;
-        }
-
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            mvstate = moveState.S;
-            lastDirectionInputTime = Time.time;
-            return;
-        }
-
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            mvstate = moveState.D;
-            lastDirectionInputTime = Time.time;
-            return;
-        }
-
-        // 키를 계속 누르고 있는 경우도 유지
-        if (Input.GetKey(KeyCode.W))
-        {
-            mvstate = moveState.W;
-            lastDirectionInputTime = Time.time;
-        }
-        else if (Input.GetKey(KeyCode.A))
-        {
-            mvstate = moveState.A;
-            lastDirectionInputTime = Time.time;
-        }
-        else if (Input.GetKey(KeyCode.S))
-        {
-            mvstate = moveState.S;
-            lastDirectionInputTime = Time.time;
-        }
-        else if (Input.GetKey(KeyCode.D))
-        {
-            mvstate = moveState.D;
-            lastDirectionInputTime = Time.time;
-        }
-    }
-
     void TryRoll()
     {
-        Vector3 inputDir = GetBufferedDirection();
+        if (_input == null) return;
 
-        // 아무 방향 입력이 없으면 카메라 기준 정면
+        //  이동에서 쓰는 것과 똑같이, StarterAssetsInputs의 move 값 사용
+        Vector2 move = _input.move; 
+        Vector3 inputDir = new Vector3(move.x, 0f, move.y).normalized;
+
+        // 방향키 안 눌렀으면 정면으로
         if (inputDir == Vector3.zero)
             inputDir = Vector3.forward;
 
+        //  카메라 기준으로 방향 회전 
         float yaw = 0f;
         if (_cameraTransform != null)
         {
@@ -159,44 +97,15 @@ public class PlayerRoll : MonoBehaviour
 
         rollDirection = Quaternion.Euler(0f, yaw, 0f) * inputDir;
 
-        // 구르기 시작 전에 방향 먼저 맞추기
-        Vector3 flatDir = new Vector3(rollDirection.x, 0f, rollDirection.z);
-        if (flatDir != Vector3.zero)
-        {
-            transform.forward = flatDir;
-        }
-
+        // 구르기 애니메이션 실행
         if (animator != null)
         {
             animator.SetTrigger(rollHash);
         }
 
+        // 구르기 상태 시작
         IsRolling = true;
         rollTimer = rollDuration;
-    }
-
-    Vector3 GetBufferedDirection()
-    {
-        // 최근 입력이 버퍼 시간 안에 있으면 그 방향 사용
-        if (Time.time - lastDirectionInputTime <= directionBufferTime)
-        {
-            switch (mvstate)
-            {
-                case moveState.W:
-                    return Vector3.forward;
-
-                case moveState.A:
-                    return Vector3.left;
-
-                case moveState.S:
-                    return Vector3.back;
-
-                case moveState.D:
-                    return Vector3.right;
-            }
-        }
-
-        return Vector3.zero;
     }
 
     public Vector3 GetRollDirection()

@@ -1,21 +1,17 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
-using StarterAssets;
 
 public class PlayerAttack : MonoBehaviour
 {
     private Animator animator;
     private int attackHash;
-    private int airAttackHash;
 
     public float attackLockTime = 1.1f;
     private float attackTimer = 0f;
 
     public bool IsAttacking { get; private set; }
-    public bool IsAirAttacking { get; private set; }
 
     private PlayerInput playerInput;
-    private ThirdPersonController controller;
 
     [Header("Chest Hit")]
     public Camera playerCamera;
@@ -26,10 +22,7 @@ public class PlayerAttack : MonoBehaviour
     {
         animator = GetComponentInChildren<Animator>();
         attackHash = Animator.StringToHash("Attack");
-        airAttackHash = Animator.StringToHash("AirAttack");
-
         playerInput = GetComponent<PlayerInput>();
-        controller = GetComponent<ThirdPersonController>();
 
         if (!playerCamera)
             playerCamera = Camera.main;
@@ -37,7 +30,7 @@ public class PlayerAttack : MonoBehaviour
 
     void Update()
     {
-        if (playerInput == null || controller == null) return;
+        if (playerInput == null) return;
 
         if (StatsPanelToggle.UIBlocked) return;
 
@@ -49,32 +42,18 @@ public class PlayerAttack : MonoBehaviour
             attackTimer -= Time.deltaTime;
 
             if (attackTimer <= 0f)
-            {
                 IsAttacking = false;
-                IsAirAttacking = false;
-            }
 
             return;
         }
 
         if (playerInput.IsAttackPressed)
         {
-            if (controller.Grounded)
-            {
-                animator.SetTrigger(attackHash);
-                IsAttacking = true;
-                IsAirAttacking = false;
-
-                TryHitChest();
-            }
-            else
-            {
-                animator.SetTrigger(airAttackHash);
-                IsAirAttacking = true;
-                IsAttacking = false;
-            }
-
+            animator.SetTrigger(attackHash);
             attackTimer = attackLockTime;
+            IsAttacking = true;
+
+            TryHitChest();
         }
     }
 
@@ -86,6 +65,8 @@ public class PlayerAttack : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit, chestHitRange))
         {
+            Debug.Log("맞은 오브젝트: " + hit.collider.name);
+
             BreakableChest chest = hit.collider.GetComponentInParent<BreakableChest>();
             if (chest != null)
             {

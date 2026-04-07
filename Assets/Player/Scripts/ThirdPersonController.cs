@@ -113,6 +113,10 @@ namespace StarterAssets
         private float _lastJumpKeyTime = -999f;
         public float DoubleTapTime = 0.25f;  // 스페이스 두 번 입력 간격
 
+        // 보스의 CC기 패턴에 사용
+        private bool _isBeingKnockedBack = false;
+        private Vector3 _knockbackVelocity;
+
 #if ENABLE_INPUT_SYSTEM
         private PlayerInput _playerInput;
 #endif
@@ -326,8 +330,18 @@ namespace StarterAssets
 
         private void Move()
 {
-    // 구르는 중이면 롤 전용 이동만 처리
-    if (_roll != null && _roll.IsRolling)
+        // 보스 CC기에 필요
+        if (_isBeingKnockedBack)
+        {
+            _knockbackVelocity.y += Gravity * Time.deltaTime;
+            _controller.Move(_knockbackVelocity * Time.deltaTime);
+
+            // 넉백 중 Move() 불가능하게 return
+            return;
+        }
+
+        // 구르는 중이면 롤 전용 이동만 처리
+        if (_roll != null && _roll.IsRolling)
     {
         Vector3 rollDir = _roll.GetRollDirection();   // 미리 저장된 구르기 방향
         float rollSpeed = 8f;                         // 롤 속도 (원하는 값으로 조정)
@@ -348,18 +362,18 @@ namespace StarterAssets
     }
 
     // 공격 중에는 제자리에서 중력만 적용
-    if (_attack != null && _attack.IsAttacking && Grounded)
-{
-    _controller.Move(new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
-
-    if (_hasAnimator)
+    if (_attack != null && _attack.IsAttacking)
     {
-        _animator.SetFloat(_animIDSpeed, 0.0f);
-        _animator.SetFloat(_animIDMotionSpeed, 0.0f);
-    }
+        _controller.Move(new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
 
-    return;
-}
+        if (_hasAnimator)
+        {
+            _animator.SetFloat(_animIDSpeed, 0.0f);
+            _animator.SetFloat(_animIDMotionSpeed, 0.0f);
+        }
+
+        return;
+    }
 
     //평상시 이동 처리
     float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
@@ -533,5 +547,31 @@ namespace StarterAssets
             FootstepAudioVolume);
     }
 }
+
+
+        // 보스 CC기에 적용되는 넉백 함수
+        public void TakeKnockback(Vector3 impulseForce, float duration = 0.5f)
+        {
+            StartCoroutine(KnockbackRoutine(impulseForce, duration));
+        }
+
+        private System.Collections.IEnumerator KnockbackRoutine(Vector3 impulseForce, float duration)
+        {
+            _isBeingKnockedBack = true;
+            _knockbackVelocity = impulseForce;
+
+            if (_input != null) _input.move = Vector2.zero;
+
+            // 체공 시간 대기
+            yield return new WaitForSeconds(duration);
+
+            _isBeingKnockedBack = false;
+
+            _verticalVelocity = _knockbackVelocity.y;
+        }
+
+
     }
 }
+
+
