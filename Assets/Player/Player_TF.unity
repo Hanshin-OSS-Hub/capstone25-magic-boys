@@ -4453,7 +4453,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb17de39bc7c06247ae100e665614c87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
+  player: {fileID: 6982812146369565144}
   hpSlider: {fileID: 1504296966}
   hpText: {fileID: 1773448489}
   mpSlider: {fileID: 253197180}
@@ -10973,7 +10973,7 @@ MonoBehaviour:
   aimCamera: {fileID: 0}
   groundMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1280
   enemyMask:
     serializedVersion: 2
     m_Bits: 576

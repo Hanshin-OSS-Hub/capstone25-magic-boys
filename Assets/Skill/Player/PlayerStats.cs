@@ -3,7 +3,7 @@ using System;
 
 public enum StatType { STR, DEX, MAG, LUK }
 
-public class PlayerStats : MonoBehaviour, IDamageable // �������� ���� �� �ִ� ��ü�� IDamageble �������̽��� �־����
+public class PlayerStats : MonoBehaviour, IDamageable 
 {
     [Header("Base (before stat scaling)")]
     public int baseMaxHP = 100;
@@ -69,7 +69,7 @@ public class PlayerStats : MonoBehaviour, IDamageable // ��������
 
     void Awake()
     {
-        // ✅ 먼저 로드 시도
+        //먼저로드
         bool loaded = Load();
 
         // 로드 실패(새 게임)면 기본 세팅
