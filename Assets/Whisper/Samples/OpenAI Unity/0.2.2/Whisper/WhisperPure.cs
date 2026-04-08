@@ -8,7 +8,7 @@ using System.Security.Cryptography;
 public class WhisperPure : MonoBehaviour
 {
     [Header("Microphone Device Name")]
-    public string microphoneDevice = ""; // Inspectorø°º≠ º≥¡§
+    public string microphoneDevice = ""; // InspectorÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩ
 
     [Header("Recording")]
     public KeyCode recordKey = KeyCode.R;
@@ -24,13 +24,11 @@ public class WhisperPure : MonoBehaviour
     void Start()
     {
         if (Microphone.devices.Length > 0)
-            microphoneDevice = Microphone.devices[0];  // ¿⁄µø √π π¯¬∞
+            microphoneDevice = Microphone.devices[0];  // ÔøΩ⁄µÔøΩ √π ÔøΩÔøΩ¬∞
     }
 
     void Update()
     {
-        
-
         if (Input.GetKeyDown(recordKey) && !isRecording)
         {
             StartRecording();
@@ -38,19 +36,27 @@ public class WhisperPure : MonoBehaviour
 
         if (isRecording)
         {
-            time += Time.deltaTime;
-            if (time >= duration)
+            if (Input.GetKeyUp(recordKey))
             {
                 EndRecording();
+            }
+            else
+            {
+                time += Time.deltaTime;
+                if (time >= duration)
+                {
+                    EndRecording();
+                }
             }
         }
     }
 
-    void StartRecording()
+    public void StartRecording()
     {
+        if (isRecording) return;
         if (string.IsNullOrEmpty(microphoneDevice))
         {
-            Debug.LogWarning("∏∂¿Ã≈© µπŸ¿ÃΩ∫∞° ∫ÒæÓ ¿÷¿Ω!");
+            Debug.LogWarning("Microphone device not found!");
             return;
         }
 
@@ -61,10 +67,11 @@ public class WhisperPure : MonoBehaviour
         Debug.Log("[Whisper] Recording...");
     }
 
-    void EndRecording()
+    public void EndRecording()
     {
+        if (!isRecording) return;
         isRecording = false;
-        Microphone.End(null);
+        Microphone.End(microphoneDevice);
 
         Debug.Log("[Whisper] Sending to server...");
 
