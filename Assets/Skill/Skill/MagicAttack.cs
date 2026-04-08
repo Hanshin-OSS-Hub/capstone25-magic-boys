@@ -9,6 +9,27 @@ public class MagicAttack : MonoBehaviour
     public LayerMask groundMask = -1;
     public LayerMask enemyMask = -1;
 
+    [Header("Skill Keys (Inspector)")]
+    public KeyCode skill1Key = KeyCode.Q;   // Fireball
+    public KeyCode skill2Key = KeyCode.E;   // Water Field
+    public KeyCode skill3Key = KeyCode.R;   // Earth Wall
+    public KeyCode skill4Key = KeyCode.T;   // Thunder Rain
+    public KeyCode skill5Key = KeyCode.Y;   // Test Fail
+
+    [Header("Cast Result Particle")]
+    public Transform castEffectPoint;
+    public ParticleType successParticle = ParticleType.CastSuccess;
+    public ParticleType failParticle = ParticleType.CastFail;
+    public float resultParticleLifetime = 2f;
+
+    [Header("Cast Result Sound")]
+    public string successSfxName = "Cast_Success";
+    public string failSfxName = "Cast_Fail";
+    [Range(0f, 1f)] public float successSfxVolume = 1f;
+    [Range(0f, 1f)] public float failSfxVolume = 1f;
+    public float successSfxPitch = 1f;
+    public float failSfxPitch = 1f;
+
     [Header("Common")]
     public float maxAimDistance = 25f;
     public float spawnForwardOffset = 0.8f;
@@ -52,7 +73,7 @@ public class MagicAttack : MonoBehaviour
     public float tWarningDuration = 0.7f;
     public float tTotalStrikeDuration = 2.4f;
 
-    [Header("Y - Reserved")]
+    [Header("Y - Test Fail")]
     public int yMpCost = 20;
     public float yCooldown = 12f;
 
@@ -74,13 +95,13 @@ public class MagicAttack : MonoBehaviour
         TickCooldowns();
 
         if (StatsPanelToggle.UIBlocked) return;
-        if (!playerInput || !playerStats) return;
+        if (!playerStats) return;
 
-        if (playerInput.IsSkillQPressed) TryCastQ();
-        if (playerInput.IsSkillEPressed) TryCastE();
-        if (playerInput.IsSkillRPressed) TryCastR();
-        if (playerInput.IsSkillTPressed) TryCastT();
-        if (playerInput.IsSkillYPressed) TryCastY();
+        if (skill1Key != KeyCode.None && Input.GetKeyDown(skill1Key)) TryCastQ();
+        if (skill2Key != KeyCode.None && Input.GetKeyDown(skill2Key)) TryCastE();
+        if (skill3Key != KeyCode.None && Input.GetKeyDown(skill3Key)) TryCastR();
+        if (skill4Key != KeyCode.None && Input.GetKeyDown(skill4Key)) TryCastT();
+        if (skill5Key != KeyCode.None && Input.GetKeyDown(skill5Key)) TryCastY();
     }
 
     void TickCooldowns()
@@ -102,7 +123,7 @@ public class MagicAttack : MonoBehaviour
     {
         if (playerStats.SpendMP(amount)) return true;
 
-        Debug.Log($"{skillName} MP ����");
+        Debug.Log($"{skillName} MP 부족");
         return false;
     }
 
@@ -123,6 +144,12 @@ public class MagicAttack : MonoBehaviour
         return transform.position + Vector3.up * spawnHeightOffset + (rot * Vector3.forward * spawnForwardOffset);
     }
 
+    Vector3 GetCastEffectPosition()
+    {
+        if (castEffectPoint) return castEffectPoint.position;
+        return transform.position + Vector3.up * spawnHeightOffset;
+    }
+
     bool TryGetAimPoint(out Vector3 point)
     {
         Ray ray = aimCamera
@@ -139,66 +166,102 @@ public class MagicAttack : MonoBehaviour
         return false;
     }
 
-    public void TryCastQ()
+    void PlayResultParticle(ParticleType type, Vector3 pos, Quaternion rot)
     {
-        if (!IsUnlocked(0)) return;
-        if (qRemain > 0f) return;
-        if (!qProjectilePrefab) return;
-        if (!TrySpendMP(qMpCost, "Q")) return;
+        if (ParticleManager.Instance == null) return;
+        ParticleManager.Instance.Play(type, pos, rot, resultParticleLifetime);
+    }
 
+    void PlayResultSound(bool success, Vector3 pos)
+    {
+        if (SoundManager.Instance == null) return;
+
+        string clipName = success ? successSfxName : failSfxName;
+        if (string.IsNullOrEmpty(clipName)) return;
+        if (!SoundManager.Instance.HasSFX(clipName)) return;
+
+        float volume = success ? successSfxVolume : failSfxVolume;
+        float pitch = success ? successSfxPitch : failSfxPitch;
+
+        SoundManager.Instance.PlaySFX3D(clipName, pos, volume, pitch);
+    }
+
+    bool FailCast(string reason, Vector3 pos, Quaternion rot)
+    {
+        Debug.Log($"[MagicAttack] Cast Failed: {reason}");
+        PlayResultParticle(failParticle, pos, rot);
+        PlayResultSound(false, pos);
+        return false;
+    }
+
+    bool SuccessCast(Vector3 pos, Quaternion rot)
+    {
+        PlayResultParticle(successParticle, pos, rot);
+        PlayResultSound(true, pos);
+        return true;
+    }
+
+    public bool TryCastQ()
+    {
         Quaternion rot = GetFlatLookRotation();
         Vector3 pos = qSpawnPoint ? qSpawnPoint.position : GetDefaultSpawnPosition();
         pos += transform.TransformDirection(qSpawnOffset);
+
+        if (!IsUnlocked(0)) return FailCast("Q 잠금 상태", pos, rot);
+        if (qRemain > 0f) return FailCast("Q 쿨타임", pos, rot);
+        if (!qProjectilePrefab) return FailCast("Q 프리팹 없음", pos, rot);
+        if (!TrySpendMP(qMpCost, "Q")) return FailCast("Q MP 부족", pos, rot);
 
         GameObject go = Instantiate(qProjectilePrefab, pos, rot);
         SkillProjectile projectile = go.GetComponent<SkillProjectile>();
 
         if (!projectile)
         {
-            Debug.LogWarning("Q �����տ� SkillProjectile�� ����");
+            Debug.LogWarning("Q 프리팹에 SkillProjectile이 없음");
             Destroy(go);
-            return;
+            return FailCast("Q SkillProjectile 없음", pos, rot);
         }
 
         int damage = playerStats.GetMagicDamage(qBaseDamage);
         projectile.Launch(damage, playerStats, enemyMask, qProjectileSpeed, qMaxDistance);
 
         qRemain = qCooldown;
+        return SuccessCast(pos, rot);
     }
 
-    public void TryCastE()
+    public bool TryCastE()
     {
-        if (!IsUnlocked(1)) return;
-if (eRemain > 0f) return;
-        if (!eWaterFieldPrefab) return;
-        if (!TrySpendMP(eMpCost, "E")) return;
-
         TryGetAimPoint(out Vector3 point);
+
+        Vector3 fxPos = GetCastEffectPosition();
+        Quaternion fxRot = GetFlatLookRotation();
+
+        if (!IsUnlocked(1)) return FailCast("E 잠금 상태", fxPos, fxRot);
+        if (eRemain > 0f) return FailCast("E 쿨타임", fxPos, fxRot);
+        if (!eWaterFieldPrefab) return FailCast("E 프리팹 없음", fxPos, fxRot);
+        if (!TrySpendMP(eMpCost, "E")) return FailCast("E MP 부족", fxPos, fxRot);
 
         GameObject go = Instantiate(eWaterFieldPrefab, point + Vector3.up * 0.05f, Quaternion.identity);
         WaterFieldSkill water = go.GetComponent<WaterFieldSkill>();
 
         if (!water)
         {
-            Debug.LogWarning("E �����տ� WaterFieldSkill�� ����");
+            Debug.LogWarning("E 프리팹에 WaterFieldSkill이 없음");
             Destroy(go);
-            return;
+            return FailCast("E WaterFieldSkill 없음", fxPos, fxRot);
         }
 
         int tickDamage = playerStats.GetMagicDamage(eBaseTickDamage);
         water.Init(playerStats, enemyMask, tickDamage, eDuration, eTickInterval, eSlowMultiplier, eSlowDuration);
 
         eRemain = eCooldown;
+        return SuccessCast(fxPos, fxRot);
     }
 
-    public void TryCastR()
+    public bool TryCastR()
     {
-        if (!IsUnlocked(2)) return;
-if (rRemain > 0f) return;
-        if (!rEarthWallPrefab) return;
-        if (!TrySpendMP(rMpCost, "R")) return;
-
-        if (!TryGetAimPoint(out Vector3 point))
+        Vector3 point;
+        if (!TryGetAimPoint(out point))
             point = transform.position;
 
         Vector3 forward = Vector3.ProjectOnPlane(transform.forward, Vector3.up).normalized;
@@ -206,55 +269,67 @@ if (rRemain > 0f) return;
             forward = transform.forward;
 
         Quaternion rot = Quaternion.LookRotation(forward, Vector3.up);
+        Vector3 fxPos = GetCastEffectPosition();
+        Quaternion fxRot = GetFlatLookRotation();
+
+        if (!IsUnlocked(2)) return FailCast("R 잠금 상태", fxPos, fxRot);
+        if (rRemain > 0f) return FailCast("R 쿨타임", fxPos, fxRot);
+        if (!rEarthWallPrefab) return FailCast("R 프리팹 없음", fxPos, fxRot);
+        if (!TrySpendMP(rMpCost, "R")) return FailCast("R MP 부족", fxPos, fxRot);
 
         GameObject go = Instantiate(rEarthWallPrefab, point, rot);
         EarthWallSkill wall = go.GetComponent<EarthWallSkill>();
 
         if (!wall)
         {
-            Debug.LogWarning("R �����տ� EarthWallSkill�� ����");
+            Debug.LogWarning("R 프리팹에 EarthWallSkill이 없음");
             Destroy(go);
-            return;
+            return FailCast("R EarthWallSkill 없음", fxPos, fxRot);
         }
 
         int damage = playerStats.GetMagicDamage(rBaseDamage);
         wall.Init(playerStats, enemyMask, damage, rLifeTime, transform.root);
 
         rRemain = rCooldown;
+        return SuccessCast(fxPos, fxRot);
     }
 
-    public void TryCastT()
+    public bool TryCastT()
     {
-        if (!IsUnlocked(3)) return;
-        if (tRemain > 0f) return;
-        if (!tThunderRainPrefab) return;
-        if (!TrySpendMP(tMpCost, "T")) return;
-
         TryGetAimPoint(out Vector3 point);
+
+        Vector3 fxPos = GetCastEffectPosition();
+        Quaternion fxRot = GetFlatLookRotation();
+
+        if (!IsUnlocked(3)) return FailCast("T 잠금 상태", fxPos, fxRot);
+        if (tRemain > 0f) return FailCast("T 쿨타임", fxPos, fxRot);
+        if (!tThunderRainPrefab) return FailCast("T 프리팹 없음", fxPos, fxRot);
+        if (!TrySpendMP(tMpCost, "T")) return FailCast("T MP 부족", fxPos, fxRot);
 
         GameObject go = Instantiate(tThunderRainPrefab, point + Vector3.up * 0.05f, Quaternion.identity);
         ThunderRainSkill thunder = go.GetComponent<ThunderRainSkill>();
 
         if (!thunder)
         {
-            Debug.LogWarning("T �����տ� ThunderRainSkill�� ����");
+            Debug.LogWarning("T 프리팹에 ThunderRainSkill이 없음");
             Destroy(go);
-            return;
+            return FailCast("T ThunderRainSkill 없음", fxPos, fxRot);
         }
 
         int damage = playerStats.GetMagicDamage(tBaseDamagePerStrike);
         thunder.Init(playerStats, enemyMask, damage, tAreaRadius, tSingleStrikeRadius, tStrikeCount, tWarningDuration, tTotalStrikeDuration);
 
         tRemain = tCooldown;
+        return SuccessCast(fxPos, fxRot);
     }
 
-    public void TryCastY()
+    public bool TryCastY()
     {
-        if (!IsUnlocked(4)) return;
-        if (yRemain > 0f) return;
+        Vector3 pos = GetCastEffectPosition();
+        Quaternion rot = GetFlatLookRotation();
 
-        Debug.Log("Y ��ų�� ���� ����");
-        yRemain = yCooldown;
+        // 테스트용: Y는 무조건 실패
+        return FailCast("Y 테스트 실패", pos, rot);
     }
 
     public float GetCooldownRatio(int slotIndex)

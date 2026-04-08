@@ -2662,6 +2662,10 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 8a0d597b13ac1fb4f986251e1d4b9fae, type: 3}
   - name: spark_hit
     clip: {fileID: 8300000, guid: 09d18b019cde4b94f876cadd6b4a3be5, type: 3}
+  - name: Cast_Success
+    clip: {fileID: 8300000, guid: 3c2ae6533f4e2444c9d5860294c58039, type: 3}
+  - name: Cast_Fail
+    clip: {fileID: 8300000, guid: 177dbec1d6da42f499bc00c17bb2b6aa, type: 3}
   bgmVolume: 1
   sfxVolume: 1
   poolInitialSize: 6
@@ -3711,6 +3715,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 857879935}
   m_CullTransparentMesh: 1
+--- !u!1 &912224431
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 912224432}
+  m_Layer: 0
+  m_Name: CastPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &912224432
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 912224431}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 272993188633179440}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &978989761
 GameObject:
   m_ObjectHideFlags: 0
@@ -6929,7 +6964,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1817192201
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6946,6 +6981,8 @@ MonoBehaviour:
   fireHitVFX: {fileID: 358637981425055526, guid: 8eb503696b886e04faff8fc0f480d473, type: 3}
   sparkCastVFX: {fileID: 952961124639765284, guid: 1095a5c9f65bfbe4383f63d5d1886c65, type: 3}
   sparkHitVFX: {fileID: 952961124639765284, guid: 1095a5c9f65bfbe4383f63d5d1886c65, type: 3}
+  castSuccessVFX: {fileID: 7155335147208632822, guid: 97c43495f80a3244fad1301dfafbe252, type: 3}
+  castFailVFX: {fileID: 6126188424833946103, guid: a58aa9a78f2b45b45bb0f3e2e1e3ad3c, type: 3}
   poolSize: 20
   expandIfEmpty: 1
   defaultLifetime: 3
@@ -8969,6 +9006,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7898439671471407384}
+  - {fileID: 912224432}
   m_Father: {fileID: 3893294197915634601}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &277042836730614717
@@ -10976,7 +11014,22 @@ MonoBehaviour:
     m_Bits: 1280
   enemyMask:
     serializedVersion: 2
-    m_Bits: 576
+    m_Bits: 4672
+  skill1Key: 113
+  skill2Key: 101
+  skill3Key: 114
+  skill4Key: 116
+  skill5Key: 121
+  castEffectPoint: {fileID: 3893294197915634601}
+  successParticle: 4
+  failParticle: 5
+  resultParticleLifetime: 1
+  successSfxName: Cast_Success
+  failSfxName: Cast_Fail
+  successSfxVolume: 1
+  failSfxVolume: 1
+  successSfxPitch: 1
+  failSfxPitch: 1
   maxAimDistance: 25
   spawnForwardOffset: 0.8
   spawnHeightOffset: 1.2

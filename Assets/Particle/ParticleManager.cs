@@ -2,14 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ParticleType { FireCast, FireHit, SparkCast, SparkHit }
+public enum ParticleType
+{
+    FireCast,
+    FireHit,
+    SparkCast,
+    SparkHit,
+    CastSuccess,
+    CastFail
+}
 
 public class ParticleManager : MonoBehaviour
 {
     public static ParticleManager Instance { get; private set; }
 
     [Header("Prefabs")]
-    public GameObject fireCastVFX, fireHitVFX, sparkCastVFX, sparkHitVFX;
+    public GameObject fireCastVFX;
+    public GameObject fireHitVFX;
+    public GameObject sparkCastVFX;
+    public GameObject sparkHitVFX;
+
+    [Header("Cast Result VFX")]
+    public GameObject castSuccessVFX;
+    public GameObject castFailVFX;
 
     [Header("Pool")]
     public int poolSize = 20;
@@ -21,7 +36,12 @@ public class ParticleManager : MonoBehaviour
 
     void Awake()
     {
-        if (Instance != null) { Destroy(gameObject); return; }
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
@@ -29,15 +49,20 @@ public class ParticleManager : MonoBehaviour
         prefabs[ParticleType.FireHit] = fireHitVFX;
         prefabs[ParticleType.SparkCast] = sparkCastVFX;
         prefabs[ParticleType.SparkHit] = sparkHitVFX;
+        prefabs[ParticleType.CastSuccess] = castSuccessVFX;
+        prefabs[ParticleType.CastFail] = castFailVFX;
 
-        foreach (var kv in prefabs) CreatePool(kv.Key, kv.Value, poolSize);
+        foreach (var kv in prefabs)
+            CreatePool(kv.Key, kv.Value, poolSize);
     }
 
     void CreatePool(ParticleType t, GameObject prefab, int count)
     {
         var q = new Queue<GameObject>();
         pools[t] = q;
+
         if (!prefab) return;
+
         for (int i = 0; i < count; i++)
         {
             var go = Instantiate(prefab, transform);
@@ -48,9 +73,18 @@ public class ParticleManager : MonoBehaviour
 
     GameObject Get(ParticleType t)
     {
-        if (!pools.TryGetValue(t, out var q)) { q = new Queue<GameObject>(); pools[t] = q; }
-        if (q.Count > 0) return q.Dequeue();
-        if (!prefabs.TryGetValue(t, out var prefab) || !prefab || !expandIfEmpty) return null;
+        if (!pools.TryGetValue(t, out var q))
+        {
+            q = new Queue<GameObject>();
+            pools[t] = q;
+        }
+
+        if (q.Count > 0)
+            return q.Dequeue();
+
+        if (!prefabs.TryGetValue(t, out var prefab) || !prefab || !expandIfEmpty)
+            return null;
+
         var go = Instantiate(prefab, transform);
         go.SetActive(false);
         return go;
@@ -60,21 +94,34 @@ public class ParticleManager : MonoBehaviour
     {
         var go = Get(t);
         if (!go) return;
+
         go.transform.SetPositionAndRotation(pos, rot);
         go.SetActive(true);
 
         var ps = go.GetComponentInChildren<ParticleSystem>();
-        if (ps) { ps.Clear(); ps.Play(); StartCoroutine(ReturnWhenDone(t, go, ps, lifetimeOverride)); }
-        else { StartCoroutine(ReturnAfter(t, go, lifetimeOverride ?? defaultLifetime)); }
+        if (ps)
+        {
+            ps.Clear();
+            ps.Play();
+            StartCoroutine(ReturnWhenDone(t, go, ps, lifetimeOverride));
+        }
+        else
+        {
+            StartCoroutine(ReturnAfter(t, go, lifetimeOverride ?? defaultLifetime));
+        }
     }
 
     IEnumerator ReturnWhenDone(ParticleType t, GameObject go, ParticleSystem ps, float? life)
     {
-        if (life.HasValue) yield return new WaitForSeconds(life.Value);
-        else yield return new WaitWhile(() => ps.IsAlive(true));
+        if (life.HasValue)
+            yield return new WaitForSeconds(life.Value);
+        else
+            yield return new WaitWhile(() => ps.IsAlive(true));
+
         go.SetActive(false);
         pools[t].Enqueue(go);
     }
+
     IEnumerator ReturnAfter(ParticleType t, GameObject go, float sec)
     {
         yield return new WaitForSeconds(sec);

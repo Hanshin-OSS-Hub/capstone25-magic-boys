@@ -5009,8 +5009,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4314491717161609545}
-  - component: {fileID: 6011205843604538642}
   - component: {fileID: -4067636178159801396}
+  - component: {fileID: -7024814863330145679}
   m_Layer: 8
   m_Name: WallOfEnigma_Dynamic
   m_TagString: Untagged
@@ -5051,27 +5051,6 @@ Transform:
   - {fileID: 3825993102115632568}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6011205843604538642
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4314491717161609544}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1089a301919418e4d8aa97d642895a1f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EarthWallSkill
-  damageBox: {fileID: 5355188390198102621}
-  solidCollider: {fileID: -4067636178159801396}
-  dealSpawnDamage: 1
-  dealContactDamage: 1
-  contactTickInterval: 0.5
-  contactDamageRatio: 0.35
-  solidEnableDelay: 0.15
-  liftPlayerTopOffset: 0.05
-  debugLog: 0
 --- !u!65 &-4067636178159801396
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5093,6 +5072,27 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.81, y: 2.66, z: 9.2}
   m_Center: {x: 0, y: 0.97, z: 0}
+--- !u!114 &-7024814863330145679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4314491717161609544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b195c387bb591344096ac7fed05a7ff4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EarthWallSkill
+  damageBox: {fileID: 5355188390198102621}
+  solidCollider: {fileID: 0}
+  dealSpawnDamage: 1
+  dealContactDamage: 1
+  contactTickInterval: 0.5
+  contactDamageRatio: 0.35
+  solidEnableDelay: 0.05
+  liftPlayerTopOffset: 0.05
+  debugLog: 0
 --- !u!1 &4314491717223299401
 GameObject:
   m_ObjectHideFlags: 0
