@@ -1,0 +1,20 @@
+{
+    "name": "Mediapipe.Unity.Sample",
+    "rootNamespace": "Mediapipe.Unity.Sample",
+    "references": [
+        "Mediapipe.Runtime",
+        "Unity.TextMeshPro",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Google.Protobuf.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

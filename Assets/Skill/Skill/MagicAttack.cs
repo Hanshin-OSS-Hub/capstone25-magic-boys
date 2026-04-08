@@ -102,7 +102,7 @@ public class MagicAttack : MonoBehaviour
     {
         if (playerStats.SpendMP(amount)) return true;
 
-        Debug.Log($"{skillName} MP ºÎÁ·");
+        Debug.Log($"{skillName} MP ï¿½ï¿½ï¿½ï¿½");
         return false;
     }
 
@@ -139,7 +139,7 @@ public class MagicAttack : MonoBehaviour
         return false;
     }
 
-    void TryCastQ()
+    public void TryCastQ()
     {
         if (!IsUnlocked(0)) return;
         if (qRemain > 0f) return;
@@ -155,7 +155,7 @@ public class MagicAttack : MonoBehaviour
 
         if (!projectile)
         {
-            Debug.LogWarning("Q ÇÁ¸®ÆÕ¿¡ SkillProjectileÀÌ ¾øÀ½");
+            Debug.LogWarning("Q ï¿½ï¿½ï¿½ï¿½ï¿½Õ¿ï¿½ SkillProjectileï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
             Destroy(go);
             return;
         }
@@ -166,10 +166,10 @@ public class MagicAttack : MonoBehaviour
         qRemain = qCooldown;
     }
 
-    void TryCastE()
+    public void TryCastE()
     {
         if (!IsUnlocked(1)) return;
-        if (eRemain > 0f) return;
+if (eRemain > 0f) return;
         if (!eWaterFieldPrefab) return;
         if (!TrySpendMP(eMpCost, "E")) return;
 
@@ -180,7 +180,7 @@ public class MagicAttack : MonoBehaviour
 
         if (!water)
         {
-            Debug.LogWarning("E ÇÁ¸®ÆÕ¿¡ WaterFieldSkillÀÌ ¾øÀ½");
+            Debug.LogWarning("E ï¿½ï¿½ï¿½ï¿½ï¿½Õ¿ï¿½ WaterFieldSkillï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
             Destroy(go);
             return;
         }
@@ -191,10 +191,10 @@ public class MagicAttack : MonoBehaviour
         eRemain = eCooldown;
     }
 
-    void TryCastR()
+    public void TryCastR()
     {
         if (!IsUnlocked(2)) return;
-        if (rRemain > 0f) return;
+if (rRemain > 0f) return;
         if (!rEarthWallPrefab) return;
         if (!TrySpendMP(rMpCost, "R")) return;
 
@@ -212,7 +212,7 @@ public class MagicAttack : MonoBehaviour
 
         if (!wall)
         {
-            Debug.LogWarning("R ÇÁ¸®ÆÕ¿¡ EarthWallSkillÀÌ ¾øÀ½");
+            Debug.LogWarning("R ï¿½ï¿½ï¿½ï¿½ï¿½Õ¿ï¿½ EarthWallSkillï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
             Destroy(go);
             return;
         }
@@ -223,7 +223,7 @@ public class MagicAttack : MonoBehaviour
         rRemain = rCooldown;
     }
 
-    void TryCastT()
+    public void TryCastT()
     {
         if (!IsUnlocked(3)) return;
         if (tRemain > 0f) return;
@@ -237,7 +237,7 @@ public class MagicAttack : MonoBehaviour
 
         if (!thunder)
         {
-            Debug.LogWarning("T ÇÁ¸®ÆÕ¿¡ ThunderRainSkillÀÌ ¾øÀ½");
+            Debug.LogWarning("T ï¿½ï¿½ï¿½ï¿½ï¿½Õ¿ï¿½ ThunderRainSkillï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
             Destroy(go);
             return;
         }
@@ -248,12 +248,12 @@ public class MagicAttack : MonoBehaviour
         tRemain = tCooldown;
     }
 
-    void TryCastY()
+    public void TryCastY()
     {
         if (!IsUnlocked(4)) return;
         if (yRemain > 0f) return;
 
-        Debug.Log("Y ½ºÅ³Àº ¾ÆÁ÷ ¹ÌÁ¤");
+        Debug.Log("Y ï¿½ï¿½Å³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
         yRemain = yCooldown;
     }
 

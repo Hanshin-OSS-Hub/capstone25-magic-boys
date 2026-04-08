@@ -5099,6 +5099,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   whisper: {fileID: 1052296913}
   input: {fileID: 0}
+  magicAttack: {fileID: 211820192}
 --- !u!4 &1067584470
 Transform:
   m_ObjectHideFlags: 0
