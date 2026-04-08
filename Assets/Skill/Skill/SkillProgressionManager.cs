@@ -7,53 +7,42 @@ public class SkillProgressionManager : MonoBehaviour
 
     public const int MaxSkills = 5;
 
-    // 시작 시 항상 첫 번째 스킬만 해금
+    // 1이면 스킬1만 활성, 2면 스킬1~2 활성...
     public int UnlockedSkillCount { get; private set; } = 1;
 
     public event Action OnChanged;
 
+    const string KEY = "UnlockedSkillCount";
+
     void Awake()
     {
-        if (Instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
+        if (Instance != null) { Destroy(gameObject); return; }
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        UnlockedSkillCount = 1;
-        Debug.Log("SkillProgressionManager Awake / UnlockedSkillCount = " + UnlockedSkillCount);
+        UnlockedSkillCount = PlayerPrefs.GetInt(KEY, 1);
+        UnlockedSkillCount = Mathf.Clamp(UnlockedSkillCount, 1, MaxSkills);
     }
 
     public bool IsUnlocked(int slotIndex0Based)
-    {
-        return slotIndex0Based >= 0 && slotIndex0Based < UnlockedSkillCount;
-    }
+        => slotIndex0Based >= 0 && slotIndex0Based < UnlockedSkillCount;
 
     // stageIndex: 1~5
     public void RewardFromStage(int stageIndex)
     {
         int target = Mathf.Clamp(stageIndex + 1, 1, MaxSkills);
-        Debug.Log($"RewardFromStage 호출 / stageIndex={stageIndex}, target={target}, current={UnlockedSkillCount}");
-
-        if (target <= UnlockedSkillCount)
-        {
-            Debug.Log("이미 해금되어 있어서 변화 없음");
-            return;
-        }
+        if (target <= UnlockedSkillCount) return;
 
         UnlockedSkillCount = target;
-        Debug.Log("해금 적용 완료 / 새 UnlockedSkillCount = " + UnlockedSkillCount);
+        PlayerPrefs.SetInt(KEY, UnlockedSkillCount);
+        PlayerPrefs.Save();
 
         OnChanged?.Invoke();
     }
 
-    public void ResetProgress()
+    public static void ResetSavedData()
     {
-        UnlockedSkillCount = 1;
-        Debug.Log("진행도 초기화 / UnlockedSkillCount = " + UnlockedSkillCount);
-        OnChanged?.Invoke();
+        PlayerPrefs.DeleteKey(KEY);
+        PlayerPrefs.Save();
     }
 }

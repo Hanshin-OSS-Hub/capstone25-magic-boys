@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 637d7ff1671f972409475c8a5dbffa59
+timeCreated: 1434622598
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 30616
+  packageName: Spider Infestation Pack
+  packageVersion: 1.0
+  assetPath: Assets/Spider Infestation/Prefabs/spider.prefab
+  uploadId: 71036

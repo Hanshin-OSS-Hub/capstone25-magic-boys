@@ -901,7 +901,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd574003c05877f4ebe632bf78b8d8b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
+  player: {fileID: 6982812146369565144}
   statPointText: {fileID: 1425641962}
 --- !u!114 &283314543
 MonoBehaviour:
@@ -1120,7 +1120,9 @@ GameObject:
   - component: {fileID: 410571996}
   - component: {fileID: 410571999}
   - component: {fileID: 410571998}
-  - component: {fileID: 410571997}
+  - component: {fileID: 410572002}
+  - component: {fileID: 410572001}
+  - component: {fileID: 410572000}
   m_Layer: 5
   m_Name: SkillIcons
   m_TagString: Untagged
@@ -1152,24 +1154,6 @@ RectTransform:
   m_AnchoredPosition: {x: 292.9, y: -322}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &410571997
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 410571995}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50a0a9cb6cc5c0141a58d17b5283d475, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lockOverlays:
-  - {fileID: 1433067121}
-  - {fileID: 135478508}
-  - {fileID: 716689815}
-  - {fileID: 2065923604}
-  - {fileID: 1750382288}
 --- !u!114 &410571998
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1210,6 +1194,62 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &410572000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 410571995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6937873a7655a7f46884b59ac73bcbdd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkillUnlockOverlayUI
+  lockOverlays:
+  - {fileID: 1433067121}
+  - {fileID: 135478508}
+  - {fileID: 716689815}
+  - {fileID: 2065923604}
+  - {fileID: 1750382288}
+--- !u!114 &410572001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 410571995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &410572002
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 410571995}
+  m_CullTransparentMesh: 1
 --- !u!1 &413049367
 GameObject:
   m_ObjectHideFlags: 0
@@ -4036,6 +4076,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BreakableChest
   hp: 1
+  breakVfx: {fileID: 0}
 --- !u!65 &1163534346
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4686,7 +4727,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   which: 3
-  magicAttack: {fileID: 6982812146369565143}
+  magicAttack: {fileID: 6982812146369565145}
   secondsText: {fileID: 0}
 --- !u!114 &1215234078
 MonoBehaviour:
@@ -5068,7 +5109,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   which: 4
-  magicAttack: {fileID: 6982812146369565143}
+  magicAttack: {fileID: 6982812146369565145}
   secondsText: {fileID: 0}
 --- !u!114 &1282403725
 MonoBehaviour:
@@ -5322,7 +5363,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   which: 2
-  magicAttack: {fileID: 6982812146369565143}
+  magicAttack: {fileID: 6982812146369565145}
   secondsText: {fileID: 0}
 --- !u!114 &1376529524
 MonoBehaviour:
@@ -6294,7 +6335,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   which: 1
-  magicAttack: {fileID: 6982812146369565143}
+  magicAttack: {fileID: 6982812146369565145}
   secondsText: {fileID: 0}
 --- !u!114 &1716431089
 MonoBehaviour:
@@ -6678,7 +6719,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   which: 0
-  magicAttack: {fileID: 6982812146369565143}
+  magicAttack: {fileID: 6982812146369565145}
   secondsText: {fileID: 0}
 --- !u!114 &1775547194
 MonoBehaviour:
@@ -8240,6 +8281,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   statsPanel: {fileID: 1690038321}
+  player: {fileID: 6982812146369565144}
+  pointText: {fileID: 1425641962}
+  btnSTR: {fileID: 1168877262}
+  btnDEX: {fileID: 2123164193}
+  btnMAG: {fileID: 636281844}
+  btnLUK: {fileID: 425281874}
+  disableDuringMenu: []
 --- !u!114 &2092869552
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9979,8 +10027,8 @@ GameObject:
   - component: {fileID: 6982812146369565140}
   - component: {fileID: 6982812146369565141}
   - component: {fileID: 6982812146369565142}
-  - component: {fileID: 6982812146369565143}
   - component: {fileID: 6982812146369565144}
+  - component: {fileID: 6982812146369565145}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -10867,7 +10915,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bossTag: Boss
   toggleKey: 103
---- !u!114 &6982812146369565143
+--- !u!114 &6982812146369565144
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10876,7 +10924,48 @@ MonoBehaviour:
   m_GameObject: {fileID: 4416926081692045587}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 27c954ef7da8cdd4283eb6fbd6b21f58, type: 3}
+  m_Script: {fileID: 11500000, guid: 1c55c09691f60064d9b3549b9c93e323, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
+  baseMaxHP: 100
+  baseMaxMP: 50
+  basePhysicalATK: 10
+  baseMagicATK: 10
+  baseMPRegenPerSec: 1
+  baseMoveSpeed: 5
+  baseAttacksPerSecond: 1.5
+  maxHP: 0
+  currentHP: 0
+  maxMP: 0
+  currentMP: 0
+  level: 1
+  currentExp: 0
+  expToNext: 50
+  statPoints: 0
+  STR: 0
+  DEX: 0
+  MAG: 0
+  LUK: 0
+  physicalATK: 0
+  magicATK: 0
+  mpRegenPerSec: 0
+  moveSpeed: 0
+  attacksPerSecond: 0
+  attackInterval: 0
+  critChance: 0
+  critMultiplier: 0
+  baseCritChance: 0.05
+  baseCritMultiplier: 1.5
+--- !u!114 &6982812146369565145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4416926081692045587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82ff75fcce9ec1e42aca0f088eeb6f76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MagicAttack
   playerInput: {fileID: 1128240026}
@@ -10923,47 +11012,6 @@ MonoBehaviour:
   tTotalStrikeDuration: 2.4
   yMpCost: 20
   yCooldown: 12
---- !u!114 &6982812146369565144
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4416926081692045587}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c55c09691f60064d9b3549b9c93e323, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
-  baseMaxHP: 100
-  baseMaxMP: 50
-  basePhysicalATK: 10
-  baseMagicATK: 10
-  baseMPRegenPerSec: 1
-  baseMoveSpeed: 5
-  baseAttacksPerSecond: 1.5
-  maxHP: 0
-  currentHP: 0
-  maxMP: 0
-  currentMP: 0
-  level: 1
-  currentExp: 0
-  expToNext: 50
-  statPoints: 0
-  STR: 0
-  DEX: 0
-  MAG: 0
-  LUK: 0
-  physicalATK: 0
-  magicATK: 0
-  mpRegenPerSec: 0
-  moveSpeed: 0
-  attacksPerSecond: 0
-  attackInterval: 0
-  critChance: 0
-  critMultiplier: 0
-  baseCritChance: 0.05
-  baseCritMultiplier: 1.5
 --- !u!4 &6983258932159916298
 Transform:
   m_ObjectHideFlags: 0

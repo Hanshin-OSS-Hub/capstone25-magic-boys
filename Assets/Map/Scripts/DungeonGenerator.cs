@@ -44,6 +44,8 @@ public class DungeonGenerator : MonoBehaviour
 
     [HideInInspector]
     public DungeonGenState dungeonState = DungeonGenState.inactive;
+
+    public static event System.Action OnMapCompleted;
     
     
 
@@ -155,6 +157,8 @@ public class DungeonGenerator : MonoBehaviour
         yield return null;
         goCamera.SetActive(false);
         goPlayer.SetActive(true);
+
+        OnMapCompleted?.Invoke();
     }
     void SpawnDoors()
     {

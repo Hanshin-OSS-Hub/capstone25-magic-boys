@@ -320,7 +320,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5952386419ee824eaf900ddf515dcd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  input: {fileID: 439010292}
   statsPanel: {fileID: 6949930}
+  player: {fileID: 439010300}
+  pointText: {fileID: 1131873647}
+  btnSTR: {fileID: 1007659308}
+  btnDEX: {fileID: 1873274370}
+  btnMAG: {fileID: 1291727603}
+  btnLUK: {fileID: 217620746}
+  disableDuringMenu: []
 --- !u!114 &15288109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1099,13 +1107,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c8f5be76f107243b85097dcb72ab2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  magicAttack: {fileID: 0}
-  cooldownMasks:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  which: 1
+  attack: {fileID: 439010289}
+  secondsText: {fileID: 1855105326}
+  debugLog: 0
 --- !u!114 &91872777
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1827,6 +1832,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 217620744}
   m_CullTransparentMesh: 1
+--- !u!1001 &243772694
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 8032841063741016392, guid: 16f1d7f2dd2145348b4b3af98d0aeea7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.942917
+      objectReference: {fileID: 0}
+    - target: {fileID: 8032841063741016392, guid: 16f1d7f2dd2145348b4b3af98d0aeea7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8032841063741016392, guid: 16f1d7f2dd2145348b4b3af98d0aeea7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -3.6785145
+      objectReference: {fileID: 0}
+    - target: {fileID: 8032841063741016392, guid: 16f1d7f2dd2145348b4b3af98d0aeea7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8032841063741016392, guid: 16f1d7f2dd2145348b4b3af98d0aeea7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8032841063741016392, guid: 16f1d7f2dd2145348b4b3af98d0aeea7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8032841063741016392, guid: 16f1d7f2dd2145348b4b3af98d0aeea7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8032841063741016392, guid: 16f1d7f2dd2145348b4b3af98d0aeea7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8032841063741016392, guid: 16f1d7f2dd2145348b4b3af98d0aeea7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8032841063741016392, guid: 16f1d7f2dd2145348b4b3af98d0aeea7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8032841063741016393, guid: 16f1d7f2dd2145348b4b3af98d0aeea7, type: 3}
+      propertyPath: m_Name
+      value: IonStrike
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 16f1d7f2dd2145348b4b3af98d0aeea7, type: 3}
 --- !u!1 &279289392
 GameObject:
   m_ObjectHideFlags: 0
@@ -2835,7 +2897,78 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0c38d06a4a8b7746ab64d2d1ad53375, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  input: {fileID: 439010292}
+  player: {fileID: 439010300}
+  cam: {fileID: 1935493972}
+  firePoint: {fileID: 957023421}
+  enemyMask:
+    serializedVersion: 2
+    m_Bits: 512
+  worldMask:
+    serializedVersion: 2
+    m_Bits: 0
+  breakableMask:
+    serializedVersion: 2
+    m_Bits: 1024
   attackLockTime: 1.1
+  rollStateName: Roll
+  postRollBlock: 0.15
+  meleeRange: 2.5
+  meleeRadius: 0.8
+  meleeDamage: 20
+  hitDelay: 0
+  skillMpCost: 15
+  baseSkillDamage: 30
+  projectilePrefab: {fileID: -3790764205292089062, guid: 1336648bc1d8baf46a4515860950c9d4, type: 3}
+  projectileSpeed: 22
+  projectileMaxDistance: 40
+  skill1Cooldown: 3
+  castSfxName: fireball_cast
+  castSfxVolume: 1
+  castPitchRandom: {x: 0.98, y: 1.02}
+  castParticle1: 0
+  skill2MpCost: 20
+  baseSkill2Damage: 45
+  projectile2Prefab: {fileID: 2101115356960878115, guid: 4aa9f30a28a77224ba84b2a2c334c71b, type: 3}
+  projectile2Speed: 26
+  projectile2MaxDistance: 45
+  skill2Cooldown: 7
+  cast2SfxName: spark_cast
+  cast2SfxVolume: 1
+  cast2PitchRandom: {x: 0.98, y: 1.02}
+  castParticle2: 2
+  skill3MpCost: 25
+  baseSkill3Damage: 60
+  projectile3Prefab: {fileID: 0}
+  projectile3Speed: 28
+  projectile3MaxDistance: 50
+  skill3Cooldown: 9
+  cast3SfxName: skill3_cast
+  cast3SfxVolume: 1
+  cast3PitchRandom: {x: 0.98, y: 1.02}
+  castParticle3: 0
+  skill4MpCost: 30
+  baseSkill4Damage: 75
+  projectile4Prefab: {fileID: 0}
+  projectile4Speed: 30
+  projectile4MaxDistance: 55
+  skill4Cooldown: 11
+  cast4SfxName: skill4_cast
+  cast4SfxVolume: 1
+  cast4PitchRandom: {x: 0.98, y: 1.02}
+  castParticle4: 2
+  skill5MpCost: 35
+  baseSkill5Damage: 90
+  projectile5Prefab: {fileID: 0}
+  projectile5Speed: 32
+  projectile5MaxDistance: 60
+  skill5Cooldown: 13
+  cast5SfxName: skill5_cast
+  cast5SfxVolume: 1
+  cast5PitchRandom: {x: 0.98, y: 1.02}
+  castParticle5: 0
+  drawDebug: 1
+  debugMeleeColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!54 &439010290
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3164,9 +3297,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 439010286}
   m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea7bf185a055509468428a5ead0a4fd4, type: 3}
+  m_Script: {fileID: 11500000, guid: 7d2098a425138ea4c9b2d7897b017cfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHP: 100
+  currentHP: 10
+  currentExp: 10
 --- !u!1 &440980298
 GameObject:
   m_ObjectHideFlags: 0
@@ -4893,13 +5029,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c8f5be76f107243b85097dcb72ab2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  magicAttack: {fileID: 0}
-  cooldownMasks:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  which: 2
+  attack: {fileID: 439010289}
+  secondsText: {fileID: 1368854397}
+  debugLog: 0
 --- !u!114 &895214824
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5128,7 +5261,7 @@ GameObject:
   - component: {fileID: 970256715}
   - component: {fileID: 970256714}
   - component: {fileID: 970256713}
-  m_Layer: 12
+  m_Layer: 10
   m_Name: Box
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5162,7 +5295,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baddf3705eb28454695ad7129cbe9b31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 1
+  hp: 3
+  breakVfx: {fileID: 0}
 --- !u!114 &970256714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5218,11 +5352,11 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.32, y: 1.54, z: 1.68}
+  m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &970256717
 MeshRenderer:
@@ -7120,7 +7254,6 @@ GameObject:
   - component: {fileID: 1313042533}
   - component: {fileID: 1313042535}
   - component: {fileID: 1313042534}
-  - component: {fileID: 1313042536}
   m_Layer: 5
   m_Name: SkillIcons
   m_TagString: Untagged
@@ -7192,24 +7325,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &1313042536
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1313042532}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50a0a9cb6cc5c0141a58d17b5283d475, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lockOverlays:
-  - {fileID: 710802004}
-  - {fileID: 2004432424}
-  - {fileID: 1802183761}
-  - {fileID: 2033414647}
-  - {fileID: 1093318722}
 --- !u!1 &1339382379
 GameObject:
   m_ObjectHideFlags: 0
@@ -7700,7 +7815,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1399297603
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7733,13 +7848,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c8f5be76f107243b85097dcb72ab2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  magicAttack: {fileID: 0}
-  cooldownMasks:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  which: 2
+  attack: {fileID: 439010289}
+  secondsText: {fileID: 1368854397}
+  debugLog: 0
 --- !u!114 &1399297605
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8009,13 +8121,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c8f5be76f107243b85097dcb72ab2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  magicAttack: {fileID: 0}
-  cooldownMasks:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  which: 0
+  attack: {fileID: 439010289}
+  secondsText: {fileID: 688483011}
+  debugLog: 0
 --- !u!114 &1429576938
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8145,7 +8254,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1499789139
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8178,13 +8287,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c8f5be76f107243b85097dcb72ab2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  magicAttack: {fileID: 0}
-  cooldownMasks:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  which: 1
+  attack: {fileID: 439010289}
+  secondsText: {fileID: 1855105326}
+  debugLog: 0
 --- !u!114 &1499789141
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8388,13 +8494,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c8f5be76f107243b85097dcb72ab2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  magicAttack: {fileID: 0}
-  cooldownMasks:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  which: 4
+  attack: {fileID: 439010289}
+  secondsText: {fileID: 605824588}
+  debugLog: 0
 --- !u!114 &1523429001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8974,13 +9077,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c8f5be76f107243b85097dcb72ab2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  magicAttack: {fileID: 0}
-  cooldownMasks:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  which: 3
+  attack: {fileID: 439010289}
+  secondsText: {fileID: 1360940313}
+  debugLog: 0
 --- !u!114 &1596099454
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9462,7 +9562,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1667087570
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9495,13 +9595,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c8f5be76f107243b85097dcb72ab2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  magicAttack: {fileID: 0}
-  cooldownMasks:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  which: 3
+  attack: {fileID: 439010289}
+  secondsText: {fileID: 1360940313}
+  debugLog: 0
 --- !u!114 &1667087572
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9701,7 +9798,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1729747024
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9772,13 +9869,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c8f5be76f107243b85097dcb72ab2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  magicAttack: {fileID: 0}
-  cooldownMasks:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  which: 0
+  attack: {fileID: 439010289}
+  secondsText: {fileID: 688483011}
+  debugLog: 0
 --- !u!1 &1733355687
 GameObject:
   m_ObjectHideFlags: 0
@@ -10701,6 +10795,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9da9826fd6e37374eb782f721783bac0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stats: {fileID: 1845918676}
+  cameraPivot: {fileID: 740888743}
+  moveSpeed: 5
+  gravity: -9.81
+  jumpHeight: 1.5
+  mouseSensitivity: 200
+  pitchClamp: 45
+  invertY: 0
+  inputLocked: 0
 --- !u!136 &1845918672
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -10846,6 +10949,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 280f47870d96a6b4eb818773ffc235ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cam: {fileID: 740888746}
+  firePoint: {fileID: 0}
+  player: {fileID: 1845918676}
+  enemyMask:
+    serializedVersion: 2
+    m_Bits: 0
+  worldMask:
+    serializedVersion: 2
+    m_Bits: 0
+  rangedRange: 25
+  rangedDamage: 10
+  meleeRange: 2.5
+  meleeRadius: 0.8
+  meleeDamage: 20
+  skillKey: 49
+  skillMpCost: 15
+  baseSkillDamage: 30
+  projectilePrefab: {fileID: -3925849894111742497, guid: 1336648bc1d8baf46a4515860950c9d4, type: 3}
+  projectileSpeed: 22
+  projectileMaxDistance: 40
+  skill1Cooldown: 5
+  drawDebug: 1
+  debugRangedColor: {r: 0, g: 1, b: 1, a: 1}
+  debugMeleeColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1 &1855105324
 GameObject:
   m_ObjectHideFlags: 0
@@ -11556,7 +11683,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1956636924
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11589,13 +11716,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c8f5be76f107243b85097dcb72ab2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  magicAttack: {fileID: 0}
-  cooldownMasks:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  which: 4
+  attack: {fileID: 439010289}
+  secondsText: {fileID: 605824588}
+  debugLog: 0
 --- !u!114 &1956636926
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12590,3 +12714,4 @@ SceneRoots:
   - {fileID: 1257098879}
   - {fileID: 906522769}
   - {fileID: 970256712}
+  - {fileID: 243772694}
