@@ -8,7 +8,7 @@ using System.Security.Cryptography;
 public class WhisperPure : MonoBehaviour
 {
     [Header("Microphone Device Name")]
-    public string microphoneDevice = ""; // Inspector���� ����
+    public string microphoneDevice = "";
 
     [Header("Recording")]
     public KeyCode recordKey = KeyCode.R;
@@ -21,10 +21,14 @@ public class WhisperPure : MonoBehaviour
 
     private string lastText = "";
 
+    public event Action OnRecordEnd;
+    public event Action OnUploadStart;
+    public event Action<string> OnResponseReceived;
+
     void Start()
-    {
+{
         if (Microphone.devices.Length > 0)
-            microphoneDevice = Microphone.devices[0];  // �ڵ� ù ��°
+            microphoneDevice = Microphone.devices[0];  
     }
 
     void Update()
@@ -63,7 +67,8 @@ public class WhisperPure : MonoBehaviour
         isRecording = true;
         time = 0f;
 
-        clip = Microphone.Start(microphoneDevice, false, duration, 44100);
+        //clip = Microphone.Start(microphoneDevice, false, duration, 44100);
+        clip = Microphone.Start(microphoneDevice, false, duration, 16000);
         Debug.Log("[Whisper] Recording...");
     }
 
@@ -73,6 +78,7 @@ public class WhisperPure : MonoBehaviour
         isRecording = false;
         Microphone.End(microphoneDevice);
 
+        OnRecordEnd?.Invoke();
         Debug.Log("[Whisper] Sending to server...");
 
         byte[] wavData = SaveWav.Save(fileName, clip);
@@ -81,6 +87,7 @@ public class WhisperPure : MonoBehaviour
 
     IEnumerator SendToServer(byte[] wavData)
     {
+        OnUploadStart?.Invoke();
         WWWForm form = new WWWForm();
         form.AddBinaryData("audio", wavData, "audio.wav", "audio/wav");
 
@@ -93,12 +100,14 @@ public class WhisperPure : MonoBehaviour
                 WhisperResponse res = JsonUtility.FromJson<WhisperResponse>(req.downloadHandler.text);
                 lastText = res.text;
                 Debug.Log("[Whisper] Result = " + lastText);
+                OnResponseReceived?.Invoke(lastText);
             }
             else
             {
                 Debug.LogError("[Whisper] Error: " + req.error);
+                OnResponseReceived?.Invoke("Error: " + req.error);
             }
-        }
+}
         
     }
 

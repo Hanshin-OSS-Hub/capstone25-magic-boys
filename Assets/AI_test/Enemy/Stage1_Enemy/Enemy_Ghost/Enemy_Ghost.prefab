@@ -132,6 +132,8 @@ MonoBehaviour:
   navMeshAgent: {fileID: 0}
   animator: {fileID: 0}
   playerTransform: {fileID: 0}
+  attackSound: {fileID: 8300000, guid: 5f00fd0002239634586df67ce7e0e79c, type: 3}
+  deadSound: {fileID: 8300000, guid: 52a788699b3b7b443911241cedbecb96, type: 3}
 --- !u!1001 &6902599557673736901
 PrefabInstance:
   m_ObjectHideFlags: 0

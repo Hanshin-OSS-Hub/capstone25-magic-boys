@@ -39,11 +39,20 @@ public class DungeonGenerator : MonoBehaviour
     [UnityEngine.Range(0, 100)][SerializeField] int doorPercent = 25;
     [UnityEngine.Range(0, 1f)][SerializeField] float constructionDelay;
 
+    [Header("UI References")]
+    [SerializeField] GameObject uiCanvas;
+    [SerializeField] GameObject crosshairCanvas;
+
     [Header("Availabe at Runtime")]
     public List<Tile> genneratedTiles = new List<Tile>();
 
+    [Header("Reload Map")]
+    public string seneToLoad = "Game"; //�ν����Ϳ��� ��  �̸� ����
+
     [HideInInspector]
     public DungeonGenState dungeonState = DungeonGenState.inactive;
+
+    
 
     public static event System.Action OnMapCompleted;
     
@@ -57,32 +66,41 @@ public class DungeonGenerator : MonoBehaviour
     int attempts;
     int maxAttempts = 50;
 
+
     void Start()
     {
         goCamera = GameObject.Find("OverheadCamera");       
-        goPlayer = GameObject.FindWithTag("Player");       
+        goPlayer = GameObject.FindWithTag("Player");
+        if (uiCanvas == null) uiCanvas = GameObject.Find("Canvas(UI)");
+        if (crosshairCanvas == null) crosshairCanvas = GameObject.Find("Canvas");
         StartCoroutine(DungeonBuild());
-
     }
+
+    void ToggleMap(bool active)
+    {
+        if (goCamera != null) goCamera.SetActive(active);
+        if (goPlayer != null) goPlayer.SetActive(!active);
+        if (uiCanvas != null) uiCanvas.SetActive(!active);
+        if (crosshairCanvas != null) crosshairCanvas.SetActive(!active);
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(reloadKey))
         {
-            SceneManager.LoadScene("Game");
+            SceneManager.LoadScene(seneToLoad);
         }
         if(Input.GetKeyDown(toggleMapKey))
         {
-            goCamera.SetActive(!goCamera.activeInHierarchy);
-            goPlayer.SetActive(!goCamera.activeInHierarchy);
+            ToggleMap(!goCamera.activeInHierarchy);
         }
     }
 
     IEnumerator DungeonBuild()
     {
-        goCamera.SetActive(true);
-        goPlayer.SetActive(false);
+        ToggleMap(true);
         GameObject goContainer = new GameObject("Main Path");
-        container = goContainer.transform;
+container = goContainer.transform;
         container.SetParent(transform);
         tileRoot = CreateStartTile();
         DebugRoomLighting(tileRoot, Color.blue);
@@ -155,12 +173,11 @@ public class DungeonGenerator : MonoBehaviour
         SpawnDoors();
         dungeonState = DungeonGenState.completed;
         yield return null;
-        goCamera.SetActive(false);
-        goPlayer.SetActive(true);
+        ToggleMap(false);
 
         OnMapCompleted?.Invoke();
-    }
-    void SpawnDoors()
+        }
+void SpawnDoors()
     {
         if (doorPercent > 0)
         {

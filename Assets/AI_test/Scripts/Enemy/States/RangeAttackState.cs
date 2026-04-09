@@ -43,6 +43,10 @@ public class RangeAttackState : IEnemyState
     {
         if (enemy.stats.projectilePrefab != null && enemy.firePoint != null)
         {
+            if (enemy.attackSound != null)
+            {
+                SoundManager.Instance.PlaySFX3D(enemy.attackSound, enemy.transform.position);
+            }
             GameObject bullet = GameObject.Instantiate(enemy.stats.projectilePrefab, enemy.firePoint.position, enemy.firePoint.rotation);
 
             // (선택사항) 투사체 데미지 설정

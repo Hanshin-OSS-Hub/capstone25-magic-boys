@@ -15,7 +15,7 @@ public class BossRushState : IBossState
 
     public void EnterState(BossStateManager boss)
     {
-        Debug.Log("보스: 돌진 준비! (1초 대기)");
+        Debug.Log("보스: 돌진 준비 (1초 대기)");
 
         boss.animator.SetBool("isRushing", true);
 
@@ -110,41 +110,59 @@ public class BossRushState : IBossState
     {
         if (hasHitPlayer || boss.playerTransform == null) return;
 
-        float distance = Vector3.Distance(boss.transform.position, boss.playerTransform.position);
+        // 거리 계산 대신 보스 앞쪽에 가상의 구(Hitbox)를 생성
+        Vector3 checkPosition = boss.transform.position + (boss.transform.forward * 1.5f) + (Vector3.up * 1.0f);
 
-        if (distance <= 2.0f)
+        float hitRadius = 2.0f;
+
+        Collider[] hitColliders = Physics.OverlapSphere(checkPosition, hitRadius);
+
+        foreach (var hitCollider in hitColliders)
         {
-            hasHitPlayer = true;
-
-            boss.navMeshAgent.speed = 2.0f; // 속도를 거의 멈추다시피 줄임
-
-            IDamageable target = boss.playerTransform.GetComponent<IDamageable>();
-            if (target != null) target.TakeDamage(data.RushDamage);
-
-            ThirdPersonController playerController = boss.playerTransform.GetComponent<ThirdPersonController>();
-            if (playerController != null)
+            if (hitCollider.CompareTag("Player"))
             {
-                Vector3 dirToPlayer = (boss.playerTransform.position - boss.transform.position).normalized;
-                float dot = Vector3.Dot(boss.transform.right, dirToPlayer);
+                hasHitPlayer = true;
 
-                Vector3 pushDir = (dot > 0) ? boss.transform.right : -boss.transform.right;
+                // 1. 역경직 (타격감 보강)
+                boss.navMeshAgent.speed = 2.0f;
 
+                // 2. 데미지 처리
+                IDamageable target = hitCollider.GetComponent<IDamageable>();
+                if (target != null)
+                {
+                    Debug.Log("Rush 패턴 적중");
+                    target.TakeDamage(data.RushDamage);
+                }
 
-                pushDir = (pushDir + boss.transform.forward * 0.2f).normalized;
-                pushDir.y = 0;
+                if (boss.rushSound != null)
+                {
+                    SoundManager.Instance.PlaySFX3D(boss.rushSound, boss.transform.position);
+                }
 
-                // 수평 속도
-                Vector3 horizontalVelocity = pushDir * data.RushKnockback;
+                // 3. 넉백 처리
+                ThirdPersonController playerController = hitCollider.GetComponent<ThirdPersonController>();
+                if (playerController != null)
+                {
+                    Vector3 dirToPlayer = (boss.playerTransform.position - boss.transform.position).normalized;
+                    float dot = Vector3.Dot(boss.transform.right, dirToPlayer);
 
-                // 수직 속도 (확실하게 공중으로 쏘아 올림)
-                Vector3 verticalVelocity = Vector3.up * 12f;
+                    Vector3 pushDir = (dot > 0) ? boss.transform.right : -boss.transform.right;
 
-                Vector3 finalKnockbackVelocity = horizontalVelocity + verticalVelocity;
+                    // 앞쪽 밀어내기 비중 축소 (보스와 겹침 방지)
+                    pushDir = (pushDir + boss.transform.forward * 0.2f).normalized;
+                    pushDir.y = 0;
 
-                // 넉백 실행
-                playerController.TakeKnockback(finalKnockbackVelocity, 0.7f);
+                    // 수평/수직 분리 적용
+                    Vector3 horizontalVelocity = pushDir * data.RushKnockback;
+                    Vector3 verticalVelocity = Vector3.up * 12f;
 
-                Debug.Log(dot > 0 ? "오른쪽 대각선으로 쳐냄!" : "왼쪽 대각선으로 쳐냄!");
+                    Vector3 finalKnockbackVelocity = horizontalVelocity + verticalVelocity;
+
+                    playerController.TakeKnockback(finalKnockbackVelocity, 0.7f);
+
+                    Debug.Log(dot > 0 ? "오른쪽 대각선으로 쳐냄!" : "왼쪽 대각선으로 쳐냄!");
+                }
+                break; 
             }
         }
     }

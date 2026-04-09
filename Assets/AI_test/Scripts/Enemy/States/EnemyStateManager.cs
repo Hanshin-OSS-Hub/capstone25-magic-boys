@@ -22,7 +22,10 @@ public class EnemyStateManager : MonoBehaviour, IDamageable
     [HideInInspector] public Animator animator;
     [HideInInspector] public Transform playerTransform;
 
-    // ▼ MeshRenderer → Renderer(스킨 메쉬 포함)로 범용화
+    public AudioClip attackSound;
+    public AudioClip deadSound;
+
+    // MeshRenderer → Renderer(스킨 메쉬 포함)로 범용화
     private Renderer rend;
     private Material originalMaterial;
 
@@ -86,9 +89,17 @@ public class EnemyStateManager : MonoBehaviour, IDamageable
             IDamageable target = playerTransform.GetComponent<IDamageable>();
             if (target != null)
             {
+                if (attackSound != null)
+                {
+                    SoundManager.Instance.PlaySFX3D(attackSound, transform.position);
+                }
                 target.TakeDamage(stats.Damage);
                 //Debug.Log("공격 적중!");
+
             }
+
+
+
         }
     }
 
@@ -137,6 +148,10 @@ public class EnemyStateManager : MonoBehaviour, IDamageable
 
     public void StartDeathSequence()
     {
+        if (deadSound != null)
+        {
+            SoundManager.Instance.PlaySFX3D(deadSound, transform.position);
+        }
         StartCoroutine(DeathCoroutine());
     }
 
@@ -171,7 +186,7 @@ public class EnemyStateManager : MonoBehaviour, IDamageable
         TransitionToState(idleState);
     }
 
-    // ▼ EXP 지급: PlayerStats로 변경 (SimplePlayerMover → PlayerStats)
+    // EXP 지급: PlayerStats로 변경 (SimplePlayerMover → PlayerStats)
     void GiveExpToPlayer()
     {
         if (!playerTransform) return;

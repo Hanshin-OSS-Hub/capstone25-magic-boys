@@ -13,6 +13,12 @@ public class BossDeadState : IBossState
 
         if (boss.animator != null) boss.animator.SetTrigger("dead");
 
+        if (boss.deadSound != null || boss.deadSound2 != null)
+        {
+            SoundManager.Instance.PlaySFX3D(boss.deadSound, boss.transform.position);
+            SoundManager.Instance.PlaySFX3D(boss.deadSound2, boss.transform.position);
+        }
+
         // 3. 약점 숨기기 (혹시 켜져있다면)
         if (boss.weakPointObject != null) boss.weakPointObject.SetActive(false);
 

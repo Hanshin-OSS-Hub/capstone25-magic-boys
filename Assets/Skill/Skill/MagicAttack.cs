@@ -100,6 +100,11 @@ public class MagicAttack : MonoBehaviour
     private float tRemain;
     private float yRemain;
 
+    public enum SkillSlot { None, Q, E, R, T, Y }
+    private SkillSlot pendingSlot = SkillSlot.None;
+
+    public bool IsAiming => pendingSlot != SkillSlot.None;
+
     void Awake()
     {
         if (!playerInput) playerInput = GetComponent<PlayerInput>();
@@ -114,11 +119,69 @@ public class MagicAttack : MonoBehaviour
         if (StatsPanelToggle.UIBlocked) return;
         if (!playerStats) return;
 
-        if (skill1Key != KeyCode.None && Input.GetKeyDown(skill1Key)) TryCastQ();
-        if (skill2Key != KeyCode.None && Input.GetKeyDown(skill2Key)) TryCastE();
-        if (skill3Key != KeyCode.None && Input.GetKeyDown(skill3Key)) TryCastR();
-        if (skill4Key != KeyCode.None && Input.GetKeyDown(skill4Key)) TryCastT();
-        if (skill5Key != KeyCode.None && Input.GetKeyDown(skill5Key)) TryCastY();
+        if (!IsAiming)
+        {
+            if (skill1Key != KeyCode.None && Input.GetKeyDown(skill1Key)) SelectSkill(SkillSlot.Q);
+            else if (skill2Key != KeyCode.None && Input.GetKeyDown(skill2Key)) SelectSkill(SkillSlot.E);
+            else if (skill3Key != KeyCode.None && Input.GetKeyDown(skill3Key)) SelectSkill(SkillSlot.R);
+            else if (skill4Key != KeyCode.None && Input.GetKeyDown(skill4Key)) SelectSkill(SkillSlot.T);
+            else if (skill5Key != KeyCode.None && Input.GetKeyDown(skill5Key)) SelectSkill(SkillSlot.Y);
+        }
+        else
+        {
+            // 좌클릭 시전
+            if (Input.GetMouseButtonDown(0))
+            {
+                ConfirmCast();
+            }
+            // 우클릭 취소
+            else if (Input.GetMouseButtonDown(1))
+            {
+                CancelCast();
+            }
+        }
+        }
+
+        public void SelectSkill(SkillSlot slot)
+        {
+        int index = (int)slot - 1;
+        if (index < 0) return;
+
+        if (!IsUnlocked(index))
+        {
+            Debug.Log($"[MagicAttack] {slot} is locked.");
+            return;
+        }
+
+        if (GetCooldownRatio(index) > 0f)
+        {
+            Debug.Log($"[MagicAttack] {slot} is on cooldown.");
+            return;
+        }
+
+        pendingSlot = slot;
+        Debug.Log($"[MagicAttack] Selected {slot}. Left-click to cast, Right-click to cancel.");
+        }
+
+    private void ConfirmCast()
+    {
+        SkillSlot toCast = pendingSlot;
+        pendingSlot = SkillSlot.None;
+
+        switch (toCast)
+        {
+            case SkillSlot.Q: TryCastQ(); break;
+            case SkillSlot.E: TryCastE(); break;
+            case SkillSlot.R: TryCastR(); break;
+            case SkillSlot.T: TryCastT(); break;
+            case SkillSlot.Y: TryCastY(); break;
+        }
+    }
+
+    private void CancelCast()
+    {
+        Debug.Log($"[MagicAttack] Cancelled {pendingSlot}.");
+        pendingSlot = SkillSlot.None;
     }
 
     void TickCooldowns()

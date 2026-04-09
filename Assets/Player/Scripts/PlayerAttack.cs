@@ -12,8 +12,9 @@ public class PlayerAttack : MonoBehaviour
 
     private PlayerInput playerInput;
     private PlayerRoll playerRoll;
+    private MagicAttack magicAttack;
 
-    // Ãß°¡: ±¸¸£±â ³¡³­ Á÷ÈÄ ³²¾ÆÀÖ´Â °ø°Ý ÀÔ·Â ¹«½Ã¿ë
+    // ï¿½ß°ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ ï¿½ï¿½ï¿½Ã¿ï¿½
     private bool blockAttackUntilRelease = false;
 
     [Header("Chest Hit")]
@@ -28,6 +29,7 @@ public class PlayerAttack : MonoBehaviour
 
         playerInput = GetComponent<PlayerInput>();
         playerRoll = GetComponent<PlayerRoll>();
+        magicAttack = GetComponent<MagicAttack>();
 
         if (playerCamera == null)
             playerCamera = Camera.main;
@@ -37,14 +39,21 @@ public class PlayerAttack : MonoBehaviour
     {
         if (playerInput == null) return;
 
-        // ±¸¸£´Â Áß¿¡´Â °ø°Ý ¸·±â
-        if (playerRoll != null && playerRoll.IsRolling)
+
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½Ï¹ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ò°ï¿½
+        if (magicAttack != null && magicAttack.IsAiming)
         {
-            blockAttackUntilRelease = true;   // Ãß°¡
             return;
         }
 
-        // ±¸¸£±â ³¡³­ µÚ °ø°Ý ¹öÆ°ÀÌ ¾ÆÁ÷ ´­·ÁÀÖÀ¸¸é °ø°Ý ¾È ÇÔ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        if (playerRoll != null && playerRoll.IsRolling)
+        {
+            blockAttackUntilRelease = true;   // ï¿½ß°ï¿½
+            return;
+        }
+
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½
         if (blockAttackUntilRelease)
         {
             if (playerInput.IsAttackPressed)
@@ -84,7 +93,7 @@ public class PlayerAttack : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit, chestHitRange))
         {
-            Debug.Log("¸ÂÀº ¿ÀºêÁ§Æ®: " + hit.collider.name);
+            Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®: " + hit.collider.name);
 
             BreakableChest chest = hit.collider.GetComponentInParent<BreakableChest>();
             if (chest != null)

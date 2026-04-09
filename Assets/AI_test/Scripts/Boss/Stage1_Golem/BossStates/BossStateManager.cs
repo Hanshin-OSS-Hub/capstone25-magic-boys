@@ -39,6 +39,16 @@ public class BossStateManager : MonoBehaviour, IDamageable
     [HideInInspector] public Animator animator;
     [HideInInspector] public Transform playerTransform;
 
+    [Header("Boss Sounds")]
+    public AudioClip attackSound;
+    public AudioClip smashSound;
+    public AudioClip rushSound;
+    public AudioClip throwSound;
+    public AudioClip ventingSound;
+    public AudioClip deadSound;
+    public AudioClip deadSound2;
+
+
     void Awake()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
@@ -217,7 +227,6 @@ public class BossStateManager : MonoBehaviour, IDamageable
         float attackRadius = 5.0f;
 
         Collider[] hitColliders = Physics.OverlapSphere(attackPos, attackRadius);
-        bool hitSomething = false;
         foreach (var hitCollider in hitColliders)
         {
             if (hitCollider.CompareTag("Player"))
@@ -225,12 +234,16 @@ public class BossStateManager : MonoBehaviour, IDamageable
                 IDamageable target = hitCollider.GetComponent<IDamageable>();
                 if (target != null)
                 {
+                    Debug.Log("보스 -> Player 평타 적중");
                     target.TakeDamage(stats.Damage);
-                    hitSomething = true;
+                }
+
+                if (attackSound != null)
+                {
+                    SoundManager.Instance.PlaySFX3D(attackSound, transform.position);
                 }
             }
         }
-        if (hitSomething) Debug.Log("평타 적중!");
     }
 
     void OnDrawGizmosSelected()
