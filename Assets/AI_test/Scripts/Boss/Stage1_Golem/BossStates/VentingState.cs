@@ -8,7 +8,6 @@ public class VentingState : IBossState
     {
         Debug.Log("보스: 과열! 냉각 모드 (약점 노출)");
 
-        // 1. 애니메이션 시작 (isVenting 켜기)
         boss.animator.SetBool("isVenting", true);
 
         boss.navMeshAgent.isStopped = true;
@@ -31,7 +30,6 @@ public class VentingState : IBossState
     {
         timer -= Time.deltaTime;
 
-        // 시간이 다 되면 다시 추적 상태로
         if (timer <= 0)
         {
             boss.TransitionToState(boss.chaseState);
@@ -40,8 +38,12 @@ public class VentingState : IBossState
 
     public void ExitState(BossStateManager boss)
     {
-        // 2. 애니메이션 종료 (isVenting 끄기)
         boss.animator.SetBool("isVenting", false);
+
+        if (boss.ventingSound != null)
+        {
+            SoundManager.Instance.PlaySFX3D(boss.ventingSound, boss.transform.position);
+        }
 
         if (boss.weakPointObject != null) boss.weakPointObject.SetActive(false);
         boss.navMeshAgent.isStopped = false;

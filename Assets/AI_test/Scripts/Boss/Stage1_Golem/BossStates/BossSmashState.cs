@@ -125,6 +125,11 @@ public class BossSmashState : IBossState
                         target.TakeDamage(data.SmashDamage);
                     }
 
+                    if (boss.smashSound != null)
+                    {
+                        SoundManager.Instance.PlaySFX3D(boss.smashSound, boss.transform.position);
+                    }
+
                     // 2. 넉백 처리 (수정된 부분)
                     ThirdPersonController playerController = hitCollider.GetComponent<ThirdPersonController>();
                     if (playerController != null)
