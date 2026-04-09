@@ -928,6 +928,7 @@ MonoBehaviour:
   doorPercent: 25
   constructionDelay: 0
   genneratedTiles: []
+  seneToLoad: 0326_MapMerge
   dungeonState: 0
 --- !u!4 &160881563
 Transform:
@@ -5046,6 +5047,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1052296914}
   - component: {fileID: 1052296913}
+  - component: {fileID: 1052296915}
   m_Layer: 0
   m_Name: Whisper
   m_TagString: Untagged
@@ -5084,6 +5086,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1052296915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1052296912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 352a525e2ebb7b54096b643a08573553, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WhisperLatencyTester
+  whisper: {fileID: 1052296913}
 --- !u!1 &1067584468
 GameObject:
   m_ObjectHideFlags: 0

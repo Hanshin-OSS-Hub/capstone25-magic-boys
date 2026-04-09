@@ -42,8 +42,13 @@ public class DungeonGenerator : MonoBehaviour
     [Header("Availabe at Runtime")]
     public List<Tile> genneratedTiles = new List<Tile>();
 
+    [Header("Reload Map")]
+    public string seneToLoad = "Game"; //인스펙터에서 씬  이름 지정
+
     [HideInInspector]
     public DungeonGenState dungeonState = DungeonGenState.inactive;
+
+    
 
     public static event System.Action OnMapCompleted;
     
@@ -57,6 +62,7 @@ public class DungeonGenerator : MonoBehaviour
     int attempts;
     int maxAttempts = 50;
 
+
     void Start()
     {
         goCamera = GameObject.Find("OverheadCamera");       
@@ -68,7 +74,7 @@ public class DungeonGenerator : MonoBehaviour
     {
         if (Input.GetKeyDown(reloadKey))
         {
-            SceneManager.LoadScene("Game");
+            SceneManager.LoadScene(seneToLoad);
         }
         if(Input.GetKeyDown(toggleMapKey))
         {
