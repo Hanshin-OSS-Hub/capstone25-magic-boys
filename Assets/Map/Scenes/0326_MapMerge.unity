@@ -1360,6 +1360,21 @@ MonoBehaviour:
   enemyMask:
     serializedVersion: 2
     m_Bits: 4672
+  skill1Key: 49
+  skill2Key: 50
+  skill3Key: 51
+  skill4Key: 52
+  skill5Key: 53
+  castEffectPoint: {fileID: 0}
+  successParticle: 4
+  failParticle: 5
+  resultParticleLifetime: 2
+  successSfxName: Cast_Success
+  failSfxName: Cast_Fail
+  successSfxVolume: 1
+  failSfxVolume: 1
+  successSfxPitch: 1
+  failSfxPitch: 1
   maxAimDistance: 25
   spawnForwardOffset: 0.8
   spawnHeightOffset: 1.2
@@ -1408,7 +1423,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bossTag: Boss
-  toggleKey: 103
+  toggleKey: 9
 --- !u!114 &211820194
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5050,7 +5065,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   microphoneDevice: 
-  recordKey: 279
+  recordKey: 113
   duration: 3
   fileName: output.wav
 --- !u!4 &1052296914
@@ -7861,6 +7876,8 @@ MonoBehaviour:
   fireHitVFX: {fileID: 358637981425055526, guid: 8eb503696b886e04faff8fc0f480d473, type: 3}
   sparkCastVFX: {fileID: 952961124639765284, guid: 1095a5c9f65bfbe4383f63d5d1886c65, type: 3}
   sparkHitVFX: {fileID: 952961124639765284, guid: 1095a5c9f65bfbe4383f63d5d1886c65, type: 3}
+  castSuccessVFX: {fileID: 0}
+  castFailVFX: {fileID: 0}
   poolSize: 20
   expandIfEmpty: 1
   defaultLifetime: 3
@@ -8643,9 +8660,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'R
-
-'
+  m_text: 3
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -9896,7 +9911,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Q
+  m_text: 1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -10283,7 +10298,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'E
+  m_text: '2
 
 '
   m_isRightToLeft: 0
@@ -10469,7 +10484,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: T
+  m_text: 4
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -11611,9 +11626,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Y
-
-'
+  m_text: 5
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

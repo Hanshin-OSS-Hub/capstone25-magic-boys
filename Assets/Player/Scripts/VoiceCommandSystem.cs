@@ -24,36 +24,36 @@ public class VoiceCommandSystem : MonoBehaviour
         // Q - Fireball
         if (text.Contains("fireball") || text.Contains("fire"))
         {
-            magicAttack.TryCastQ();
-            Debug.Log("[VoiceCommand] Cast Fireball (Q)");
+            magicAttack.SelectSkill(MagicAttack.SkillSlot.Q);
+            Debug.Log("[VoiceCommand] Select Fireball (Q)");
         }
 
         // E - Water Field
         if (text.Contains("water") || text.Contains("ice"))
         {
-            magicAttack.TryCastE();
-            Debug.Log("[VoiceCommand] Cast Water Field (E)");
+            magicAttack.SelectSkill(MagicAttack.SkillSlot.E);
+            Debug.Log("[VoiceCommand] Select Water Field (E)");
         }
 
         // R - Earth Wall
         if (text.Contains("earth") || text.Contains("wall") || text.Contains("rock"))
         {
-            magicAttack.TryCastR();
-            Debug.Log("[VoiceCommand] Cast Earth Wall (R)");
+            magicAttack.SelectSkill(MagicAttack.SkillSlot.R);
+            Debug.Log("[VoiceCommand] Select Earth Wall (R)");
         }
 
         // T - Thunder Rain
         if (text.Contains("thunder") || text.Contains("lightning") || text.Contains("storm"))
         {
-            magicAttack.TryCastT();
-            Debug.Log("[VoiceCommand] Cast Thunder Rain (T)");
+            magicAttack.SelectSkill(MagicAttack.SkillSlot.T);
+            Debug.Log("[VoiceCommand] Select Thunder Rain (T)");
         }
 
         // Y - Reserved (Skill 5)
         if (text.Contains("ultimate") || text.Contains("skill y"))
         {
-            magicAttack.TryCastY();
-            Debug.Log("[VoiceCommand] Cast Y Skill");
+            magicAttack.SelectSkill(MagicAttack.SkillSlot.Y);
+            Debug.Log("[VoiceCommand] Select Y Skill");
         }
 
         whisper.ClearText();
