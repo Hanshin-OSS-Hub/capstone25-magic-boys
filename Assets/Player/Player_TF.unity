@@ -448,6 +448,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &79715149
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 79715150}
+  m_Layer: 0
+  m_Name: CastResultPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &79715150
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 79715149}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 272993188633179440}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &135478508
 GameObject:
   m_ObjectHideFlags: 0
@@ -2662,10 +2693,16 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 8a0d597b13ac1fb4f986251e1d4b9fae, type: 3}
   - name: spark_hit
     clip: {fileID: 8300000, guid: 09d18b019cde4b94f876cadd6b4a3be5, type: 3}
-  - name: Cast_Success
-    clip: {fileID: 8300000, guid: 3c2ae6533f4e2444c9d5860294c58039, type: 3}
   - name: Cast_Fail
     clip: {fileID: 8300000, guid: 177dbec1d6da42f499bc00c17bb2b6aa, type: 3}
+  - name: Fireball_Voice
+    clip: {fileID: 8300000, guid: 00dfe9d103fd97043a736d48c553717b, type: 3}
+  - name: Water_Voice
+    clip: {fileID: 8300000, guid: 0b65f7df7d53c914b85c92b63252f211, type: 3}
+  - name: Earth_Voice
+    clip: {fileID: 8300000, guid: 88087d4dcc12da24e98814de462442d9, type: 3}
+  - name: Thunder_Voice
+    clip: {fileID: 8300000, guid: af7274ec07642c349a397bee81f5321b, type: 3}
   bgmVolume: 1
   sfxVolume: 1
   poolInitialSize: 6
@@ -3715,37 +3752,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 857879935}
   m_CullTransparentMesh: 1
---- !u!1 &912224431
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 912224432}
-  m_Layer: 0
-  m_Name: CastPosition
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &912224432
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 912224431}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 272993188633179440}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &978989761
 GameObject:
   m_ObjectHideFlags: 0
@@ -6981,8 +6987,8 @@ MonoBehaviour:
   fireHitVFX: {fileID: 358637981425055526, guid: 8eb503696b886e04faff8fc0f480d473, type: 3}
   sparkCastVFX: {fileID: 952961124639765284, guid: 1095a5c9f65bfbe4383f63d5d1886c65, type: 3}
   sparkHitVFX: {fileID: 952961124639765284, guid: 1095a5c9f65bfbe4383f63d5d1886c65, type: 3}
-  castSuccessVFX: {fileID: 7155335147208632822, guid: 97c43495f80a3244fad1301dfafbe252, type: 3}
-  castFailVFX: {fileID: 6126188424833946103, guid: a58aa9a78f2b45b45bb0f3e2e1e3ad3c, type: 3}
+  castSuccessVFX: {fileID: 3797912586305360933, guid: 521f87196874933438b1439acd4c12a0, type: 3}
+  castFailVFX: {fileID: 8210478666967721066, guid: c4580228ee7b96b41988dafd9d113ff5, type: 3}
   poolSize: 20
   expandIfEmpty: 1
   defaultLifetime: 3
@@ -9006,7 +9012,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7898439671471407384}
-  - {fileID: 912224432}
+  - {fileID: 79715150}
   m_Father: {fileID: 3893294197915634601}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &277042836730614717
@@ -11020,16 +11026,25 @@ MonoBehaviour:
   skill3Key: 114
   skill4Key: 116
   skill5Key: 121
-  castEffectPoint: {fileID: 3893294197915634601}
+  castEffectPoint: {fileID: 79715150}
   successParticle: 4
   failParticle: 5
   resultParticleLifetime: 1
-  successSfxName: Cast_Success
   failSfxName: Cast_Fail
-  successSfxVolume: 1
   failSfxVolume: 1
-  successSfxPitch: 1
   failSfxPitch: 1
+  fireballSuccessSfxName: Fireball_Voice
+  fireballSuccessSfxVolume: 1
+  fireballSuccessSfxPitch: 1
+  waterSuccessSfxName: Water_Voice
+  waterSuccessSfxVolume: 1
+  waterSuccessSfxPitch: 1
+  earthSuccessSfxName: Earth_Voice
+  earthSuccessSfxVolume: 1
+  earthSuccessSfxPitch: 1
+  thunderSuccessSfxName: Thunder_Voice
+  thunderSuccessSfxVolume: 1
+  thunderSuccessSfxPitch: 1
   maxAimDistance: 25
   spawnForwardOffset: 0.8
   spawnHeightOffset: 1.2

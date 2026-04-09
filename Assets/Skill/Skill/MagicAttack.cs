@@ -22,13 +22,30 @@ public class MagicAttack : MonoBehaviour
     public ParticleType failParticle = ParticleType.CastFail;
     public float resultParticleLifetime = 2f;
 
-    [Header("Cast Result Sound")]
-    public string successSfxName = "Cast_Success";
+    [Header("Cast Fail Sound")]
     public string failSfxName = "Cast_Fail";
-    [Range(0f, 1f)] public float successSfxVolume = 1f;
     [Range(0f, 1f)] public float failSfxVolume = 1f;
-    public float successSfxPitch = 1f;
     public float failSfxPitch = 1f;
+
+    [Header("Cast Success Voice - Fireball")]
+    public string fireballSuccessSfxName = "Fireball_Voice";
+    [Range(0f, 1f)] public float fireballSuccessSfxVolume = 1f;
+    public float fireballSuccessSfxPitch = 1f;
+
+    [Header("Cast Success Voice - Water")]
+    public string waterSuccessSfxName = "Water_Voice";
+    [Range(0f, 1f)] public float waterSuccessSfxVolume = 1f;
+    public float waterSuccessSfxPitch = 1f;
+
+    [Header("Cast Success Voice - Earth")]
+    public string earthSuccessSfxName = "Earth_Voice";
+    [Range(0f, 1f)] public float earthSuccessSfxVolume = 1f;
+    public float earthSuccessSfxPitch = 1f;
+
+    [Header("Cast Success Voice - Thunder")]
+    public string thunderSuccessSfxName = "Thunder_Voice";
+    [Range(0f, 1f)] public float thunderSuccessSfxVolume = 1f;
+    public float thunderSuccessSfxPitch = 1f;
 
     [Header("Common")]
     public float maxAimDistance = 25f;
@@ -172,16 +189,20 @@ public class MagicAttack : MonoBehaviour
         ParticleManager.Instance.Play(type, pos, rot, resultParticleLifetime);
     }
 
-    void PlayResultSound(bool success, Vector3 pos)
+    void PlayFailSound(Vector3 pos)
     {
         if (SoundManager.Instance == null) return;
+        if (string.IsNullOrEmpty(failSfxName)) return;
+        if (!SoundManager.Instance.HasSFX(failSfxName)) return;
 
-        string clipName = success ? successSfxName : failSfxName;
+        SoundManager.Instance.PlaySFX3D(failSfxName, pos, failSfxVolume, failSfxPitch);
+    }
+
+    void PlaySuccessSound(string clipName, Vector3 pos, float volume, float pitch)
+    {
+        if (SoundManager.Instance == null) return;
         if (string.IsNullOrEmpty(clipName)) return;
         if (!SoundManager.Instance.HasSFX(clipName)) return;
-
-        float volume = success ? successSfxVolume : failSfxVolume;
-        float pitch = success ? successSfxPitch : failSfxPitch;
 
         SoundManager.Instance.PlaySFX3D(clipName, pos, volume, pitch);
     }
@@ -190,14 +211,14 @@ public class MagicAttack : MonoBehaviour
     {
         Debug.Log($"[MagicAttack] Cast Failed: {reason}");
         PlayResultParticle(failParticle, pos, rot);
-        PlayResultSound(false, pos);
+        PlayFailSound(pos);
         return false;
     }
 
-    bool SuccessCast(Vector3 pos, Quaternion rot)
+    bool SuccessCast(Vector3 pos, Quaternion rot, string successClipName, float successVolume, float successPitch)
     {
         PlayResultParticle(successParticle, pos, rot);
-        PlayResultSound(true, pos);
+        PlaySuccessSound(successClipName, pos, successVolume, successPitch);
         return true;
     }
 
@@ -226,7 +247,7 @@ public class MagicAttack : MonoBehaviour
         projectile.Launch(damage, playerStats, enemyMask, qProjectileSpeed, qMaxDistance);
 
         qRemain = qCooldown;
-        return SuccessCast(pos, rot);
+        return SuccessCast(pos, rot, fireballSuccessSfxName, fireballSuccessSfxVolume, fireballSuccessSfxPitch);
     }
 
     public bool TryCastE()
@@ -255,7 +276,7 @@ public class MagicAttack : MonoBehaviour
         water.Init(playerStats, enemyMask, tickDamage, eDuration, eTickInterval, eSlowMultiplier, eSlowDuration);
 
         eRemain = eCooldown;
-        return SuccessCast(fxPos, fxRot);
+        return SuccessCast(fxPos, fxRot, waterSuccessSfxName, waterSuccessSfxVolume, waterSuccessSfxPitch);
     }
 
     public bool TryCastR()
@@ -291,7 +312,7 @@ public class MagicAttack : MonoBehaviour
         wall.Init(playerStats, enemyMask, damage, rLifeTime, transform.root);
 
         rRemain = rCooldown;
-        return SuccessCast(fxPos, fxRot);
+        return SuccessCast(fxPos, fxRot, earthSuccessSfxName, earthSuccessSfxVolume, earthSuccessSfxPitch);
     }
 
     public bool TryCastT()
@@ -320,7 +341,7 @@ public class MagicAttack : MonoBehaviour
         thunder.Init(playerStats, enemyMask, damage, tAreaRadius, tSingleStrikeRadius, tStrikeCount, tWarningDuration, tTotalStrikeDuration);
 
         tRemain = tCooldown;
-        return SuccessCast(fxPos, fxRot);
+        return SuccessCast(fxPos, fxRot, thunderSuccessSfxName, thunderSuccessSfxVolume, thunderSuccessSfxPitch);
     }
 
     public bool TryCastY()
