@@ -8,6 +8,11 @@ public class VentingState : IBossState
     {
         Debug.Log("보스: 과열! 냉각 모드 (약점 노출)");
 
+        if (boss.ventingSound != null)
+        {
+            SoundManager.Instance.PlaySFX3D(boss.ventingSound, boss.transform.position);
+        }
+
         boss.animator.SetBool("isVenting", true);
 
         boss.navMeshAgent.isStopped = true;
@@ -39,11 +44,6 @@ public class VentingState : IBossState
     public void ExitState(BossStateManager boss)
     {
         boss.animator.SetBool("isVenting", false);
-
-        if (boss.ventingSound != null)
-        {
-            SoundManager.Instance.PlaySFX3D(boss.ventingSound, boss.transform.position);
-        }
 
         if (boss.weakPointObject != null) boss.weakPointObject.SetActive(false);
         boss.navMeshAgent.isStopped = false;
