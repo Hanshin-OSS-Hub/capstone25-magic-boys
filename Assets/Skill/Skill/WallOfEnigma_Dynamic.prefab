@@ -5085,7 +5085,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EarthWallSkill
   damageBox: {fileID: 5355188390198102621}
-  solidCollider: {fileID: 0}
+  solidCollider: {fileID: -4067636178159801396}
   dealSpawnDamage: 1
   dealContactDamage: 1
   contactTickInterval: 0.5
