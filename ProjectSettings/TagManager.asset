@@ -8,6 +8,7 @@ TagManager:
   - PatrolPoint
   - Boss
   - Global Resource
+  - Movable
   layers:
   - Default
   - TransparentFX
