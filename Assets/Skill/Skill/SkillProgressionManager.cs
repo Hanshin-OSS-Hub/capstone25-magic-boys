@@ -7,25 +7,37 @@ public class SkillProgressionManager : MonoBehaviour
 
     public const int MaxSkills = 5;
 
-    // 1이면 스킬1만 활성, 2면 스킬1~2 활성...
+    // 1이면 스킬1만 활성화, 2면 스킬1~2 활성화
     public int UnlockedSkillCount { get; private set; } = 1;
 
     public event Action OnChanged;
 
-    const string KEY = "UnlockedSkillCount";
+    private const string KEY = "UnlockedSkillCount";
 
     void Awake()
     {
-        if (Instance != null) { Destroy(gameObject); return; }
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
+        Load();
+    }
+
+    private void Load()
+    {
         UnlockedSkillCount = PlayerPrefs.GetInt(KEY, 1);
         UnlockedSkillCount = Mathf.Clamp(UnlockedSkillCount, 1, MaxSkills);
     }
 
     public bool IsUnlocked(int slotIndex0Based)
-        => slotIndex0Based >= 0 && slotIndex0Based < UnlockedSkillCount;
+    {
+        return slotIndex0Based >= 0 && slotIndex0Based < UnlockedSkillCount;
+    }
 
     // stageIndex: 1~5
     public void RewardFromStage(int stageIndex)
@@ -34,6 +46,7 @@ public class SkillProgressionManager : MonoBehaviour
         if (target <= UnlockedSkillCount) return;
 
         UnlockedSkillCount = target;
+
         PlayerPrefs.SetInt(KEY, UnlockedSkillCount);
         PlayerPrefs.Save();
 
@@ -44,5 +57,11 @@ public class SkillProgressionManager : MonoBehaviour
     {
         PlayerPrefs.DeleteKey(KEY);
         PlayerPrefs.Save();
+
+        if (Instance != null)
+        {
+            Instance.UnlockedSkillCount = 1;
+            Instance.OnChanged?.Invoke();
+        }
     }
 }

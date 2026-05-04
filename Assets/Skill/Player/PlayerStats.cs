@@ -3,16 +3,16 @@ using System;
 
 public enum StatType { STR, DEX, MAG, LUK }
 
-public class PlayerStats : MonoBehaviour, IDamageable 
+public class PlayerStats : MonoBehaviour, IDamageable
 {
-    [Header("Base (before stat scaling)")]
+    [Header("Base")]
     public int baseMaxHP = 100;
     public int baseMaxMP = 50;
     public int basePhysicalATK = 10;
     public int baseMagicATK = 10;
     public float baseMPRegenPerSec = 1f;
-    public float baseMoveSpeed = 5f;          // m/s
-    public float baseAttacksPerSecond = 1.5f; // 초당 공격수 (공격속도)
+    public float baseMoveSpeed = 5f;
+    public float baseAttacksPerSecond = 1.5f;
 
     [Header("Runtime Resources")]
     public int maxHP;
@@ -27,57 +27,56 @@ public class PlayerStats : MonoBehaviour, IDamageable
     public int statPoints = 0;
 
     [Header("Allocated Stats")]
-    public int STR = 0;  // 힘: HP/물리공격 ↑
-    public int DEX = 0;  // 민첩: 공격속도/이동속도 ↑
-    public int MAG = 0;  // 마력: MP최대/자연회복/마법공격 ↑
-    public int LUK = 0;  // 운: 크리확률/크리배수 ↑
+    public int STR = 0;
+    public int DEX = 0;
+    public int MAG = 0;
+    public int LUK = 0;
 
-    [Header("Derived (auto)")]
+    [Header("Derived")]
     public int physicalATK;
     public int magicATK;
     public float mpRegenPerSec;
     public float moveSpeed;
     public float attacksPerSecond;
-    public float attackInterval; // 1 / APS
-    [Range(0, 1)] public float critChance;
+    public float attackInterval;
+
+    [Range(0f, 1f)] public float critChance;
     public float critMultiplier;
 
     [Header("Crit Base")]
-    [Range(0, 1)] public float baseCritChance = 0.05f;  // 5%
-    public float baseCritMultiplier = 1.5f;            // 1.5x
+    [Range(0f, 1f)] public float baseCritChance = 0.05f;
+    public float baseCritMultiplier = 1.5f;
 
-    // Events (UI 등)
     public event Action<int, int> OnHPChanged;
     public event Action<int, int> OnMPChanged;
     public event Action<int, int, int> OnExpChanged;
     public event Action<int> OnStatPointChanged;
     public event Action OnDied;
 
-    float _mpRegenCarry;
+    private float mpRegenCarry;
 
-    // ===== PlayerPrefs Keys =====
-    const string K_LV = "PS_LV";
-    const string K_EXP = "PS_EXP";
-    const string K_EXP_NEXT = "PS_EXP_NEXT";
-    const string K_SP = "PS_SP";
-    const string K_STR = "PS_STR";
-    const string K_DEX = "PS_DEX";
-    const string K_MAG = "PS_MAG";
-    const string K_LUK = "PS_LUK";
-    const string K_HP = "PS_HP";
-    const string K_MP = "PS_MP";
+    private const string K_LV = "PS_LV";
+    private const string K_EXP = "PS_EXP";
+    private const string K_EXP_NEXT = "PS_EXP_NEXT";
+    private const string K_SP = "PS_SP";
+    private const string K_STR = "PS_STR";
+    private const string K_DEX = "PS_DEX";
+    private const string K_MAG = "PS_MAG";
+    private const string K_LUK = "PS_LUK";
+    private const string K_HP = "PS_HP";
+    private const string K_MP = "PS_MP";
 
     void Awake()
     {
-        //먼저로드
         bool loaded = Load();
 
-        // 로드 실패(새 게임)면 기본 세팅
         if (!loaded)
         {
             RecalculateDerived();
+
             currentHP = maxHP;
             currentMP = maxMP;
+
             BroadcastAll();
         }
     }
@@ -94,11 +93,10 @@ public class PlayerStats : MonoBehaviour, IDamageable
 
     void OnDisable()
     {
-        // 씬 전환/비활성에서도 저장(원치 않으면 주석 처리)
         Save();
     }
 
-    void BroadcastAll()
+    private void BroadcastAll()
     {
         OnHPChanged?.Invoke(currentHP, maxHP);
         OnMPChanged?.Invoke(currentMP, maxMP);
@@ -106,7 +104,6 @@ public class PlayerStats : MonoBehaviour, IDamageable
         OnStatPointChanged?.Invoke(statPoints);
     }
 
-    // ===== Derived rules (간단 밸런스) =====
     public void RecalculateDerived()
     {
         maxHP = baseMaxHP + STR * 10;
@@ -117,34 +114,41 @@ public class PlayerStats : MonoBehaviour, IDamageable
 
         mpRegenPerSec = baseMPRegenPerSec + MAG * 0.3f;
 
-        moveSpeed = baseMoveSpeed + DEX * 0.15f; // 0.15 m/s per DEX
-        attacksPerSecond = baseAttacksPerSecond + DEX * 0.05f; // +0.05 APS per DEX
+        moveSpeed = baseMoveSpeed + DEX * 0.15f;
+
+        attacksPerSecond = baseAttacksPerSecond + DEX * 0.05f;
         attacksPerSecond = Mathf.Max(0.2f, attacksPerSecond);
         attackInterval = 1f / attacksPerSecond;
 
-        critChance = Mathf.Clamp01(baseCritChance + LUK * 0.005f); // +0.5%/LUK
-        critMultiplier = baseCritMultiplier + LUK * 0.01f;         // +1%/LUK
+        critChance = Mathf.Clamp01(baseCritChance + LUK * 0.005f);
+        critMultiplier = baseCritMultiplier + LUK * 0.01f;
 
         currentHP = Mathf.Min(currentHP, maxHP);
         currentMP = Mathf.Min(currentMP, maxMP);
     }
 
-    // ===== HP / MP =====
     public void TakeDamage(float amount)
     {
         if (amount <= 0) return;
-        currentHP = Mathf.Max(0, currentHP - (int)amount); // ���� �������̽��� float�� ���踦 �ߴµ� �ӽ÷� ����ȯ�ؼ� int�� ó���ҰԿ�(����)
+
+        currentHP = Mathf.Max(0, currentHP - Mathf.RoundToInt(amount));
+
         OnHPChanged?.Invoke(currentHP, maxHP);
 
-        Save(); //변화 시 저장(원치 않으면 주석)
+        Save();
 
-        if (currentHP <= 0) Die();
+        if (currentHP <= 0)
+            Die();
     }
 
     public void Heal(int amount)
     {
+        if (amount <= 0) return;
+
         currentHP = Mathf.Min(maxHP, currentHP + amount);
+
         OnHPChanged?.Invoke(currentHP, maxHP);
+
         Save();
     }
 
@@ -152,37 +156,50 @@ public class PlayerStats : MonoBehaviour, IDamageable
     {
         if (amount <= 0) return true;
         if (currentMP < amount) return false;
+
         currentMP -= amount;
+
         OnMPChanged?.Invoke(currentMP, maxMP);
+
         Save();
+
         return true;
     }
 
     public void RestoreMP(int amount)
     {
+        if (amount <= 0) return;
+
         currentMP = Mathf.Min(maxMP, currentMP + amount);
+
         OnMPChanged?.Invoke(currentMP, maxMP);
+
         Save();
     }
 
-    void TickMPRegen(float dt)
+    private void TickMPRegen(float dt)
     {
-        if (mpRegenPerSec <= 0f || currentMP >= maxMP) return;
-        _mpRegenCarry += mpRegenPerSec * dt;
-        int gain = Mathf.FloorToInt(_mpRegenCarry);
+        if (mpRegenPerSec <= 0f) return;
+        if (currentMP >= maxMP) return;
+
+        mpRegenCarry += mpRegenPerSec * dt;
+
+        int gain = Mathf.FloorToInt(mpRegenCarry);
+
         if (gain > 0)
         {
-            _mpRegenCarry -= gain;
-            // 자연회복은 저장 너무 잦을 수 있으니 Save() 안 함
+            mpRegenCarry -= gain;
+
             currentMP = Mathf.Min(maxMP, currentMP + gain);
+
             OnMPChanged?.Invoke(currentMP, maxMP);
         }
     }
 
-    // ===== EXP / Level =====
     public void AddExp(int amount)
     {
         if (amount <= 0) return;
+
         currentExp += amount;
 
         bool leveledUp = false;
@@ -190,70 +207,87 @@ public class PlayerStats : MonoBehaviour, IDamageable
         while (currentExp >= expToNext)
         {
             currentExp -= expToNext;
+
             level++;
-            statPoints += 1; // 레벨업 시 포인트 지급
+            statPoints++;
+
             expToNext = Mathf.RoundToInt(expToNext * 1.2f);
+
             OnStatPointChanged?.Invoke(statPoints);
+
             leveledUp = true;
         }
 
         OnExpChanged?.Invoke(currentExp, expToNext, level);
 
-        if (leveledUp) Save(); // 레벨업 같은 큰 변화에서 저장
+        if (leveledUp)
+            Save();
     }
 
-    void Die()
+    private void Die()
     {
         Debug.Log("Player Died");
+
         OnDied?.Invoke();
     }
 
-    // ===== Stat allocation =====
     public bool AllocateStat(StatType type)
     {
         if (statPoints <= 0) return false;
 
         switch (type)
         {
-            case StatType.STR: STR++; break;
-            case StatType.DEX: DEX++; break;
-            case StatType.MAG: MAG++; break;
-            case StatType.LUK: LUK++; break;
+            case StatType.STR:
+                STR++;
+                break;
+            case StatType.DEX:
+                DEX++;
+                break;
+            case StatType.MAG:
+                MAG++;
+                break;
+            case StatType.LUK:
+                LUK++;
+                break;
         }
 
         statPoints--;
 
         RecalculateDerived();
+
         OnStatPointChanged?.Invoke(statPoints);
         OnHPChanged?.Invoke(currentHP, maxHP);
         OnMPChanged?.Invoke(currentMP, maxMP);
 
-        Save(); // ✅ 스탯 분배는 저장 필수
+        Save();
+
         return true;
     }
 
-    // ===== Damage helpers =====
     public int GetPhysicalDamage(int baseWeaponOrSkill = 0)
     {
         float dmg = baseWeaponOrSkill + physicalATK;
+
         ApplyCrit(ref dmg);
+
         return Mathf.Max(0, Mathf.RoundToInt(dmg));
     }
 
     public int GetMagicDamage(int baseSkill = 0)
     {
         float dmg = baseSkill + magicATK;
+
         ApplyCrit(ref dmg);
+
         return Mathf.Max(0, Mathf.RoundToInt(dmg));
     }
 
-    void ApplyCrit(ref float dmg)
+    private void ApplyCrit(ref float dmg)
     {
         if (UnityEngine.Random.value < critChance)
             dmg *= critMultiplier;
     }
 
-    // ===== Save / Load =====
     public void Save()
     {
         PlayerPrefs.SetInt(K_LV, level);
@@ -274,7 +308,8 @@ public class PlayerStats : MonoBehaviour, IDamageable
 
     public bool Load()
     {
-        if (!PlayerPrefs.HasKey(K_LV)) return false;
+        if (!PlayerPrefs.HasKey(K_LV))
+            return false;
 
         level = PlayerPrefs.GetInt(K_LV, 1);
         currentExp = PlayerPrefs.GetInt(K_EXP, 0);
@@ -292,22 +327,25 @@ public class PlayerStats : MonoBehaviour, IDamageable
         currentMP = Mathf.Clamp(PlayerPrefs.GetInt(K_MP, maxMP), 0, maxMP);
 
         BroadcastAll();
+
         return true;
     }
 
-    // (선택) 새 게임 초기화용
     public static void ResetSavedData()
     {
         PlayerPrefs.DeleteKey(K_LV);
         PlayerPrefs.DeleteKey(K_EXP);
         PlayerPrefs.DeleteKey(K_EXP_NEXT);
         PlayerPrefs.DeleteKey(K_SP);
+
         PlayerPrefs.DeleteKey(K_STR);
         PlayerPrefs.DeleteKey(K_DEX);
         PlayerPrefs.DeleteKey(K_MAG);
         PlayerPrefs.DeleteKey(K_LUK);
+
         PlayerPrefs.DeleteKey(K_HP);
         PlayerPrefs.DeleteKey(K_MP);
+
         PlayerPrefs.Save();
     }
 }

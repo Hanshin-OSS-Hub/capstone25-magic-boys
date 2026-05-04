@@ -9,12 +9,12 @@ public class MagicAttack : MonoBehaviour
     public LayerMask groundMask = -1;
     public LayerMask enemyMask = -1;
 
-    [Header("Skill Keys (Inspector)")]
-    public KeyCode skill1Key = KeyCode.Q;   // Fireball
-    public KeyCode skill2Key = KeyCode.E;   // Water Field
-    public KeyCode skill3Key = KeyCode.R;   // Earth Wall
-    public KeyCode skill4Key = KeyCode.T;   // Thunder Rain
-    public KeyCode skill5Key = KeyCode.Y;   // Test Fail
+    [Header("Skill Keys")]
+    public KeyCode skill1Key = KeyCode.Q;
+    public KeyCode skill2Key = KeyCode.E;
+    public KeyCode skill3Key = KeyCode.R;
+    public KeyCode skill4Key = KeyCode.T;
+    public KeyCode skill5Key = KeyCode.Y;
 
     [Header("Cast Result Particle")]
     public Transform castEffectPoint;
@@ -101,67 +101,73 @@ public class MagicAttack : MonoBehaviour
     private float yRemain;
 
     public enum SkillSlot { None, Q, E, R, T, Y }
+
     private SkillSlot pendingSlot = SkillSlot.None;
 
     public bool IsAiming => pendingSlot != SkillSlot.None;
 
     void Awake()
     {
-        if (!playerInput) playerInput = GetComponent<PlayerInput>();
-        if (!playerStats) playerStats = GetComponent<PlayerStats>();
-        if (!aimCamera) aimCamera = Camera.main;
+        if (playerInput == null)
+            playerInput = GetComponent<PlayerInput>();
+
+        if (playerStats == null)
+            playerStats = GetComponent<PlayerStats>();
+
+        if (aimCamera == null)
+            aimCamera = Camera.main;
     }
 
     void Update()
     {
         TickCooldowns();
 
+        if (PauseMenuUI.IsPaused) return;
         if (StatsPanelToggle.UIBlocked) return;
-        if (!playerStats) return;
+        if (playerStats == null) return;
 
         if (!IsAiming)
         {
-            if (skill1Key != KeyCode.None && Input.GetKeyDown(skill1Key)) SelectSkill(SkillSlot.Q);
-            else if (skill2Key != KeyCode.None && Input.GetKeyDown(skill2Key)) SelectSkill(SkillSlot.E);
-            else if (skill3Key != KeyCode.None && Input.GetKeyDown(skill3Key)) SelectSkill(SkillSlot.R);
-            else if (skill4Key != KeyCode.None && Input.GetKeyDown(skill4Key)) SelectSkill(SkillSlot.T);
-            else if (skill5Key != KeyCode.None && Input.GetKeyDown(skill5Key)) SelectSkill(SkillSlot.Y);
+            if (skill1Key != KeyCode.None && Input.GetKeyDown(skill1Key))
+                SelectSkill(SkillSlot.Q);
+            else if (skill2Key != KeyCode.None && Input.GetKeyDown(skill2Key))
+                SelectSkill(SkillSlot.E);
+            else if (skill3Key != KeyCode.None && Input.GetKeyDown(skill3Key))
+                SelectSkill(SkillSlot.R);
+            else if (skill4Key != KeyCode.None && Input.GetKeyDown(skill4Key))
+                SelectSkill(SkillSlot.T);
+            else if (skill5Key != KeyCode.None && Input.GetKeyDown(skill5Key))
+                SelectSkill(SkillSlot.Y);
         }
         else
         {
-            // 좌클릭 시전
             if (Input.GetMouseButtonDown(0))
-            {
                 ConfirmCast();
-            }
-            // 우클릭 취소
             else if (Input.GetMouseButtonDown(1))
-            {
                 CancelCast();
-            }
         }
-        }
+    }
 
-        public void SelectSkill(SkillSlot slot)
-        {
+    public void SelectSkill(SkillSlot slot)
+    {
         int index = (int)slot - 1;
         if (index < 0) return;
 
         if (!IsUnlocked(index))
         {
-            Debug.Log($"[MagicAttack] {slot} is locked.");
+            Debug.Log("[MagicAttack] " + slot + " is locked.");
             return;
         }
 
         if (GetCooldownRatio(index) > 0f)
         {
-            Debug.Log($"[MagicAttack] {slot} is on cooldown.");
+            Debug.Log("[MagicAttack] " + slot + " is on cooldown.");
             return;
         }
 
         pendingSlot = slot;
-        Debug.Log($"[MagicAttack] Selected {slot}. Left-click to cast, Right-click to cancel.");
-        }
+        Debug.Log("[MagicAttack] Selected " + slot + ". Left-click to cast, Right-click to cancel.");
+    }
 
     private void ConfirmCast()
     {
@@ -170,21 +176,31 @@ public class MagicAttack : MonoBehaviour
 
         switch (toCast)
         {
-            case SkillSlot.Q: TryCastQ(); break;
-            case SkillSlot.E: TryCastE(); break;
-            case SkillSlot.R: TryCastR(); break;
-            case SkillSlot.T: TryCastT(); break;
-            case SkillSlot.Y: TryCastY(); break;
+            case SkillSlot.Q:
+                TryCastQ();
+                break;
+            case SkillSlot.E:
+                TryCastE();
+                break;
+            case SkillSlot.R:
+                TryCastR();
+                break;
+            case SkillSlot.T:
+                TryCastT();
+                break;
+            case SkillSlot.Y:
+                TryCastY();
+                break;
         }
     }
 
     private void CancelCast()
     {
-        Debug.Log($"[MagicAttack] Cancelled {pendingSlot}.");
+        Debug.Log("[MagicAttack] Cancelled " + pendingSlot);
         pendingSlot = SkillSlot.None;
     }
 
-    void TickCooldowns()
+    private void TickCooldowns()
     {
         if (qRemain > 0f) qRemain -= Time.deltaTime;
         if (eRemain > 0f) eRemain -= Time.deltaTime;
@@ -193,23 +209,26 @@ public class MagicAttack : MonoBehaviour
         if (yRemain > 0f) yRemain -= Time.deltaTime;
     }
 
-    bool IsUnlocked(int slotIndex)
+    private bool IsUnlocked(int slotIndex)
     {
-        if (SkillProgressionManager.Instance == null) return true;
+        if (SkillProgressionManager.Instance == null)
+            return true;
+
         return SkillProgressionManager.Instance.IsUnlocked(slotIndex);
     }
 
-    bool TrySpendMP(int amount, string skillName)
+    private bool TrySpendMP(int amount, string skillName)
     {
-        if (playerStats.SpendMP(amount)) return true;
+        if (playerStats.SpendMP(amount))
+            return true;
 
-        Debug.Log($"{skillName} MP 부족");
+        Debug.Log(skillName + " MP 부족");
         return false;
     }
 
-    Quaternion GetFlatLookRotation()
+    private Quaternion GetFlatLookRotation()
     {
-        Vector3 forward = aimCamera ? aimCamera.transform.forward : transform.forward;
+        Vector3 forward = aimCamera != null ? aimCamera.transform.forward : transform.forward;
         forward = Vector3.ProjectOnPlane(forward, Vector3.up);
 
         if (forward.sqrMagnitude < 0.001f)
@@ -218,21 +237,26 @@ public class MagicAttack : MonoBehaviour
         return Quaternion.LookRotation(forward.normalized, Vector3.up);
     }
 
-    Vector3 GetDefaultSpawnPosition()
+    private Vector3 GetDefaultSpawnPosition()
     {
         Quaternion rot = GetFlatLookRotation();
-        return transform.position + Vector3.up * spawnHeightOffset + (rot * Vector3.forward * spawnForwardOffset);
+
+        return transform.position
+               + Vector3.up * spawnHeightOffset
+               + rot * Vector3.forward * spawnForwardOffset;
     }
 
-    Vector3 GetCastEffectPosition()
+    private Vector3 GetCastEffectPosition()
     {
-        if (castEffectPoint) return castEffectPoint.position;
+        if (castEffectPoint != null)
+            return castEffectPoint.position;
+
         return transform.position + Vector3.up * spawnHeightOffset;
     }
 
-    bool TryGetAimPoint(out Vector3 point)
+    private bool TryGetAimPoint(out Vector3 point)
     {
-        Ray ray = aimCamera
+        Ray ray = aimCamera != null
             ? new Ray(aimCamera.transform.position, aimCamera.transform.forward)
             : new Ray(transform.position + Vector3.up, transform.forward);
 
@@ -246,13 +270,14 @@ public class MagicAttack : MonoBehaviour
         return false;
     }
 
-    void PlayResultParticle(ParticleType type, Vector3 pos, Quaternion rot)
+    private void PlayResultParticle(ParticleType type, Vector3 pos, Quaternion rot)
     {
         if (ParticleManager.Instance == null) return;
+
         ParticleManager.Instance.Play(type, pos, rot, resultParticleLifetime);
     }
 
-    void PlayFailSound(Vector3 pos)
+    private void PlayFailSound(Vector3 pos)
     {
         if (SoundManager.Instance == null) return;
         if (string.IsNullOrEmpty(failSfxName)) return;
@@ -261,7 +286,7 @@ public class MagicAttack : MonoBehaviour
         SoundManager.Instance.PlaySFX3D(failSfxName, pos, failSfxVolume, failSfxPitch);
     }
 
-    void PlaySuccessSound(string clipName, Vector3 pos, float volume, float pitch)
+    private void PlaySuccessSound(string clipName, Vector3 pos, float volume, float pitch)
     {
         if (SoundManager.Instance == null) return;
         if (string.IsNullOrEmpty(clipName)) return;
@@ -270,36 +295,41 @@ public class MagicAttack : MonoBehaviour
         SoundManager.Instance.PlaySFX3D(clipName, pos, volume, pitch);
     }
 
-    bool FailCast(string reason, Vector3 pos, Quaternion rot)
+    private bool FailCast(string reason, Vector3 pos, Quaternion rot)
     {
-        Debug.Log($"[MagicAttack] Cast Failed: {reason}");
+        Debug.Log("[MagicAttack] Cast Failed: " + reason);
+
         PlayResultParticle(failParticle, pos, rot);
         PlayFailSound(pos);
+
         return false;
     }
 
-    bool SuccessCast(Vector3 pos, Quaternion rot, string successClipName, float successVolume, float successPitch)
+    private bool SuccessCast(Vector3 pos, Quaternion rot, string successClipName, float successVolume, float successPitch)
     {
         PlayResultParticle(successParticle, pos, rot);
         PlaySuccessSound(successClipName, pos, successVolume, successPitch);
+
         return true;
     }
 
     public bool TryCastQ()
     {
         Quaternion rot = GetFlatLookRotation();
-        Vector3 pos = qSpawnPoint ? qSpawnPoint.position : GetDefaultSpawnPosition();
+
+        Vector3 pos = qSpawnPoint != null ? qSpawnPoint.position : GetDefaultSpawnPosition();
         pos += transform.TransformDirection(qSpawnOffset);
 
         if (!IsUnlocked(0)) return FailCast("Q 잠금 상태", pos, rot);
         if (qRemain > 0f) return FailCast("Q 쿨타임", pos, rot);
-        if (!qProjectilePrefab) return FailCast("Q 프리팹 없음", pos, rot);
+        if (qProjectilePrefab == null) return FailCast("Q 프리팹 없음", pos, rot);
         if (!TrySpendMP(qMpCost, "Q")) return FailCast("Q MP 부족", pos, rot);
 
         GameObject go = Instantiate(qProjectilePrefab, pos, rot);
+
         SkillProjectile projectile = go.GetComponent<SkillProjectile>();
 
-        if (!projectile)
+        if (projectile == null)
         {
             Debug.LogWarning("Q 프리팹에 SkillProjectile이 없음");
             Destroy(go);
@@ -307,9 +337,11 @@ public class MagicAttack : MonoBehaviour
         }
 
         int damage = playerStats.GetMagicDamage(qBaseDamage);
+
         projectile.Launch(damage, playerStats, enemyMask, qProjectileSpeed, qMaxDistance);
 
         qRemain = qCooldown;
+
         return SuccessCast(pos, rot, fireballSuccessSfxName, fireballSuccessSfxVolume, fireballSuccessSfxPitch);
     }
 
@@ -322,13 +354,14 @@ public class MagicAttack : MonoBehaviour
 
         if (!IsUnlocked(1)) return FailCast("E 잠금 상태", fxPos, fxRot);
         if (eRemain > 0f) return FailCast("E 쿨타임", fxPos, fxRot);
-        if (!eWaterFieldPrefab) return FailCast("E 프리팹 없음", fxPos, fxRot);
+        if (eWaterFieldPrefab == null) return FailCast("E 프리팹 없음", fxPos, fxRot);
         if (!TrySpendMP(eMpCost, "E")) return FailCast("E MP 부족", fxPos, fxRot);
 
         GameObject go = Instantiate(eWaterFieldPrefab, point + Vector3.up * 0.05f, Quaternion.identity);
+
         WaterFieldSkill water = go.GetComponent<WaterFieldSkill>();
 
-        if (!water)
+        if (water == null)
         {
             Debug.LogWarning("E 프리팹에 WaterFieldSkill이 없음");
             Destroy(go);
@@ -336,35 +369,47 @@ public class MagicAttack : MonoBehaviour
         }
 
         int tickDamage = playerStats.GetMagicDamage(eBaseTickDamage);
-        water.Init(playerStats, enemyMask, tickDamage, eDuration, eTickInterval, eSlowMultiplier, eSlowDuration);
+
+        water.Init(
+            playerStats,
+            enemyMask,
+            tickDamage,
+            eDuration,
+            eTickInterval,
+            eSlowMultiplier,
+            eSlowDuration
+        );
 
         eRemain = eCooldown;
+
         return SuccessCast(fxPos, fxRot, waterSuccessSfxName, waterSuccessSfxVolume, waterSuccessSfxPitch);
     }
 
     public bool TryCastR()
     {
-        Vector3 point;
-        if (!TryGetAimPoint(out point))
+        if (!TryGetAimPoint(out Vector3 point))
             point = transform.position;
 
         Vector3 forward = Vector3.ProjectOnPlane(transform.forward, Vector3.up).normalized;
+
         if (forward.sqrMagnitude < 0.001f)
             forward = transform.forward;
 
         Quaternion rot = Quaternion.LookRotation(forward, Vector3.up);
+
         Vector3 fxPos = GetCastEffectPosition();
         Quaternion fxRot = GetFlatLookRotation();
 
         if (!IsUnlocked(2)) return FailCast("R 잠금 상태", fxPos, fxRot);
         if (rRemain > 0f) return FailCast("R 쿨타임", fxPos, fxRot);
-        if (!rEarthWallPrefab) return FailCast("R 프리팹 없음", fxPos, fxRot);
+        if (rEarthWallPrefab == null) return FailCast("R 프리팹 없음", fxPos, fxRot);
         if (!TrySpendMP(rMpCost, "R")) return FailCast("R MP 부족", fxPos, fxRot);
 
         GameObject go = Instantiate(rEarthWallPrefab, point, rot);
+
         EarthWallSkill wall = go.GetComponent<EarthWallSkill>();
 
-        if (!wall)
+        if (wall == null)
         {
             Debug.LogWarning("R 프리팹에 EarthWallSkill이 없음");
             Destroy(go);
@@ -372,9 +417,11 @@ public class MagicAttack : MonoBehaviour
         }
 
         int damage = playerStats.GetMagicDamage(rBaseDamage);
+
         wall.Init(playerStats, enemyMask, damage, rLifeTime, transform.root);
 
         rRemain = rCooldown;
+
         return SuccessCast(fxPos, fxRot, earthSuccessSfxName, earthSuccessSfxVolume, earthSuccessSfxPitch);
     }
 
@@ -387,13 +434,14 @@ public class MagicAttack : MonoBehaviour
 
         if (!IsUnlocked(3)) return FailCast("T 잠금 상태", fxPos, fxRot);
         if (tRemain > 0f) return FailCast("T 쿨타임", fxPos, fxRot);
-        if (!tThunderRainPrefab) return FailCast("T 프리팹 없음", fxPos, fxRot);
+        if (tThunderRainPrefab == null) return FailCast("T 프리팹 없음", fxPos, fxRot);
         if (!TrySpendMP(tMpCost, "T")) return FailCast("T MP 부족", fxPos, fxRot);
 
         GameObject go = Instantiate(tThunderRainPrefab, point + Vector3.up * 0.05f, Quaternion.identity);
+
         ThunderRainSkill thunder = go.GetComponent<ThunderRainSkill>();
 
-        if (!thunder)
+        if (thunder == null)
         {
             Debug.LogWarning("T 프리팹에 ThunderRainSkill이 없음");
             Destroy(go);
@@ -401,9 +449,20 @@ public class MagicAttack : MonoBehaviour
         }
 
         int damage = playerStats.GetMagicDamage(tBaseDamagePerStrike);
-        thunder.Init(playerStats, enemyMask, damage, tAreaRadius, tSingleStrikeRadius, tStrikeCount, tWarningDuration, tTotalStrikeDuration);
+
+        thunder.Init(
+            playerStats,
+            enemyMask,
+            damage,
+            tAreaRadius,
+            tSingleStrikeRadius,
+            tStrikeCount,
+            tWarningDuration,
+            tTotalStrikeDuration
+        );
 
         tRemain = tCooldown;
+
         return SuccessCast(fxPos, fxRot, thunderSuccessSfxName, thunderSuccessSfxVolume, thunderSuccessSfxPitch);
     }
 
@@ -412,7 +471,6 @@ public class MagicAttack : MonoBehaviour
         Vector3 pos = GetCastEffectPosition();
         Quaternion rot = GetFlatLookRotation();
 
-        // 테스트용: Y는 무조건 실패
         return FailCast("Y 테스트 실패", pos, rot);
     }
 
@@ -420,12 +478,18 @@ public class MagicAttack : MonoBehaviour
     {
         switch (slotIndex)
         {
-            case 0: return qCooldown <= 0f ? 0f : Mathf.Clamp01(qRemain / qCooldown);
-            case 1: return eCooldown <= 0f ? 0f : Mathf.Clamp01(eRemain / eCooldown);
-            case 2: return rCooldown <= 0f ? 0f : Mathf.Clamp01(rRemain / rCooldown);
-            case 3: return tCooldown <= 0f ? 0f : Mathf.Clamp01(tRemain / tCooldown);
-            case 4: return yCooldown <= 0f ? 0f : Mathf.Clamp01(yRemain / yCooldown);
+            case 0:
+                return qCooldown <= 0f ? 0f : Mathf.Clamp01(qRemain / qCooldown);
+            case 1:
+                return eCooldown <= 0f ? 0f : Mathf.Clamp01(eRemain / eCooldown);
+            case 2:
+                return rCooldown <= 0f ? 0f : Mathf.Clamp01(rRemain / rCooldown);
+            case 3:
+                return tCooldown <= 0f ? 0f : Mathf.Clamp01(tRemain / tCooldown);
+            case 4:
+                return yCooldown <= 0f ? 0f : Mathf.Clamp01(yRemain / yCooldown);
         }
+
         return 0f;
     }
 
@@ -433,12 +497,18 @@ public class MagicAttack : MonoBehaviour
     {
         switch (slotIndex)
         {
-            case 0: return qCooldown;
-            case 1: return eCooldown;
-            case 2: return rCooldown;
-            case 3: return tCooldown;
-            case 4: return yCooldown;
+            case 0:
+                return qCooldown;
+            case 1:
+                return eCooldown;
+            case 2:
+                return rCooldown;
+            case 3:
+                return tCooldown;
+            case 4:
+                return yCooldown;
         }
+
         return 0f;
     }
 }

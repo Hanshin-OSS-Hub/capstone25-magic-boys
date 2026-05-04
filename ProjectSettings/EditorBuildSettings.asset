@@ -7,7 +7,7 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/AI_test/Scenes/AI_Test_Scene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
+    guid: 523e2a98b1c50374b9e2093bdc0ce4ee
   - enabled: 1
     path: Assets/Map/Scenes/0326_MapMerge.unity
     guid: be243b239677f0142887ff2cf1b8f85c

@@ -6,92 +6,171 @@ public class StatsPanelToggle : MonoBehaviour
 {
     public static bool UIBlocked { get; private set; }
 
+    [Header("Keys")]
+    public KeyCode toggleKey = KeyCode.K;
+    public KeyCode holdViewKey = KeyCode.C;
+
     [Header("Refs")]
-    public GameObject statsPanel; // 열고 닫을 패널
+    public GameObject statsPanel;
     public PlayerStats player;
 
-    [Header("UI (optional)")]
+    [Header("UI")]
     public TMP_Text pointText;
-    public Button btnSTR, btnDEX, btnMAG, btnLUK;
+    public Button btnSTR;
+    public Button btnDEX;
+    public Button btnMAG;
+    public Button btnLUK;
 
-    [Header("Disable when open (optional)")]
+    [Header("Disable when K panel open")]
     public MonoBehaviour[] disableDuringMenu;
 
-    private bool paused = false;
+    private bool kPanelOpen = false;
+    private bool currentPanelVisible = false;
 
     void Awake()
     {
-        if (!player) player = FindObjectOfType<PlayerStats>();
+        if (player == null)
+            player = FindObjectOfType<PlayerStats>();
 
-        if (!statsPanel)
+        if (statsPanel == null)
             Debug.LogWarning("[StatsPanelToggle] statsPanel not assigned!");
+    }
+
+    void OnEnable()
+    {
+        if (player != null)
+            player.OnStatPointChanged += OnPointChanged;
+    }
+
+    void OnDisable()
+    {
+        if (player != null)
+            player.OnStatPointChanged -= OnPointChanged;
     }
 
     void Start()
     {
-        Show(false);
+        SetKPanel(false);
+        ApplyPanelVisible(false);
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.K))
-            Show(!paused);
+        if (PauseMenuUI.IsPaused) return;
+
+        if (Input.GetKeyDown(toggleKey))
+        {
+            SetKPanel(!kPanelOpen);
+            return;
+        }
+
+        if (!kPanelOpen)
+        {
+            bool holdVisible = Input.GetKey(holdViewKey);
+            ApplyPanelVisible(holdVisible);
+        }
     }
 
-    public void Show(bool on)
+    private void SetKPanel(bool on)
     {
-        paused = on;
+        kPanelOpen = on;
+        UIBlocked = on;
 
-        if (statsPanel) statsPanel.SetActive(on);
+        ApplyPanelVisible(on);
 
         Time.timeScale = on ? 0f : 1f;
 
         Cursor.lockState = on ? CursorLockMode.None : CursorLockMode.Locked;
         Cursor.visible = on;
 
-        UIBlocked = on;
-
         if (disableDuringMenu != null)
         {
-            foreach (var c in disableDuringMenu)
+            foreach (MonoBehaviour c in disableDuringMenu)
             {
-                if (c) c.enabled = !on;
+                if (c != null)
+                    c.enabled = !on;
             }
         }
 
         RefreshUI();
     }
 
-    public void Open() => Show(true);
-    public void Close() => Show(false);
-
-    void RefreshUI()
+    private void ApplyPanelVisible(bool visible)
     {
-        if (!player) return;
+        if (currentPanelVisible == visible) return;
 
-        if (pointText) pointText.text = $"Points: {player.statPoints}";
-        bool canSpend = player.statPoints > 0;
+        currentPanelVisible = visible;
 
-        if (btnSTR) btnSTR.interactable = canSpend;
-        if (btnDEX) btnDEX.interactable = canSpend;
-        if (btnMAG) btnMAG.interactable = canSpend;
-        if (btnLUK) btnLUK.interactable = canSpend;
+        if (statsPanel != null)
+            statsPanel.SetActive(visible);
+
+        RefreshUI();
     }
 
-    void OnEnable()
+    public void Open()
     {
-        if (player) player.OnStatPointChanged += OnPointChanged;
+        SetKPanel(true);
     }
 
-    void OnDisable()
+    public void Close()
     {
-        if (player) player.OnStatPointChanged -= OnPointChanged;
+        SetKPanel(false);
     }
 
-    void OnPointChanged(int _) => RefreshUI();
+    private void RefreshUI()
+    {
+        if (player == null) return;
 
-    public void ClickSTR() { if (player && player.AllocateStat(StatType.STR)) player.Save(); }
-    public void ClickDEX() { if (player && player.AllocateStat(StatType.DEX)) player.Save(); }
-    public void ClickMAG() { if (player && player.AllocateStat(StatType.MAG)) player.Save(); }
-    public void ClickLUK() { if (player && player.AllocateStat(StatType.LUK)) player.Save(); }
+        if (pointText != null)
+            pointText.text = "Points: " + player.statPoints;
+
+        bool canSpend = kPanelOpen && player.statPoints > 0;
+
+        if (btnSTR != null) btnSTR.interactable = canSpend;
+        if (btnDEX != null) btnDEX.interactable = canSpend;
+        if (btnMAG != null) btnMAG.interactable = canSpend;
+        if (btnLUK != null) btnLUK.interactable = canSpend;
+    }
+
+    private void OnPointChanged(int point)
+    {
+        RefreshUI();
+    }
+
+    public void ClickSTR()
+    {
+        if (!kPanelOpen) return;
+
+        if (player != null && player.AllocateStat(StatType.STR))
+            player.Save();
+    }
+
+    public void ClickDEX()
+    {
+        if (!kPanelOpen) return;
+
+        if (player != null && player.AllocateStat(StatType.DEX))
+            player.Save();
+    }
+
+    public void ClickMAG()
+    {
+        if (!kPanelOpen) return;
+
+        if (player != null && player.AllocateStat(StatType.MAG))
+            player.Save();
+    }
+
+    public void ClickLUK()
+    {
+        if (!kPanelOpen) return;
+
+        if (player != null && player.AllocateStat(StatType.LUK))
+            player.Save();
+    }
+
+    public static void ForceUIBlocked(bool blocked)
+    {
+        UIBlocked = blocked;
+    }
 }

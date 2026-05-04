@@ -8,13 +8,13 @@ public class PlayerAttack : MonoBehaviour
 
     public float attackLockTime = 1.1f;
     private float attackTimer = 0f;
+
     public bool IsAttacking { get; private set; }
 
     private PlayerInput playerInput;
     private PlayerRoll playerRoll;
     private MagicAttack magicAttack;
 
-    // �߰�: ������ ���� ���� �����ִ� ���� �Է� ���ÿ�
     private bool blockAttackUntilRelease = false;
 
     [Header("Chest Hit")]
@@ -39,21 +39,18 @@ public class PlayerAttack : MonoBehaviour
     {
         if (playerInput == null) return;
 
+        if (PauseMenuUI.IsPaused) return;
+        if (StatsPanelToggle.UIBlocked) return;
 
-        // ���� ���� ���̸� �Ϲ� ���� �Ұ�
         if (magicAttack != null && magicAttack.IsAiming)
-        {
             return;
-        }
 
-        // ������ �߿��� ���� ����
         if (playerRoll != null && playerRoll.IsRolling)
         {
-            blockAttackUntilRelease = true;   // �߰�
+            blockAttackUntilRelease = true;
             return;
         }
 
-        // ������ ���� �� ���� ��ư�� ���� ���������� ���� �� ��
         if (blockAttackUntilRelease)
         {
             if (playerInput.IsAttackPressed)
@@ -62,22 +59,24 @@ public class PlayerAttack : MonoBehaviour
             blockAttackUntilRelease = false;
         }
 
-        if (StatsPanelToggle.UIBlocked) return;
-
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
             return;
 
         if (attackTimer > 0f)
         {
             attackTimer -= Time.deltaTime;
+
             if (attackTimer <= 0f)
                 IsAttacking = false;
+
             return;
         }
 
         if (playerInput.IsAttackPressed)
         {
-            animator.SetTrigger(attackHash);
+            if (animator != null)
+                animator.SetTrigger(attackHash);
+
             attackTimer = attackLockTime;
             IsAttacking = true;
 
@@ -93,13 +92,12 @@ public class PlayerAttack : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit, chestHitRange))
         {
-            Debug.Log("���� ������Ʈ: " + hit.collider.name);
+            Debug.Log("Hit Object: " + hit.collider.name);
 
             BreakableChest chest = hit.collider.GetComponentInParent<BreakableChest>();
+
             if (chest != null)
-            {
                 chest.TakeDamage(chestDamage);
-            }
         }
     }
 }
