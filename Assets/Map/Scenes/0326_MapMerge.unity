@@ -908,7 +908,7 @@ MonoBehaviour:
   - {fileID: 1696691019835108044, guid: d330a7f4fbe98974c93f0914d602c536, type: 3}
   - {fileID: 3468054585450443636, guid: 44630eba347bef24ca1ddd1d8a65cbc8, type: 3}
   exitPrefabs:
-  - {fileID: 7389133403800816304, guid: cc90e7820dc8c1b498cf9847ddccce82, type: 3}
+  - {fileID: 1525352032836519903, guid: e7bcad201c9bf6d4085582c5f58ab855, type: 3}
   blockedPrefabs:
   - {fileID: 4359298560274636353, guid: 52b86c2f327cf244d9ae1f49cbfe57b1, type: 3}
   - {fileID: 6449548866097282603, guid: 58bbeba32ff4471459b82c2672c2e39d, type: 3}
@@ -917,16 +917,20 @@ MonoBehaviour:
   - {fileID: 6572936773003228197, guid: 80465318efcf26347952a16299826668, type: 3}
   - {fileID: 6572936773003228197, guid: 688981e7d3d09ff4c8fa074e49244549, type: 3}
   - {fileID: 6572936773003228197, guid: 04f1a59667385454db66420a0d42fb8b, type: 3}
+  puzzlePrefabs:
+  - {fileID: 7626492010286133213, guid: 01bc7f58569369b42809aa3e04314110, type: 3}
   useBoxColliders: 0
   useLightsForDebugging: 1
   restoreLightsAfterDebugging: 0
   reloadKey: 8
   toggleMapKey: 109
-  mainLength: 30
-  branchLength: 2
+  mainLength: 18
+  branchLength: 9
   numBranches: 2
   doorPercent: 25
-  constructionDelay: 0
+  constructionDelay: 0.093
+  uiCanvas: {fileID: 0}
+  crosshairCanvas: {fileID: 0}
   genneratedTiles: []
   seneToLoad: 0326_MapMerge
   dungeonState: 0
@@ -1370,12 +1374,21 @@ MonoBehaviour:
   successParticle: 4
   failParticle: 5
   resultParticleLifetime: 2
-  successSfxName: Cast_Success
   failSfxName: Cast_Fail
-  successSfxVolume: 1
   failSfxVolume: 1
-  successSfxPitch: 1
   failSfxPitch: 1
+  fireballSuccessSfxName: Fireball_Voice
+  fireballSuccessSfxVolume: 1
+  fireballSuccessSfxPitch: 1
+  waterSuccessSfxName: Water_Voice
+  waterSuccessSfxVolume: 1
+  waterSuccessSfxPitch: 1
+  earthSuccessSfxName: Earth_Voice
+  earthSuccessSfxVolume: 1
+  earthSuccessSfxPitch: 1
+  thunderSuccessSfxName: Thunder_Voice
+  thunderSuccessSfxVolume: 1
+  thunderSuccessSfxPitch: 1
   maxAimDistance: 25
   spawnForwardOffset: 0.8
   spawnHeightOffset: 1.2
@@ -1438,7 +1451,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   doubleTapTime: 0.25
+  directionBufferTime: 0.15
   rollDuration: 0.8
+  mvstate: 0
 --- !u!114 &211820195
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1517,11 +1532,8 @@ MonoBehaviour:
   CameraAngleOverride: 0
   LockCameraPosition: 0
   RollSpeed: 8
-  RollDuration: 0.7
-  RollCooldown: 0.3
   IsLockOn: 0
   LockOnTarget: {fileID: 0}
-  DoubleTapTime: 0.25
 --- !u!114 &211820198
 MonoBehaviour:
   m_ObjectHideFlags: 0

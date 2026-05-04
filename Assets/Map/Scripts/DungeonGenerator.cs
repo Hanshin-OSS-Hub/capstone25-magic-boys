@@ -20,6 +20,7 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField] GameObject[] exitPrefabs;
     [SerializeField] GameObject[] blockedPrefabs;
     [SerializeField] GameObject[] doorPrefabs;
+    [SerializeField] GameObject[] puzzlePrefabs;
 
     [Header("Debugging Options")]
     [SerializeField] bool useBoxColliders;
@@ -100,7 +101,7 @@ public class DungeonGenerator : MonoBehaviour
     {
         ToggleMap(true);
         GameObject goContainer = new GameObject("Main Path");
-container = goContainer.transform;
+        container = goContainer.transform;
         container.SetParent(transform);
         tileRoot = CreateStartTile();
         DebugRoomLighting(tileRoot, Color.blue);
@@ -167,6 +168,7 @@ container = goContainer.transform;
             else { break; }
         }
         dungeonState = DungeonGenState.cleanup;
+        yield return StartCoroutine(SpawnPuzzleRoom());
         LightRestoration();
         CleanupBoxes();
         BlockedPassages();
@@ -441,5 +443,102 @@ void SpawnDoors()
         return goTile.transform;
     }
 
+
+    IEnumerator SpawnPuzzleRoom()
+    {
+        if (puzzlePrefabs == null || puzzlePrefabs.Length == 0)
+        {
+            Debug.LogWarning("PuzzlePrefabs가 비어있습니다. 퍼즐 룸을 생성하지 않습니다.");
+            yield break;
+        }
+
+
+        List<Connector> branchEndConnectors = new List<Connector>();
+
+        foreach (Transform child in transform)
+        {
+          
+            if (!child.name.Contains("Branch")) continue;
+
+            foreach (Connector connector in child.GetComponentsInChildren<Connector>())
+            {
+                if (!connector.isConnected)
+                {
+                    branchEndConnectors.Add(connector);
+                }
+            }
+        }
+
+        if (branchEndConnectors.Count == 0)
+        {
+            Debug.LogWarning("사용 가능한 브랜치 끝 Connector가 없습니다.");
+            yield break;
+        }
+
+
+        int randIdx = Random.Range(0, branchEndConnectors.Count);
+        Connector selectedConnector = branchEndConnectors[randIdx];
+        tileFrom = selectedConnector.transform.parent.parent;
+
+
+        GameObject puzzleContainer = new GameObject("PuzzleRoom");
+        puzzleContainer.transform.SetParent(transform);
+        container = puzzleContainer.transform;
+
+        yield return new WaitForSeconds(constructionDelay);
+
+        int puzzleIndex = Random.Range(0, puzzlePrefabs.Length);
+        GameObject goPuzzle = Instantiate(
+            puzzlePrefabs[puzzleIndex],
+            Vector3.zero,
+            Quaternion.identity,
+            container
+        );
+        goPuzzle.name = "Puzzle Room";
+
+        Transform originTile = genneratedTiles[genneratedTiles.FindIndex(x => x.tile == tileFrom)].tile;
+        genneratedTiles.Add(new Tile(goPuzzle.transform, originTile));
+        tileTo = goPuzzle.transform;
+
+        ConnectTilesWithConnector(selectedConnector.transform);
+
+        CollisionCheck();
+
+        if (tileTo == null || tileTo.gameObject == null)
+        {
+            Debug.LogWarning("퍼즐 룸 배치 실패: 충돌로 인해 제거됨.");
+            Destroy(puzzleContainer);
+            yield break;
+        }
+
+        DebugRoomLighting(tileTo, Color.cyan);
+        Debug.Log($"퍼즐 룸이 [{tileFrom.name}]의 끝에 생성되었습니다.");
+    }
+
+    void ConnectTilesWithConnector(Transform connectFrom)
+    {
+        Transform connectTo = GetRandomConnector(tileTo);
+        if (connectFrom == null || connectTo == null) return;
+
+
+        connectFrom.GetComponent<Connector>().isConnected = true;
+
+
+        BoxCollider box = tileFrom.GetComponent<BoxCollider>();
+        if (box == null)
+        {
+            box = tileFrom.gameObject.AddComponent<BoxCollider>();
+            box.isTrigger = true;
+        }
+
+        connectTo.SetParent(connectFrom);
+        tileTo.SetParent(connectTo);
+        connectTo.localPosition = Vector3.zero;
+        connectTo.localRotation = Quaternion.identity;
+        connectTo.Rotate(0, 180f, 0);
+        tileTo.SetParent(container);
+        connectTo.SetParent(tileTo.Find("Connectors"));
+        genneratedTiles.Last().connector = connectFrom.GetComponent<Connector>();
+    }
 
 }
