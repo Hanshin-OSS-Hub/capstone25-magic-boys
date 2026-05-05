@@ -50,20 +50,43 @@ public class StatsPanelToggle : MonoBehaviour
 
     void Start()
     {
-        SetKPanel(false);
-        ApplyPanelVisible(false);
+        // 시작할 때 K 패널 상태 초기화
+        kPanelOpen = false;
+        UIBlocked = false;
+
+        // 시작할 때 스텟창 전체 강제로 끄기
+        currentPanelVisible = false;
+
+        if (statsPanel != null)
+            statsPanel.SetActive(false);
+
+        // 시작할 때 시간 정상화
+        Time.timeScale = 1f;
+
+        // 시작할 때 커서 잠금
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        // 혹시 비활성화했던 스크립트 있으면 다시 켜기
+        SetDisableScripts(true);
+
+        RefreshUI();
     }
 
     void Update()
     {
-        if (PauseMenuUI.IsPaused) return;
+        // ESC 메뉴가 열려 있으면 K/C 스텟창 조작 안 함
+        if (PauseMenuUI.IsPaused)
+            return;
 
+        // K키: 스텟 찍는 창 열기/닫기
         if (Input.GetKeyDown(toggleKey))
         {
             SetKPanel(!kPanelOpen);
             return;
         }
 
+        // K 패널이 닫혀 있을 때만 C키로 잠깐 보기 가능
         if (!kPanelOpen)
         {
             bool holdVisible = Input.GetKey(holdViewKey);
@@ -83,28 +106,31 @@ public class StatsPanelToggle : MonoBehaviour
         Cursor.lockState = on ? CursorLockMode.None : CursorLockMode.Locked;
         Cursor.visible = on;
 
-        if (disableDuringMenu != null)
-        {
-            foreach (MonoBehaviour c in disableDuringMenu)
-            {
-                if (c != null)
-                    c.enabled = !on;
-            }
-        }
+        SetDisableScripts(!on);
 
         RefreshUI();
     }
 
     private void ApplyPanelVisible(bool visible)
     {
-        if (currentPanelVisible == visible) return;
-
+        // 여기서 같은 상태라고 return 하면 시작할 때 패널이 안 꺼질 수 있음
         currentPanelVisible = visible;
 
         if (statsPanel != null)
             statsPanel.SetActive(visible);
 
         RefreshUI();
+    }
+
+    private void SetDisableScripts(bool enabled)
+    {
+        if (disableDuringMenu == null) return;
+
+        foreach (MonoBehaviour component in disableDuringMenu)
+        {
+            if (component != null)
+                component.enabled = enabled;
+        }
     }
 
     public void Open()
@@ -124,6 +150,8 @@ public class StatsPanelToggle : MonoBehaviour
         if (pointText != null)
             pointText.text = "Points: " + player.statPoints;
 
+        // K로 열었을 때만 스텟 찍기 버튼 활성화
+        // C로 볼 때는 보기만 가능
         bool canSpend = kPanelOpen && player.statPoints > 0;
 
         if (btnSTR != null) btnSTR.interactable = canSpend;

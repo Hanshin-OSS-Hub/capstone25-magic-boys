@@ -5269,6 +5269,58 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 852284139}
   m_CullTransparentMesh: 1
+--- !u!1 &856177471
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 856177473}
+  - component: {fileID: 856177472}
+  m_Layer: 0
+  m_Name: 'PauseMenuController  '
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &856177472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 856177471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9071618c28e6ca6418805ce7e13d6c12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PauseMenuUI
+  mainMenuSceneName: MainMenu
+  pausePanel: {fileID: 1594896680}
+  settingsPanel: {fileID: 116305177}
+  resumeButton: {fileID: 1268582762}
+  mainMenuButton: {fileID: 235648288}
+  quitButton: {fileID: 1872971655}
+  settingsButton: {fileID: 871122413}
+  settingsBackButton: {fileID: 161569473}
+--- !u!4 &856177473
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 856177471}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &857879935
 GameObject:
   m_ObjectHideFlags: 0
@@ -8479,7 +8531,6 @@ GameObject:
   - component: {fileID: 1594896681}
   - component: {fileID: 1594896683}
   - component: {fileID: 1594896682}
-  - component: {fileID: 1594896684}
   m_Layer: 5
   m_Name: PausePanel
   m_TagString: Untagged
@@ -8548,26 +8599,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1594896680}
   m_CullTransparentMesh: 1
---- !u!114 &1594896684
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1594896680}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9071618c28e6ca6418805ce7e13d6c12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PauseMenuUI
-  mainMenuSceneName: MainMenu
-  pausePanel: {fileID: 1594896680}
-  settingsPanel: {fileID: 116305177}
-  resumeButton: {fileID: 1268582762}
-  mainMenuButton: {fileID: 235648288}
-  quitButton: {fileID: 1872971655}
-  settingsButton: {fileID: 871122413}
-  settingsBackButton: {fileID: 0}
 --- !u!1 &1595498507
 GameObject:
   m_ObjectHideFlags: 0
@@ -16179,8 +16210,9 @@ SceneRoots:
   - {fileID: 743513992}
   - {fileID: 2133607380}
   - {fileID: 1795538915}
-  - {fileID: 508862490}
   - {fileID: 1163534349}
+  - {fileID: 508862490}
   - {fileID: 1735135561}
   - {fileID: 711132046}
   - {fileID: 1817192202}
+  - {fileID: 856177473}
