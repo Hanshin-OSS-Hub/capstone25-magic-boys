@@ -6466,7 +6466,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PauseMenuUI
   mainMenuSceneName: MainMenu
   pausePanel: {fileID: 1520291498}
-  settingsPanel: {fileID: 0}
+  settingsPanel: {fileID: 346546152}
   resumeButton: {fileID: 1579675106}
   mainMenuButton: {fileID: 1043097968}
   quitButton: {fileID: 1346291421}
