@@ -25,7 +25,6 @@ public class EnemyStateManager : MonoBehaviour, IDamageable
     public AudioClip attackSound;
     public AudioClip deadSound;
 
-    // MeshRenderer → Renderer(스킨 메쉬 포함)로 범용화
     private Renderer rend;
     private Material originalMaterial;
 
@@ -34,7 +33,6 @@ public class EnemyStateManager : MonoBehaviour, IDamageable
         navMeshAgent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
 
-        // 자식까지 탐색해서 첫 Renderer 확보
         rend = GetComponentInChildren<Renderer>();
         if (rend != null) originalMaterial = rend.material;
     }
@@ -81,6 +79,10 @@ public class EnemyStateManager : MonoBehaviour, IDamageable
     public void PerformAttack()
     {
         if (playerTransform == null) return;
+        if (attackSound != null)
+        {
+            SoundManager.Instance.PlaySFX3D(attackSound, transform.position);
+        }
 
         // 공격 사거리 체크
         float dist = Vector3.Distance(transform.position, playerTransform.position);
@@ -89,16 +91,9 @@ public class EnemyStateManager : MonoBehaviour, IDamageable
             IDamageable target = playerTransform.GetComponent<IDamageable>();
             if (target != null)
             {
-                if (attackSound != null)
-                {
-                    SoundManager.Instance.PlaySFX3D(attackSound, transform.position);
-                }
                 target.TakeDamage(stats.Damage);
                 //Debug.Log("공격 적중!");
-
             }
-
-
 
         }
     }
@@ -108,7 +103,6 @@ public class EnemyStateManager : MonoBehaviour, IDamageable
         TransitionToState(chaseState);
     }
 
-    // === IDamageable ===
     public void TakeDamage(float damage)
     {
         if (currentHP <= 0) return;

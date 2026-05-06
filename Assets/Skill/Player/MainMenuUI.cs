@@ -79,6 +79,7 @@ public class MainMenuUI : MonoBehaviour
         PlayerPrefs.SetString(GameSceneSavePoint.LastSceneKey, firstGameSceneName);
         PlayerPrefs.Save();
 
+        DungeonGenerator.saveSeed = -1;
         SceneManager.LoadScene(firstGameSceneName);
     }
 
