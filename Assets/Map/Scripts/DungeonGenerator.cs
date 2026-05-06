@@ -48,16 +48,12 @@ public class DungeonGenerator : MonoBehaviour
     public List<Tile> genneratedTiles = new List<Tile>();
 
     [Header("Reload Map")]
-    public string seneToLoad = "Game"; //�ν����Ϳ��� ��  �̸� ����
+    public string seneToLoad = "Game"; 
 
     [HideInInspector]
     public DungeonGenState dungeonState = DungeonGenState.inactive;
 
-    
-
     public static event System.Action OnMapCompleted;
-    
-    
 
     GameObject goCamera, goPlayer;
     List<Connector> availableConnectors = new List<Connector>();
@@ -67,6 +63,7 @@ public class DungeonGenerator : MonoBehaviour
     int attempts;
     int maxAttempts = 50;
 
+    public static int saveSeed = -1;
 
     void Start()
     {
@@ -74,8 +71,19 @@ public class DungeonGenerator : MonoBehaviour
         goPlayer = GameObject.FindWithTag("Player");
         if (uiCanvas == null) uiCanvas = GameObject.Find("Canvas(UI)");
         if (crosshairCanvas == null) crosshairCanvas = GameObject.Find("Canvas");
-        StartCoroutine(DungeonBuild());
+        if (saveSeed != -1)
+        {
+            Random.InitState(saveSeed);
+        }
+        else
+        {
+            saveSeed = Random.Range(0, int.MaxValue);
+            Random.InitState(saveSeed);
+        }
+
+            StartCoroutine(DungeonBuild());
     }
+
 
     void ToggleMap(bool active)
     {
@@ -89,6 +97,7 @@ public class DungeonGenerator : MonoBehaviour
     {
         if (Input.GetKeyDown(reloadKey))
         {
+            saveSeed = -1;
             SceneManager.LoadScene(seneToLoad);
         }
         if(Input.GetKeyDown(toggleMapKey))
@@ -96,6 +105,8 @@ public class DungeonGenerator : MonoBehaviour
             ToggleMap(!goCamera.activeInHierarchy);
         }
     }
+
+
 
     IEnumerator DungeonBuild()
     {
