@@ -1608,7 +1608,7 @@ MonoBehaviour:
   branchLength: 9
   numBranches: 2
   doorPercent: 25
-  constructionDelay: 0.093
+  constructionDelay: 0
   uiCanvas: {fileID: 0}
   crosshairCanvas: {fileID: 0}
   genneratedTiles: []

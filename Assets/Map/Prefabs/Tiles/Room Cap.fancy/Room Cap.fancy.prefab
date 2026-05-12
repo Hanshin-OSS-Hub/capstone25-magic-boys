@@ -49,6 +49,7 @@ GameObject:
   - component: {fileID: 1798537582913460049}
   - component: {fileID: 1925372984303539771}
   - component: {fileID: -5442318950756208227}
+  - component: {fileID: 6193131933329574563}
   m_Layer: 10
   m_Name: Room Cap.fancy
   m_TagString: Untagged
@@ -184,6 +185,22 @@ MonoBehaviour:
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: 975c2676fc767284988e45ceeeb4fc72, type: 2}
   m_BuildHeightMesh: 0
+--- !u!114 &6193131933329574563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1696691019835108044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6af987cd11396014580dbdc8bb0059a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RandomDecore
+  decorPrefabs:
+  - {fileID: 8725133811264767617, guid: df76803c4509e1541a84c1c27a675081, type: 3}
+  - {fileID: 2543204850331571944, guid: 7dfe2b5b7f9a98548a57915a7f509618, type: 3}
+  - {fileID: 1044744920020063691, guid: d4b6ab94f9f7d384086dc9c88000024a, type: 3}
 --- !u!1 &6884852475060580523
 GameObject:
   m_ObjectHideFlags: 0
