@@ -30,8 +30,15 @@ public class EnemySpawner : MonoBehaviour
         if (enemyPrefabs == null || enemyPrefabs.Length == 0) return;
 
         GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag("EnemySpawnPoint");
-
         if (spawnPoints.Length == 0) return;
+
+        GameObject enemyParentObj = GameObject.Find("Enemy");
+        if (enemyParentObj == null)
+        {
+            Debug.LogError("하이어라키에 'Enemy' 오브젝트가 없습니다! 미리 생성해주세요.");
+            return;
+        }
+        Transform enemyParent = enemyParentObj.transform;
 
         int totalSpawned = 0;
 
@@ -50,11 +57,11 @@ public class EnemySpawner : MonoBehaviour
                 NavMeshHit hit;
                 if (NavMesh.SamplePosition(randomPos, out hit, 2.0f, NavMesh.AllAreas))
                 {
-                    Instantiate(selectedEnemy, hit.position, point.transform.rotation);
+                    Instantiate(selectedEnemy, hit.position, point.transform.rotation, enemyParent);
                     totalSpawned++;
                 }
             }
         }
-        Debug.Log($"{totalSpawned}개의 적 개체 생성.");
+        Debug.Log($"{totalSpawned}개의 적 개체 생성 완료.");
     }
 }

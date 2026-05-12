@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 5481688373750480331}
   - component: {fileID: 2024826811515092212}
   - component: {fileID: 736161393635958027}
-  - component: {fileID: 5495979531252587939}
   - component: {fileID: 2611707286255324669}
+  - component: {fileID: -8963094256494168039}
   m_Layer: 0
   m_Name: Projectile
   m_TagString: Untagged
@@ -114,21 +114,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5495979531252587939
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4688760338870842338}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f95c9e4e7839d444ba2c234553eb1f57, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 10
-  damage: 5
-  lifeTime: 3
 --- !u!54 &2611707286255324669
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -156,3 +141,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-8963094256494168039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4688760338870842338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a23e18adb69d37d41bf8cfeec15ee006, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyProjectile
+  speed: 10
+  damage: 5
+  lifeTime: 3

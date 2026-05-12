@@ -7,7 +7,7 @@ public class RangeAttackState : IEnemyState
 
     public void EnterState(EnemyStateManager enemy)
     {
-        //Debug.Log("원거리 공격 시작!");
+        //Debug.Log("원거리 공격 시작");
         enemy.navMeshAgent.isStopped = true;
 
         Vector3 targetPos = enemy.playerTransform.position;
@@ -39,17 +39,17 @@ public class RangeAttackState : IEnemyState
         }
     }
 
-    private void PerformRangedAttack(EnemyStateManager enemy) // 공격 수행 함수
+    private void PerformRangedAttack(EnemyStateManager enemy)
     {
-        if (enemy.stats.projectilePrefab != null && enemy.firePoint != null)
+        if (enemy.firePoint != null)
         {
             if (enemy.attackSound != null)
             {
                 SoundManager.Instance.PlaySFX3D(enemy.attackSound, enemy.transform.position);
             }
-            GameObject bullet = GameObject.Instantiate(enemy.stats.projectilePrefab, enemy.firePoint.position, enemy.firePoint.rotation);
 
-            // (선택사항) 투사체 데미지 설정
+            GameObject bullet = ProjectilePool.Instance.GetProjectile(enemy.firePoint.position, enemy.firePoint.rotation);
+
             EnemyProjectile proj = bullet.GetComponent<EnemyProjectile>();
             if (proj != null) proj.damage = enemy.stats.Damage;
         }

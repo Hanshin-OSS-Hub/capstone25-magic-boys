@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class EnemyProjectile : MonoBehaviour
+public class RockProjectile : MonoBehaviour
 {
     public float speed = 20f;
     public float damage = 5f;
@@ -9,23 +9,16 @@ public class EnemyProjectile : MonoBehaviour
     private Rigidbody rb;
     private int tileLayerIndex;
 
-    void Awake()
+    void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.useGravity = false;
-        tileLayerIndex = LayerMask.NameToLayer("Tile");
-    }
-    void OnEnable()
-    {
 
         rb.linearVelocity = transform.forward * speed;
 
-        Invoke(nameof(Deactivate), lifeTime);
-    }
+        tileLayerIndex = LayerMask.NameToLayer("Tile");
 
-    void OnDisable()
-    {
-        CancelInvoke(nameof(Deactivate));
+        Destroy(gameObject, lifeTime);
     }
 
     void OnTriggerEnter(Collider other)
@@ -36,16 +29,11 @@ public class EnemyProjectile : MonoBehaviour
         {
             IDamageable target = other.GetComponent<IDamageable>();
             target?.TakeDamage(damage);
-            Deactivate(); 
+            Destroy(gameObject);
         }
         else if (other.gameObject.layer == tileLayerIndex)
         {
-            Deactivate();
+            Destroy(gameObject);
         }
-    }
-
-    private void Deactivate()
-    {
-        gameObject.SetActive(false);
     }
 }
