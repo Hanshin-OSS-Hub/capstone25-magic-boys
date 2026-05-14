@@ -50,6 +50,7 @@ GameObject:
   - component: {fileID: 6016191543923058666}
   - component: {fileID: 9076312760511245422}
   - component: {fileID: 2822531246845063192}
+  - component: {fileID: 845381335463410582}
   m_Layer: 10
   m_Name: Room Cap.soft
   m_TagString: Untagged
@@ -201,6 +202,24 @@ MonoBehaviour:
   - {fileID: 6503349986393972199, guid: 22d16e634addc594c891cc4a751d48c6, type: 3}
   - {fileID: 896868046691854107, guid: 7b242b941d1e4ee4892c79df2670d982, type: 3}
   - {fileID: 5692684692220344249, guid: 8862b0c9cce16e446b8fe24ffdffc997, type: 3}
+--- !u!114 &845381335463410582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3468054585450443636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 572f86550a8733e48983b3c203ff5d21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
+  enemyPrefabs:
+  - {fileID: 770130574332236223, guid: 4d64717cdbf30fd418ae9e5462905604, type: 3}
+  - {fileID: 7509243798015521505, guid: efb8053f987df8f42adde5b495158eb3, type: 3}
+  minEnemiesPerPoint: 3
+  maxEnemiesPerPoint: 4
+  spawnRadius: 5
 --- !u!1 &6999398563798453872
 GameObject:
   m_ObjectHideFlags: 0

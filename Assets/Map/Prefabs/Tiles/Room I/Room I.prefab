@@ -42,6 +42,37 @@ Transform:
   - {fileID: 8400051604364240938}
   m_Father: {fileID: 1600255499480715962}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2417364109890634843
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4396797498052321714}
+  m_Layer: 0
+  m_Name: EnemySpawnPoint
+  m_TagString: EnemySpawnPoint
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4396797498052321714
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2417364109890634843}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.25, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1600255499480715962}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2893924120409196055
 GameObject:
   m_ObjectHideFlags: 0
@@ -89,6 +120,7 @@ GameObject:
   - component: {fileID: 982836799672716970}
   - component: {fileID: -7183494705922901959}
   - component: {fileID: 6060154416349599321}
+  - component: {fileID: -5887249297968871204}
   m_Layer: 10
   m_Name: Room I
   m_TagString: Untagged
@@ -109,6 +141,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4396797498052321714}
   - {fileID: 5478500879490780469}
   - {fileID: 3944419245755877287}
   m_Father: {fileID: 0}
@@ -237,9 +270,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   decorPrefabs:
-  - {fileID: 485944068155972059, guid: 7ba0e3f14c9c7824cab68ea4fc9f748f, type: 3}
-  - {fileID: 3289062242994793809, guid: e468ea47f738b3546b0acdcd8299d4c8, type: 3}
-  - {fileID: 4043876167682948012, guid: 63abca16f616ad242b7b3337c9ff0fac, type: 3}
+  - {fileID: 1740391984085987359, guid: d51ca882d00055c488dc868b1e1d3671, type: 3}
+  - {fileID: 5631755632858556247, guid: 67ebaf007aeef6b439c9c61a2df3ac7d, type: 3}
+  - {fileID: 5542120961803067265, guid: 77b50943a19e3f140b8040b96c6e228d, type: 3}
+--- !u!114 &-5887249297968871204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9153126633575684432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 572f86550a8733e48983b3c203ff5d21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
+  enemyPrefabs:
+  - {fileID: 770130574332236223, guid: 4d64717cdbf30fd418ae9e5462905604, type: 3}
+  - {fileID: 7509243798015521505, guid: efb8053f987df8f42adde5b495158eb3, type: 3}
+  minEnemiesPerPoint: 3
+  maxEnemiesPerPoint: 4
+  spawnRadius: 5
 --- !u!1001 &2167517038303561637
 PrefabInstance:
   m_ObjectHideFlags: 0
