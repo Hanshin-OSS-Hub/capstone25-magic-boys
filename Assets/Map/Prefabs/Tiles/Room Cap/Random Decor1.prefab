@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 304280259730545893}
   - component: {fileID: 304280259731545637}
   - component: {fileID: 304280259727413159}
+  - component: {fileID: 8915299238314845185}
   m_Layer: 0
   m_Name: Crate_A (1)
   m_TagString: Untagged
@@ -114,6 +115,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300176, guid: fd75e63c14c4540438372a6844af68b6, type: 3}
+--- !u!208 &8915299238314845185
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 304280259729342693}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.46400002, y: 0.266, z: 0.60200006}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.266, z: -0.001}
+  m_TimeToStationary: 0.5
 --- !u!1 &488876938242765003
 GameObject:
   m_ObjectHideFlags: 0
@@ -126,6 +143,7 @@ GameObject:
   - component: {fileID: 488876938243665099}
   - component: {fileID: 488876938244763147}
   - component: {fileID: 488876938240467207}
+  - component: {fileID: 8040609831233256661}
   m_Layer: 0
   m_Name: Barrel (1)
   m_TagString: Untagged
@@ -141,13 +159,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 488876938242765003}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.5575356, y: 0.00023906834, z: -3.0474}
+  m_LocalRotation: {x: -0.0012106817, y: -0.0017106507, z: 0.001511138, w: 0.99999666}
+  m_LocalPosition: {x: -4.5545893, y: 0.0002503395, z: -3.0450265}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5793115393044230519}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -0.138, y: -0.196, z: 0.173}
 --- !u!33 &488876938243665099
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -229,6 +247,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 628e5212ccbe5044ba8b70740d37394e, type: 3}
+--- !u!208 &8040609831233256661
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 488876938242765003}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.85400003, y: 0.97800004, z: 0.85}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.97800004, z: -0.002}
+  m_TimeToStationary: 0.5
 --- !u!1 &1405249415316642291
 GameObject:
   m_ObjectHideFlags: 0
@@ -2095,6 +2129,7 @@ GameObject:
   - component: {fileID: 4411189790087292068}
   - component: {fileID: 4411189790086194788}
   - component: {fileID: 4411189790082070502}
+  - component: {fileID: 4885749480948906333}
   m_Layer: 0
   m_Name: Crate_A
   m_TagString: Untagged
@@ -2197,6 +2232,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300176, guid: fd75e63c14c4540438372a6844af68b6, type: 3}
+--- !u!208 &4885749480948906333
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4411189790083938468}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.46400002, y: 0.266, z: 0.60200006}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.266, z: -0.001}
+  m_TimeToStationary: 0.5
 --- !u!1 &6719312027130863805
 GameObject:
   m_ObjectHideFlags: 0
@@ -5613,6 +5664,7 @@ GameObject:
   - component: {fileID: 7493843848558981052}
   - component: {fileID: 7493843848558026396}
   - component: {fileID: 7493843848562077756}
+  - component: {fileID: 4757189102721013582}
   m_Layer: 0
   m_Name: Stool_A_Broken
   m_TagString: Untagged
@@ -5715,6 +5767,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300538, guid: 628e5212ccbe5044ba8b70740d37394e, type: 3}
+--- !u!208 &4757189102721013582
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7493843848559971348}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.33800003, y: 0.41700003, z: 0.527}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &7493843848560029826
 GameObject:
   m_ObjectHideFlags: 0
@@ -5841,6 +5909,7 @@ GameObject:
   - component: {fileID: 7611828192023690366}
   - component: {fileID: 7611828192024821438}
   - component: {fileID: 7611828192020591026}
+  - component: {fileID: 2929653183281144981}
   m_Layer: 0
   m_Name: Barrel
   m_TagString: Untagged
@@ -5944,6 +6013,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 628e5212ccbe5044ba8b70740d37394e, type: 3}
+--- !u!208 &2929653183281144981
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7611828192022880382}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.85400003, y: 0.97800004, z: 0.85}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.97800004, z: -0.002}
+  m_TimeToStationary: 0.5
 --- !u!1 &8090300511475438662
 GameObject:
   m_ObjectHideFlags: 0
@@ -5953,7 +6038,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5793115393044230519}
-  - component: {fileID: 4266634746909968222}
   m_Layer: 0
   m_Name: Random Decor1
   m_TagString: Untagged
@@ -5987,22 +6071,6 @@ Transform:
   - {fileID: 488876938242338027}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!208 &4266634746909968222
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8090300511475438662}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 0, z: 0}
-  m_TimeToStationary: 0.5
 --- !u!1 &8632413284844336110
 GameObject:
   m_ObjectHideFlags: 0

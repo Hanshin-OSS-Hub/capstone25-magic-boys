@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 114695059801859746}
   - component: {fileID: 114695059800728674}
   - component: {fileID: 114695059796604384}
+  - component: {fileID: 6463920712263856868}
   m_Layer: 0
   m_Name: Crate_A
   m_TagString: Untagged
@@ -114,6 +115,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300176, guid: fd75e63c14c4540438372a6844af68b6, type: 3}
+--- !u!208 &6463920712263856868
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 114695059798538914}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.46400002, y: 0.266, z: 0.60200006}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.266, z: -0.001}
+  m_TimeToStationary: 0.5
 --- !u!1 &2249204083223753175
 GameObject:
   m_ObjectHideFlags: 0
@@ -467,6 +484,7 @@ GameObject:
   - component: {fileID: 4016381794259879832}
   - component: {fileID: 4016381794258879832}
   - component: {fileID: 4016381794262997126}
+  - component: {fileID: 2441809577300377378}
   m_Layer: 0
   m_Name: Crate_B
   m_TagString: Untagged
@@ -569,6 +587,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300178, guid: fd75e63c14c4540438372a6844af68b6, type: 3}
+--- !u!208 &2441809577300377378
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4016381794256886680}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.46400002, y: 0.266, z: 0.84800005}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.266, z: -0.004}
+  m_TimeToStationary: 0.5
 --- !u!1 &6205346939433763050
 GameObject:
   m_ObjectHideFlags: 0
@@ -805,7 +839,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2279453362727429224}
-  - component: {fileID: 6034078550782824318}
   m_Layer: 0
   m_Name: Random Decor1
   m_TagString: Untagged
@@ -836,22 +869,6 @@ Transform:
   - {fileID: 8989152743982321815}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!208 &6034078550782824318
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8725133811264767617}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 0, z: 0}
-  m_TimeToStationary: 0.5
 --- !u!1 &8989152743982419127
 GameObject:
   m_ObjectHideFlags: 0
@@ -864,6 +881,7 @@ GameObject:
   - component: {fileID: 8989152743985713335}
   - component: {fileID: 8989152743984616055}
   - component: {fileID: 8989152743980304475}
+  - component: {fileID: 7656640432697329558}
   m_Layer: 0
   m_Name: Crate_C
   m_TagString: Untagged
@@ -966,3 +984,19 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300180, guid: fd75e63c14c4540438372a6844af68b6, type: 3}
+--- !u!208 &7656640432697329558
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8989152743982419127}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.46400002, y: 0.45100003, z: 0.84800005}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.45100003, z: 0}
+  m_TimeToStationary: 0.5

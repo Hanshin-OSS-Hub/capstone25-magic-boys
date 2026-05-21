@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 752670449025806503}
   - component: {fileID: 752670449024676455}
   - component: {fileID: 752670449028906347}
+  - component: {fileID: 5757569879534520341}
   m_Layer: 0
   m_Name: Barrel (2)
   m_TagString: Untagged
@@ -115,6 +116,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 628e5212ccbe5044ba8b70740d37394e, type: 3}
+--- !u!208 &5757569879534520341
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 752670449026870439}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.85400003, y: 0.97800004, z: 0.85}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.97800004, z: -0.002}
+  m_TimeToStationary: 0.5
 --- !u!1 &1083177528586563472
 GameObject:
   m_ObjectHideFlags: 0
@@ -127,6 +144,7 @@ GameObject:
   - component: {fileID: 1083177528587563920}
   - component: {fileID: 1083177528588562768}
   - component: {fileID: 1083177528592793180}
+  - component: {fileID: 377580855858837426}
   m_Layer: 0
   m_Name: Barrel (5)
   m_TagString: Untagged
@@ -230,6 +248,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 628e5212ccbe5044ba8b70740d37394e, type: 3}
+--- !u!208 &377580855858837426
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1083177528586563472}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.85400003, y: 0.97800004, z: 0.85}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.97800004, z: -0.002}
+  m_TimeToStationary: 0.5
 --- !u!1 &2543204850331571944
 GameObject:
   m_ObjectHideFlags: 0
@@ -239,7 +273,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5690533994380052200}
-  - component: {fileID: 4939792298540913250}
   m_Layer: 0
   m_Name: Random Decor2
   m_TagString: Untagged
@@ -276,22 +309,6 @@ Transform:
   - {fileID: 7249721873823516654}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!208 &4939792298540913250
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2543204850331571944}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 0, z: 0}
-  m_TimeToStationary: 0.5
 --- !u!1 &3723029952640694081
 GameObject:
   m_ObjectHideFlags: 0
@@ -304,6 +321,7 @@ GameObject:
   - component: {fileID: 3723029952643885889}
   - component: {fileID: 3723029952642886017}
   - component: {fileID: 3723029952638658189}
+  - component: {fileID: 2451003395717071887}
   m_Layer: 0
   m_Name: Barrel (10)
   m_TagString: Untagged
@@ -407,6 +425,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 628e5212ccbe5044ba8b70740d37394e, type: 3}
+--- !u!208 &2451003395717071887
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3723029952640694081}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.85400003, y: 0.97800004, z: 0.85}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.97800004, z: -0.002}
+  m_TimeToStationary: 0.5
 --- !u!1 &4426646951743738495
 GameObject:
   m_ObjectHideFlags: 0
@@ -419,6 +453,7 @@ GameObject:
   - component: {fileID: 4426646951747096191}
   - component: {fileID: 4426646951745998015}
   - component: {fileID: 4426646951741834163}
+  - component: {fileID: 2641309458047599126}
   m_Layer: 0
   m_Name: Barrel (1)
   m_TagString: Untagged
@@ -522,6 +557,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 628e5212ccbe5044ba8b70740d37394e, type: 3}
+--- !u!208 &2641309458047599126
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4426646951743738495}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.85400003, y: 0.97800004, z: 0.85}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.97800004, z: -0.002}
+  m_TimeToStationary: 0.5
 --- !u!1 &4562707972675063118
 GameObject:
   m_ObjectHideFlags: 0
@@ -534,6 +585,7 @@ GameObject:
   - component: {fileID: 4562707972673769806}
   - component: {fileID: 4562707972672803726}
   - component: {fileID: 4562707972676967554}
+  - component: {fileID: 8987877371254160219}
   m_Layer: 0
   m_Name: Barrel (7)
   m_TagString: Untagged
@@ -637,6 +689,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 628e5212ccbe5044ba8b70740d37394e, type: 3}
+--- !u!208 &8987877371254160219
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4562707972675063118}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.85400003, y: 0.97800004, z: 0.85}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.97800004, z: -0.002}
+  m_TimeToStationary: 0.5
 --- !u!1 &4864576594020609857
 GameObject:
   m_ObjectHideFlags: 0
@@ -649,6 +717,7 @@ GameObject:
   - component: {fileID: 4864576594023609153}
   - component: {fileID: 4864576594022609281}
   - component: {fileID: 4864576594018320013}
+  - component: {fileID: 5162394499689861950}
   m_Layer: 0
   m_Name: Barrel (9)
   m_TagString: Untagged
@@ -752,6 +821,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 628e5212ccbe5044ba8b70740d37394e, type: 3}
+--- !u!208 &5162394499689861950
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4864576594020609857}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.85400003, y: 0.97800004, z: 0.85}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.97800004, z: -0.002}
+  m_TimeToStationary: 0.5
 --- !u!1 &5244241806616414552
 GameObject:
   m_ObjectHideFlags: 0
@@ -764,6 +849,7 @@ GameObject:
   - component: {fileID: 5244241806617220440}
   - component: {fileID: 5244241806618351512}
   - component: {fileID: 5244241806622513300}
+  - component: {fileID: 4807883091818275092}
   m_Layer: 0
   m_Name: Barrel (8)
   m_TagString: Untagged
@@ -867,6 +953,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 628e5212ccbe5044ba8b70740d37394e, type: 3}
+--- !u!208 &4807883091818275092
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5244241806616414552}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.85400003, y: 0.97800004, z: 0.85}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.97800004, z: -0.002}
+  m_TimeToStationary: 0.5
 --- !u!1 &6415115316713485908
 GameObject:
   m_ObjectHideFlags: 0
@@ -879,6 +981,7 @@ GameObject:
   - component: {fileID: 6415115316714285652}
   - component: {fileID: 6415115316715415700}
   - component: {fileID: 6415115316711188376}
+  - component: {fileID: 6426279799736908901}
   m_Layer: 0
   m_Name: Barrel (6)
   m_TagString: Untagged
@@ -982,6 +1085,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 628e5212ccbe5044ba8b70740d37394e, type: 3}
+--- !u!208 &6426279799736908901
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6415115316713485908}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.85400003, y: 0.97800004, z: 0.85}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.97800004, z: -0.002}
+  m_TimeToStationary: 0.5
 --- !u!1 &6595509547483874442
 GameObject:
   m_ObjectHideFlags: 0
@@ -994,6 +1113,7 @@ GameObject:
   - component: {fileID: 6595509547480815754}
   - component: {fileID: 6595509547481946698}
   - component: {fileID: 6595509547477683144}
+  - component: {fileID: 6569246010691053064}
   m_Layer: 0
   m_Name: Crate_A
   m_TagString: Untagged
@@ -1096,6 +1216,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300176, guid: fd75e63c14c4540438372a6844af68b6, type: 3}
+--- !u!208 &6569246010691053064
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6595509547483874442}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.46400002, y: 0.266, z: 0.60200006}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.266, z: -0.001}
+  m_TimeToStationary: 0.5
 --- !u!1 &7249721873823882190
 GameObject:
   m_ObjectHideFlags: 0
@@ -1108,6 +1244,7 @@ GameObject:
   - component: {fileID: 7249721873822713806}
   - component: {fileID: 7249721873821615374}
   - component: {fileID: 7249721873825963810}
+  - component: {fileID: 318960074110750428}
   m_Layer: 0
   m_Name: Crate_C
   m_TagString: Untagged
@@ -1210,6 +1347,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300180, guid: fd75e63c14c4540438372a6844af68b6, type: 3}
+--- !u!208 &318960074110750428
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7249721873823882190}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.46400002, y: 0.45100003, z: 0.84800005}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.45100003, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &7898015021086203559
 GameObject:
   m_ObjectHideFlags: 0
@@ -1222,6 +1375,7 @@ GameObject:
   - component: {fileID: 7898015021089227431}
   - component: {fileID: 7898015021088129127}
   - component: {fileID: 7898015021092425579}
+  - component: {fileID: 8957924001942963305}
   m_Layer: 0
   m_Name: Barrel
   m_TagString: Untagged
@@ -1325,6 +1479,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 628e5212ccbe5044ba8b70740d37394e, type: 3}
+--- !u!208 &8957924001942963305
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7898015021086203559}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.85400003, y: 0.97800004, z: 0.85}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.97800004, z: -0.002}
+  m_TimeToStationary: 0.5
 --- !u!1 &7989286434362745025
 GameObject:
   m_ObjectHideFlags: 0
@@ -1337,6 +1507,7 @@ GameObject:
   - component: {fileID: 7989286434365914305}
   - component: {fileID: 7989286434364947969}
   - component: {fileID: 7989286434369106189}
+  - component: {fileID: 8475367113362534379}
   m_Layer: 0
   m_Name: Barrel (3)
   m_TagString: Untagged
@@ -1440,6 +1611,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 628e5212ccbe5044ba8b70740d37394e, type: 3}
+--- !u!208 &8475367113362534379
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7989286434362745025}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.85400003, y: 0.97800004, z: 0.85}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.97800004, z: -0.002}
+  m_TimeToStationary: 0.5
 --- !u!1 &8313591730705349717
 GameObject:
   m_ObjectHideFlags: 0
@@ -1452,6 +1639,7 @@ GameObject:
   - component: {fileID: 8313591730706505813}
   - component: {fileID: 8313591730707604117}
   - component: {fileID: 8313591730703348503}
+  - component: {fileID: 4786385602221834854}
   m_Layer: 0
   m_Name: Crate_A (1)
   m_TagString: Untagged
@@ -1554,6 +1742,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300176, guid: fd75e63c14c4540438372a6844af68b6, type: 3}
+--- !u!208 &4786385602221834854
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8313591730705349717}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.46400002, y: 0.266, z: 0.60200006}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.266, z: -0.001}
+  m_TimeToStationary: 0.5
 --- !u!1 &9207278453489939410
 GameObject:
   m_ObjectHideFlags: 0
@@ -1566,6 +1770,7 @@ GameObject:
   - component: {fileID: 9207278453489135570}
   - component: {fileID: 9207278453488004370}
   - component: {fileID: 9207278453483840030}
+  - component: {fileID: 5612868974238365521}
   m_Layer: 0
   m_Name: Barrel (4)
   m_TagString: Untagged
@@ -1669,3 +1874,19 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 628e5212ccbe5044ba8b70740d37394e, type: 3}
+--- !u!208 &5612868974238365521
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9207278453489939410}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.85400003, y: 0.97800004, z: 0.85}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.97800004, z: -0.002}
+  m_TimeToStationary: 0.5
