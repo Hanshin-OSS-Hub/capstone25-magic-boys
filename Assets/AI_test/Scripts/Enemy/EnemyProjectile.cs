@@ -9,16 +9,23 @@ public class EnemyProjectile : MonoBehaviour
     private Rigidbody rb;
     private int tileLayerIndex;
 
-    void Start()
+    void Awake()
     {
         rb = GetComponent<Rigidbody>();
         rb.useGravity = false;
+        tileLayerIndex = LayerMask.NameToLayer("Tile");
+    }
+    void OnEnable()
+    {
 
         rb.linearVelocity = transform.forward * speed;
 
-        tileLayerIndex = LayerMask.NameToLayer("Tile");
+        Invoke(nameof(Deactivate), lifeTime);
+    }
 
-        Destroy(gameObject, lifeTime);
+    void OnDisable()
+    {
+        CancelInvoke(nameof(Deactivate));
     }
 
     void OnTriggerEnter(Collider other)
@@ -29,11 +36,16 @@ public class EnemyProjectile : MonoBehaviour
         {
             IDamageable target = other.GetComponent<IDamageable>();
             target?.TakeDamage(damage);
-            Destroy(gameObject);
+            Deactivate(); 
         }
         else if (other.gameObject.layer == tileLayerIndex)
         {
-            Destroy(gameObject);
+            Deactivate();
         }
+    }
+
+    private void Deactivate()
+    {
+        gameObject.SetActive(false);
     }
 }

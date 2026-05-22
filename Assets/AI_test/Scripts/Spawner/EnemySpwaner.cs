@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -29,13 +30,28 @@ public class EnemySpawner : MonoBehaviour
     {
         if (enemyPrefabs == null || enemyPrefabs.Length == 0) return;
 
-        GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag("EnemySpawnPoint");
+        List<Transform> mySpawnPoints = new List<Transform>();
+        foreach (Transform child in GetComponentsInChildren<Transform>())
+        {
+            if (child.CompareTag("EnemySpawnPoint"))
+            {
+                mySpawnPoints.Add(child);
+            }
+        }
 
-        if (spawnPoints.Length == 0) return;
+        if (mySpawnPoints.Count == 0) return;
+
+        GameObject enemyParentObj = GameObject.Find("Enemy");
+        if (enemyParentObj == null)
+        {
+            Debug.LogError("하이어라키에 'Enemy' 오브젝트가 없습니다.");
+            return;
+        }
+        Transform enemyParent = enemyParentObj.transform;
 
         int totalSpawned = 0;
 
-        foreach (GameObject point in spawnPoints)
+        foreach (Transform point in mySpawnPoints)
         {
             int spawnCount = Random.Range(minEnemiesPerPoint, maxEnemiesPerPoint + 1);
 
@@ -45,16 +61,16 @@ public class EnemySpawner : MonoBehaviour
                 GameObject selectedEnemy = enemyPrefabs[enemyIndex];
 
                 Vector2 randomCircle = Random.insideUnitCircle * spawnRadius;
-                Vector3 randomPos = point.transform.position + new Vector3(randomCircle.x, 0, randomCircle.y);
+                Vector3 randomPos = point.position + new Vector3(randomCircle.x, 0, randomCircle.y);
 
                 NavMeshHit hit;
                 if (NavMesh.SamplePosition(randomPos, out hit, 2.0f, NavMesh.AllAreas))
                 {
-                    Instantiate(selectedEnemy, hit.position, point.transform.rotation);
+                    Instantiate(selectedEnemy, hit.position, point.rotation, enemyParent);
                     totalSpawned++;
                 }
             }
         }
-        Debug.Log($"{totalSpawned}개의 적 개체 생성.");
+        Debug.Log($"{gameObject.name}에서 {totalSpawned}개의 적 개체 생성 완료.");
     }
 }

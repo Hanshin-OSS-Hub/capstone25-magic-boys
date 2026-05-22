@@ -4523,7 +4523,9 @@ MonoBehaviour:
   playerCamera: {fileID: 0}
   movableTag: Movable
   castRange: 8
-  holdDistance: 4
+  minHoldDistance: 2
+  maxHoldDistance: 15
+  scrollSensitivity: 3
   moveSpeed: 12
   maxTelekinesisTime: 3
   maxHoldHeightOffset: 1
@@ -9523,6 +9525,67 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1359422888}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1618446717
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 770130574332236223, guid: 4d64717cdbf30fd418ae9e5462905604, type: 3}
+      propertyPath: m_Name
+      value: Enemy_Ghost
+      objectReference: {fileID: 0}
+    - target: {fileID: 770130574332236223, guid: 4d64717cdbf30fd418ae9e5462905604, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1115871349246972110, guid: 4d64717cdbf30fd418ae9e5462905604, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 5.89
+      objectReference: {fileID: 0}
+    - target: {fileID: 1115871349246972110, guid: 4d64717cdbf30fd418ae9e5462905604, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.37
+      objectReference: {fileID: 0}
+    - target: {fileID: 1115871349246972110, guid: 4d64717cdbf30fd418ae9e5462905604, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 11.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1115871349246972110, guid: 4d64717cdbf30fd418ae9e5462905604, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7153301
+      objectReference: {fileID: 0}
+    - target: {fileID: 1115871349246972110, guid: 4d64717cdbf30fd418ae9e5462905604, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1115871349246972110, guid: 4d64717cdbf30fd418ae9e5462905604, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.6987868
+      objectReference: {fileID: 0}
+    - target: {fileID: 1115871349246972110, guid: 4d64717cdbf30fd418ae9e5462905604, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1115871349246972110, guid: 4d64717cdbf30fd418ae9e5462905604, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1115871349246972110, guid: 4d64717cdbf30fd418ae9e5462905604, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -88.659
+      objectReference: {fileID: 0}
+    - target: {fileID: 1115871349246972110, guid: 4d64717cdbf30fd418ae9e5462905604, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4d64717cdbf30fd418ae9e5462905604, type: 3}
 --- !u!1 &1626528855
 GameObject:
   m_ObjectHideFlags: 0
@@ -10853,6 +10916,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackLockTime: 1.1
+  hammerCollider: {fileID: 1909696354}
   playerCamera: {fileID: 33370557}
   chestHitRange: 5
   chestDamage: 1
@@ -11146,7 +11210,9 @@ MonoBehaviour:
   playerCamera: {fileID: 33370557}
   movableTag: Movable
   castRange: 8
-  holdDistance: 4
+  minHoldDistance: 2
+  maxHoldDistance: 15
+  scrollSensitivity: 3
   moveSpeed: 12
   maxTelekinesisTime: 3
   maxHoldHeightOffset: 1
@@ -11309,6 +11375,45 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1891485413}
   m_CullTransparentMesh: 1
+--- !u!1 &1909696351 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 0e9dde2650ef69842ac01d2063b650a9, type: 3}
+  m_PrefabInstance: {fileID: 2042656838}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1909696354
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1909696351}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.32229418, y: 1.0223665, z: 0.18592824}
+  m_Center: {x: 0.000000016247643, y: 0.29076287, z: 0.000000016115987}
+--- !u!114 &1909696355
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1909696351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac792d6f9913ae742a34a34081b5aef0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HammerHitbox
+  damage: 10
 --- !u!1 &1920550848
 GameObject:
   m_ObjectHideFlags: 0
@@ -11521,6 +11626,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5952386419ee824eaf900ddf515dcd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  toggleKey: 107
+  holdViewKey: 99
   statsPanel: {fileID: 742754595}
   player: {fileID: 0}
   pointText: {fileID: 0}
@@ -12024,7 +12131,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0e9dde2650ef69842ac01d2063b650a9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1909696354}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0e9dde2650ef69842ac01d2063b650a9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1909696355}
   m_SourcePrefab: {fileID: 100100000, guid: 0e9dde2650ef69842ac01d2063b650a9, type: 3}
 --- !u!1 &2048938225
 GameObject:
@@ -12699,3 +12812,4 @@ SceneRoots:
   - {fileID: 825164932}
   - {fileID: 674354841}
   - {fileID: 1322338414}
+  - {fileID: 1618446717}

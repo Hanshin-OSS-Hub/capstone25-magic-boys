@@ -6,10 +6,12 @@ public class MagicAttackk : MonoBehaviour
     [Header("Telekinesis")]
     [SerializeField] private Camera playerCamera;
     [SerializeField] private string movableTag = "Movable";
-    [SerializeField] private float castRange = 8f;
-    [SerializeField] private float holdDistance = 4f;
+    [SerializeField] private float castRange = 20f;
+    [SerializeField] private float minHoldDistance = 2f;
+    [SerializeField] private float maxHoldDistance = 15f;
+    [SerializeField] private float scrollSensitivity = 3f;
     [SerializeField] private float moveSpeed = 12f;
-    [SerializeField] private float maxTelekinesisTime = 3f;
+    [SerializeField] private float maxTelekinesisTime = 10f;
     [SerializeField] private float maxHoldHeightOffset = 1.0f;
 
     [Header("UI")]
@@ -18,6 +20,9 @@ public class MagicAttackk : MonoBehaviour
     private Rigidbody currentTargetRb;
     private bool isTelekinesisActive = false;
     private float currentTelekinesisTime = 0f;
+
+    // 현재 물체를 잡고 있는 거리
+    private float currentHoldDistance = 4f;
 
     void Start()
     {
@@ -35,7 +40,7 @@ public class MagicAttackk : MonoBehaviour
 
     void Update()
     {
-        // U키는 이제 홀드가 아니라 토글
+        // U키 토글
         if (Input.GetKeyDown(KeyCode.U))
         {
             if (isTelekinesisActive)
@@ -50,6 +55,7 @@ public class MagicAttackk : MonoBehaviour
 
         if (isTelekinesisActive)
         {
+            // 시전 시간 감소
             currentTelekinesisTime -= Time.deltaTime;
 
             if (telekinesisFillImage != null)
@@ -60,6 +66,15 @@ public class MagicAttackk : MonoBehaviour
             if (currentTelekinesisTime <= 0f)
             {
                 StopTelekinesis();
+                return;
+            }
+
+            // 마우스 휠로 거리 조절
+            float scroll = Input.GetAxis("Mouse ScrollWheel");
+            if (Mathf.Abs(scroll) > 0.0001f)
+            {
+                currentHoldDistance += scroll * scrollSensitivity;
+                currentHoldDistance = Mathf.Clamp(currentHoldDistance, minHoldDistance, maxHoldDistance);
             }
         }
     }
@@ -69,8 +84,9 @@ public class MagicAttackk : MonoBehaviour
         if (!isTelekinesisActive || currentTargetRb == null || playerCamera == null)
             return;
 
-        Vector3 targetPosition = playerCamera.transform.position + playerCamera.transform.forward * holdDistance;
+        Vector3 targetPosition = playerCamera.transform.position + playerCamera.transform.forward * currentHoldDistance;
 
+        // 너무 위로 뜨는 것 방지
         float maxY = playerCamera.transform.position.y + maxHoldHeightOffset;
         if (targetPosition.y > maxY)
         {
@@ -84,7 +100,6 @@ public class MagicAttackk : MonoBehaviour
 
     public void Telekinesis()
     {
-        // 이미 시전 중이면 새로 시작 안 함
         if (isTelekinesisActive)
             return;
 
@@ -104,17 +119,19 @@ public class MagicAttackk : MonoBehaviour
                 return;
 
             Rigidbody targetRb = hit.collider.GetComponentInParent<Rigidbody>();
-
             if (targetRb == null)
                 return;
 
-            StartTelekinesis(targetRb);
+            StartTelekinesis(targetRb, hit.distance);
         }
     }
 
-    private void StartTelekinesis(Rigidbody targetRb)
+    private void StartTelekinesis(Rigidbody targetRb, float hitDistance)
     {
         currentTargetRb = targetRb;
+
+        // 시작할 때는 "맞은 거리"를 그대로 유지해서 바로 앞으로 안 끌려오게 함
+        currentHoldDistance = Mathf.Clamp(hitDistance, minHoldDistance, maxHoldDistance);
 
         currentTargetRb.useGravity = false;
         currentTargetRb.linearVelocity = Vector3.zero;

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7022612934343652059}
-  - component: {fileID: -1970177621330755324}
+  - component: {fileID: -2439335692146563750}
   m_Layer: 10
   m_Name: Random Decor1
   m_TagString: Untagged
@@ -30,30 +30,32 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 516623949022553898}
   - {fileID: 6292331324585885678}
   - {fileID: 4069157096161532510}
   - {fileID: 3646213379401263984}
   - {fileID: 2208226484767155485}
   - {fileID: 282812927372237939}
-  - {fileID: 516623949022553898}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!208 &-1970177621330755324
-NavMeshObstacle:
+--- !u!114 &-2439335692146563750
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 485944068155972059}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 0, z: 0}
-  m_TimeToStationary: 0.5
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 572f86550a8733e48983b3c203ff5d21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
+  enemyPrefabs:
+  - {fileID: 770130574332236223, guid: 4d64717cdbf30fd418ae9e5462905604, type: 3}
+  - {fileID: 7509243798015521505, guid: efb8053f987df8f42adde5b495158eb3, type: 3}
+  minEnemiesPerPoint: 3
+  maxEnemiesPerPoint: 4
+  spawnRadius: 5
 --- !u!1 &2172454267844926510
 GameObject:
   m_ObjectHideFlags: 0
@@ -97,6 +99,7 @@ GameObject:
   - component: {fileID: 5647215797154602183}
   - component: {fileID: 1913839380582759103}
   - component: {fileID: 8464349366067011253}
+  - component: {fileID: 84977205862018000}
   m_Layer: 10
   m_Name: Cylinder (3)
   m_TagString: Untagged
@@ -199,6 +202,22 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!208 &84977205862018000
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2243934430399771313}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &3574678630865438077
 GameObject:
   m_ObjectHideFlags: 0
@@ -211,6 +230,7 @@ GameObject:
   - component: {fileID: 1463754671504377563}
   - component: {fileID: 597417452740272501}
   - component: {fileID: 270784809816350395}
+  - component: {fileID: 6246487953551680656}
   m_Layer: 10
   m_Name: Cube
   m_TagString: Untagged
@@ -311,6 +331,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!208 &6246487953551680656
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3574678630865438077}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &3599389832292481771
 GameObject:
   m_ObjectHideFlags: 0
@@ -323,6 +359,7 @@ GameObject:
   - component: {fileID: 9073030908928957537}
   - component: {fileID: 5009898482691179359}
   - component: {fileID: 8618690118509279526}
+  - component: {fileID: 8074743764658334423}
   m_Layer: 10
   m_Name: Cylinder (2)
   m_TagString: Untagged
@@ -425,6 +462,22 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!208 &8074743764658334423
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3599389832292481771}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &5438647407182003710
 GameObject:
   m_ObjectHideFlags: 0
@@ -437,6 +490,7 @@ GameObject:
   - component: {fileID: 1943144239173293393}
   - component: {fileID: 1036069959564031467}
   - component: {fileID: 4014676624736120507}
+  - component: {fileID: 8070380363244972453}
   m_Layer: 10
   m_Name: Cylinder (1)
   m_TagString: Untagged
@@ -539,6 +593,22 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!208 &8070380363244972453
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5438647407182003710}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &7623262061473351083
 GameObject:
   m_ObjectHideFlags: 0
@@ -551,6 +621,7 @@ GameObject:
   - component: {fileID: 8715499480021135982}
   - component: {fileID: 6232875003295739566}
   - component: {fileID: 2987900728920429820}
+  - component: {fileID: 472594558633693491}
   m_Layer: 10
   m_Name: Cylinder
   m_TagString: Untagged
@@ -653,3 +724,19 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!208 &472594558633693491
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7623262061473351083}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
