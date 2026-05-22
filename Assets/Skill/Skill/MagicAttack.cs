@@ -104,7 +104,8 @@ public class MagicAttack : MonoBehaviour
 
     private SkillSlot pendingSlot = SkillSlot.None;
 
-    public bool IsAiming => pendingSlot != SkillSlot.None;
+    // 이제 마법은 조준 대기 상태를 만들지 않고, 키를 누르는 순간 바로 발동함
+    public bool IsAiming => false;
 
     void Awake()
     {
@@ -126,47 +127,49 @@ public class MagicAttack : MonoBehaviour
         if (StatsPanelToggle.UIBlocked) return;
         if (playerStats == null) return;
 
-        if (!IsAiming)
-        {
-            if (skill1Key != KeyCode.None && Input.GetKeyDown(skill1Key))
-                SelectSkill(SkillSlot.Q);
-            else if (skill2Key != KeyCode.None && Input.GetKeyDown(skill2Key))
-                SelectSkill(SkillSlot.E);
-            else if (skill3Key != KeyCode.None && Input.GetKeyDown(skill3Key))
-                SelectSkill(SkillSlot.R);
-            else if (skill4Key != KeyCode.None && Input.GetKeyDown(skill4Key))
-                SelectSkill(SkillSlot.T);
-            else if (skill5Key != KeyCode.None && Input.GetKeyDown(skill5Key))
-                SelectSkill(SkillSlot.Y);
-        }
-        else
-        {
-            if (Input.GetMouseButtonDown(0))
-                ConfirmCast();
-            else if (Input.GetMouseButtonDown(1))
-                CancelCast();
-        }
+        // 기존 방식: 스킬 키 입력 -> 좌클릭으로 발동
+        // 변경 방식: 스킬 키를 누르는 순간 바로 발동
+        if (skill1Key != KeyCode.None && Input.GetKeyDown(skill1Key))
+            CastImmediate(SkillSlot.Q);
+        else if (skill2Key != KeyCode.None && Input.GetKeyDown(skill2Key))
+            CastImmediate(SkillSlot.E);
+        else if (skill3Key != KeyCode.None && Input.GetKeyDown(skill3Key))
+            CastImmediate(SkillSlot.R);
+        else if (skill4Key != KeyCode.None && Input.GetKeyDown(skill4Key))
+            CastImmediate(SkillSlot.T);
+        else if (skill5Key != KeyCode.None && Input.GetKeyDown(skill5Key))
+            CastImmediate(SkillSlot.Y);
     }
 
     public void SelectSkill(SkillSlot slot)
     {
-        int index = (int)slot - 1;
-        if (index < 0) return;
+        // 음성 인식이나 다른 스크립트에서 SelectSkill을 호출해도
+        // 이제는 선택 상태로 기다리지 않고 바로 발동함
+        CastImmediate(slot);
+    }
 
-        if (!IsUnlocked(index))
+    private void CastImmediate(SkillSlot slot)
+    {
+        pendingSlot = SkillSlot.None;
+
+        switch (slot)
         {
-            Debug.Log("[MagicAttack] " + slot + " is locked.");
-            return;
+            case SkillSlot.Q:
+                TryCastQ();
+                break;
+            case SkillSlot.E:
+                TryCastE();
+                break;
+            case SkillSlot.R:
+                TryCastR();
+                break;
+            case SkillSlot.T:
+                TryCastT();
+                break;
+            case SkillSlot.Y:
+                TryCastY();
+                break;
         }
-
-        if (GetCooldownRatio(index) > 0f)
-        {
-            Debug.Log("[MagicAttack] " + slot + " is on cooldown.");
-            return;
-        }
-
-        pendingSlot = slot;
-        Debug.Log("[MagicAttack] Selected " + slot + ". Left-click to cast, Right-click to cancel.");
     }
 
     private void ConfirmCast()
