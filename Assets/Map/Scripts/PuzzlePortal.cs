@@ -1,71 +1,98 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
-
 
 public class PuzzlePortal : MonoBehaviour
 {
+    [Header("Portal Type")]
+    [SerializeField] private bool isReturnPortal = false;
+
     [Header("Scene Settings")]
-    [Tooltip("전환할 씬 이름 (Build Settings에 등록 필요)")]
-    [SerializeField] string puzzleSceneName = "PuzzleScene";
+    [SerializeField] private string puzzleSceneName = "PuzzleScene";
+
+    [Header("Return Settings")]
+    [Tooltip("던전으로 돌아왔을 때 배치될 위치. 던전 포탈 근처에 빈 오브젝트로 만들어두면 좋음")]
+    [SerializeField] private Transform returnPoint;
 
     [Header("Interaction Settings")]
-    [SerializeField] KeyCode interactKey = KeyCode.E;
-    [Tooltip("플레이어 태그 (Player 태그 사용)")]
-    [SerializeField] string playerTag = "Player";
+    [SerializeField] private KeyCode interactKey = KeyCode.E;
+    [SerializeField] private string playerTag = "Player";
 
-    bool playerInside = false;
+    private bool playerInside = false;
+    private Transform currentPlayer;
 
-
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag(playerTag)) return;
+        if (!TryGetPlayer(other, out Transform player)) return;
 
         playerInside = true;
-        Debug.Log("[PuzzleRoomTrigger] 플레이어 진입 - E 키로 씬 전환 가능");
+        currentPlayer = player;
+
+        Debug.Log("[PuzzlePortal] 플레이어 진입 - E 입력 가능");
     }
 
-    void OnTriggerExit(Collider other)
+    private void OnTriggerExit(Collider other)
     {
-        if (!other.CompareTag(playerTag)) return;
+        if (!TryGetPlayer(other, out Transform player)) return;
+        if (player != currentPlayer) return;
 
         playerInside = false;
+        currentPlayer = null;
     }
 
-
-    void Update()
+    private void Update()
     {
-        if (playerInside && Input.GetKeyDown(interactKey))
-        {
-            EnterPuzzleScene();
-        }
-    }
+        if (!playerInside) return;
+        if (!Input.GetKeyDown(interactKey)) return;
 
-
-    void EnterPuzzleScene()
-    {
-        if (string.IsNullOrEmpty(puzzleSceneName))
+        if (PuzzleTravelManager.Instance == null)
         {
-            Debug.LogError("[PuzzleRoomTrigger] puzzleSceneName이 비어있습니다!");
+            Debug.LogError("[PuzzlePortal] PuzzleTravelManager가 씬에 없음");
             return;
         }
-        GameObject player = GameObject.FindWithTag(playerTag);
-        player.transform.SetParent(null);   // 부모에서 분리 (필수)
-        DontDestroyOnLoad(player);          // 씬 전환 후에도 유지
 
-        Debug.Log($"[PuzzleRoomTrigger] 씬 전환 → {puzzleSceneName}");
+        if (PuzzleTravelManager.Instance.IsLoading) return;
 
-        SceneManager.LoadScene(puzzleSceneName);
+        if (isReturnPortal)
+        {
+            PuzzleTravelManager.Instance.ReturnToDungeon();
+        }
+        else
+        {
+            PuzzleTravelManager.Instance.EnterPuzzleRoom(
+                puzzleSceneName,
+                currentPlayer,
+                returnPoint
+            );
+        }
     }
 
+    private bool TryGetPlayer(Collider other, out Transform player)
+    {
+        if (other.CompareTag(playerTag))
+        {
+            player = other.transform;
+            return true;
+        }
 
-    void OnDrawGizmos()
+        Transform root = other.transform.root;
+
+        if (root.CompareTag(playerTag))
+        {
+            player = root;
+            return true;
+        }
+
+        player = null;
+        return false;
+    }
+
+    private void OnDrawGizmos()
     {
         Collider col = GetComponent<Collider>();
         if (col == null) return;
 
-        Gizmos.color = playerInside
-            ? new Color(0f, 1f, 0.4f, 0.35f)
-            : new Color(0f, 0.8f, 1f, 0.25f);
+        Gizmos.color = isReturnPortal
+            ? new Color(1f, 0.6f, 0f, 0.3f)
+            : new Color(0f, 0.8f, 1f, 0.3f);
 
         if (col is BoxCollider box)
         {
