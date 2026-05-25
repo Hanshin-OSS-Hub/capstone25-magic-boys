@@ -1826,6 +1826,7 @@ GameObject:
   - component: {fileID: 211820193}
   - component: {fileID: 211820191}
   - component: {fileID: 211820192}
+  - component: {fileID: 211820205}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -2276,6 +2277,18 @@ Transform:
   - {fileID: 714282953}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &211820205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 211820190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13a801f84c4d840488b641d3acc7d23a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PersistentPlayer
 --- !u!1 &236834174
 GameObject:
   m_ObjectHideFlags: 0
@@ -2968,6 +2981,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StagePuzzleChestReward
   stageIndex: 5
+  portalToShow: {fileID: 0}
+  hidePortalOnStart: 1
 --- !u!114 &347958070
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6548,6 +6563,53 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &864279793
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 864279795}
+  - component: {fileID: 864279794}
+  m_Layer: 0
+  m_Name: PuzzleTravelManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &864279794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 864279793}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89b17a9bd07a1bd49b8baf4e8d9993b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PuzzleTravelManager
+  playerTag: Player
+  puzzleSpawnPointName: PuzzleSpawnPoint
+  puzzleSpawnTag: PuzzleSpawn
+--- !u!4 &864279795
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 864279793}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &873160360
 GameObject:
   m_ObjectHideFlags: 0
@@ -16444,3 +16506,4 @@ SceneRoots:
   - {fileID: 1286494317}
   - {fileID: 1761396558}
   - {fileID: 840323605}
+  - {fileID: 864279795}

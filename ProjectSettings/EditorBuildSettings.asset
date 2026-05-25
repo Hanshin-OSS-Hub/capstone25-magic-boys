@@ -11,15 +11,18 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Map/Scenes/0326_MapMerge.unity
     guid: be243b239677f0142887ff2cf1b8f85c
-  - enabled: 1
-    path: Assets/MediaPipeUnity/Samples/Scenes/Hand Landmark Detection/Puzzle.unity
-    guid: 20cb3f2b64f25d5469a58cdd06276fd7
+  - enabled: 0
+    path: Assets/Map/Scenes/Puzzle.unity
+    guid: b9720ecb7b7440941ace00e41bcfbb51
   - enabled: 1
     path: Assets/Player/Player_TF.unity
     guid: 12bce66dc4e049e45883f9739b4554e3
   - enabled: 1
     path: Assets/Skill/Scenes/MainMenu.unity
     guid: 199a1beb0f77d9f44ac51ec17c37cf1d
+  - enabled: 1
+    path: Assets/MediaPipeUnity/Samples/Scenes/Hand Landmark Detection/Puzzle.unity
+    guid: 20cb3f2b64f25d5469a58cdd06276fd7
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
     com.unity.input.settings: {fileID: 11400000, guid: 9e7be553448fa2546aea5752021cbcf7, type: 2}
