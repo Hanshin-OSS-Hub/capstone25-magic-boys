@@ -2,6 +2,7 @@
   "dependencies": {
     "com.srcnalt.openai-unity": "https://github.com/srcnalt/OpenAI-Unity.git",
     "com.unity.2d.sprite": "1.0.0",
+    "com.unity.ai.assistant": "2.9.0-pre.2",
     "com.unity.ai.inference": "2.6.1",
     "com.unity.ai.navigation": "2.0.11",
     "com.unity.burst": "1.8.29",
