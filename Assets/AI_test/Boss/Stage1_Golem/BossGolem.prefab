@@ -814,6 +814,8 @@ MonoBehaviour:
   ventingSound: {fileID: 8300000, guid: 8259d006a961bbb4dbb9dc649c4d5eb7, type: 3}
   deadSound: {fileID: 8300000, guid: 62cb37a4dbc4e6a41a52eb6fa00e4268, type: 3}
   deadSound2: {fileID: 8300000, guid: 8be711b48396c8f49b540bdebde14e48, type: 3}
+  bossMap: {fileID: 6070529809956060270, guid: b76e8d423ec489149abbb69ccafca3fd, type: 3}
+  portalObject: {fileID: 0}
 --- !u!195 &6292993634777455622
 NavMeshAgent:
   m_ObjectHideFlags: 0

@@ -27,6 +27,12 @@ public class BossDeadState : IBossState
 
         boss.StartDeathSequence();
 
+        if (boss.portalObject != null)
+        {
+            boss.portalObject.SetActive(true);
+            Debug.Log("Portal 생성 완료");
+        }
+
         boss.enabled = false;
     }
 

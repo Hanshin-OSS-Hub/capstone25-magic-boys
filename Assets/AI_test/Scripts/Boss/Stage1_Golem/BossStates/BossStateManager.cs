@@ -48,6 +48,9 @@ public class BossStateManager : MonoBehaviour, IDamageable
     public AudioClip deadSound;
     public AudioClip deadSound2;
 
+    [Header("Active Portal")]
+    public GameObject bossMap;
+    [HideInInspector] public GameObject portalObject;
 
     void Awake()
     {
@@ -71,6 +74,21 @@ public class BossStateManager : MonoBehaviour, IDamageable
 
         InitializeBossPatterns();
         TransitionToState(chaseState);
+
+        if (bossMap == null || !bossMap.scene.IsValid())
+        {
+            bossMap = GameObject.Find("Exit Room");
+        }
+
+        if (bossMap != null)
+        {
+            Transform portal = bossMap.transform.Find("Portal");
+            if (portal != null)
+            {
+                portalObject = portal.gameObject;
+                portalObject.SetActive(false);
+            }
+        }
     }
 
     void InitializeBossPatterns()

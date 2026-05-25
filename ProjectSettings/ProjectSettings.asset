@@ -942,11 +942,11 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: 3760610a-ee85-47a4-8603-de6e945eaa70
+  cloudProjectId: 8828040b-ec59-45ac-bb81-2d8d05dce263
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: My project
-  organizationId: kunho1004
+  projectName: MagicBoys
+  organizationId: tmdgnxmfhf
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}
