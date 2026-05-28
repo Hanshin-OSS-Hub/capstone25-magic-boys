@@ -213,8 +213,8 @@ MonoBehaviour:
   enemyPrefabs:
   - {fileID: 770130574332236223, guid: 4d64717cdbf30fd418ae9e5462905604, type: 3}
   - {fileID: 7509243798015521505, guid: efb8053f987df8f42adde5b495158eb3, type: 3}
-  minEnemiesPerPoint: 3
-  maxEnemiesPerPoint: 4
+  minEnemiesPerPoint: 1
+  maxEnemiesPerPoint: 2
   spawnRadius: 5
 --- !u!1 &5359010320504669924
 GameObject:

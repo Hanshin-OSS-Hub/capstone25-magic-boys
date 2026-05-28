@@ -82,7 +82,7 @@ public class BossStateManager : MonoBehaviour, IDamageable
 
         if (bossMap != null)
         {
-            Transform portal = bossMap.transform.Find("Portal");
+            Transform portal = bossMap.transform.Find("EndingPortal");
             if (portal != null)
             {
                 portalObject = portal.gameObject;

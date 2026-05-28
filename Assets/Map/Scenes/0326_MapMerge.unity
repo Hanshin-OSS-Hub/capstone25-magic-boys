@@ -3692,6 +3692,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 141209515}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &493236159 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 0e9dde2650ef69842ac01d2063b650a9, type: 3}
+  m_PrefabInstance: {fileID: 1685358658}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &515235937
 GameObject:
   m_ObjectHideFlags: 0
@@ -13325,13 +13330,53 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0e9dde2650ef69842ac01d2063b650a9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1685358663}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0e9dde2650ef69842ac01d2063b650a9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1685358664}
   m_SourcePrefab: {fileID: 100100000, guid: 0e9dde2650ef69842ac01d2063b650a9, type: 3}
 --- !u!4 &1685358659 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 0e9dde2650ef69842ac01d2063b650a9, type: 3}
   m_PrefabInstance: {fileID: 1685358658}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1685358663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 493236159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac792d6f9913ae742a34a34081b5aef0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HammerHitbox
+  damage: 10
+--- !u!65 &1685358664
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 493236159}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.32229418, y: 1.0223665, z: 0.18592824}
+  m_Center: {x: 0.000000016247643, y: 0.29076287, z: 0.000000016115987}
 --- !u!1 &1686095595
 GameObject:
   m_ObjectHideFlags: 0
