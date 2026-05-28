@@ -1574,9 +1574,9 @@ MonoBehaviour:
   - {fileID: 5159277425410808507, guid: 84df8ca2a66ec8a4e990ff2b91166375, type: 3}
   - {fileID: 7626492010286133213, guid: 1edc2ecde169a7b49941d7b9cfe84f86, type: 3}
   startPrefabs:
-  - {fileID: 7389133403800816304, guid: aec05f6ea472b6349b90de65900c87e5, type: 3}
-  - {fileID: 1696691019835108044, guid: d330a7f4fbe98974c93f0914d602c536, type: 3}
-  - {fileID: 3468054585450443636, guid: 44630eba347bef24ca1ddd1d8a65cbc8, type: 3}
+  - {fileID: 7389133403800816304, guid: 21ea29846110f2b4b99c85c29ae5c430, type: 3}
+  - {fileID: 1696691019835108044, guid: ffe74f2f03435cd43a5c3ce6d2e933b2, type: 3}
+  - {fileID: 3468054585450443636, guid: 61abed5d06467704dbf10acb81424b6f, type: 3}
   exitPrefabs:
   - {fileID: 6070529809956060270, guid: b76e8d423ec489149abbb69ccafca3fd, type: 3}
   blockedPrefabs:
@@ -1843,10 +1843,10 @@ MonoBehaviour:
   baseMPRegenPerSec: 1
   baseMoveSpeed: 5
   baseAttacksPerSecond: 1.5
-  maxHP: 0
-  currentHP: 0
-  maxMP: 0
-  currentMP: 0
+  maxHP: 2000
+  currentHP: 2000
+  maxMP: 100
+  currentMP: 100
   level: 1
   currentExp: 0
   expToNext: 50
