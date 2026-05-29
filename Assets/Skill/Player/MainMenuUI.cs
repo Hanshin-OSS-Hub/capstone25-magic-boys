@@ -46,6 +46,10 @@ public class MainMenuUI : MonoBehaviour
     {
         Time.timeScale = 1f;
 
+        // 메인메뉴에 들어왔을 때 기존 Player가 남아있으면
+        // 삭제하지 말고 숨김만 처리
+        PersistentPlayer.HideCurrent();
+
         PauseMenuUI.ForcePausedState(false);
         StatsPanelToggle.ForceUIBlocked(false);
 
@@ -72,6 +76,9 @@ public class MainMenuUI : MonoBehaviour
     {
         Time.timeScale = 1f;
 
+        // 메인메뉴에 숨어 있던 기존 Player 제거
+        PersistentPlayer.DestroyCurrent();
+
         PlayerStats.ResetSavedData();
         SkillProgressionManager.ResetSavedData();
         GameSceneSavePoint.ResetSavedScene();
@@ -80,12 +87,16 @@ public class MainMenuUI : MonoBehaviour
         PlayerPrefs.Save();
 
         DungeonGenerator.saveSeed = -1;
+
         SceneManager.LoadScene(firstGameSceneName);
     }
 
     public void ContinueGame()
     {
         Time.timeScale = 1f;
+
+        // 메인메뉴에 숨어 있던 기존 Player 제거
+        PersistentPlayer.DestroyCurrent();
 
         string sceneName = PlayerPrefs.GetString(GameSceneSavePoint.LastSceneKey, firstGameSceneName);
         SceneManager.LoadScene(sceneName);

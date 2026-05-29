@@ -128,12 +128,17 @@ public class PauseMenuUI : MonoBehaviour
         IsPaused = false;
         Time.timeScale = 1f;
 
+        StatsPanelToggle.ForceUIBlocked(false);
+
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
+        // 여기서 Destroy 하지 말고 일단 숨김
+        // 그래야 메인메뉴에서 플레이어가 떨어지지 않음
+        PersistentPlayer.HideCurrent();
+
         SceneManager.LoadScene(mainMenuSceneName);
     }
-
     public void QuitGame()
     {
         IsPaused = false;

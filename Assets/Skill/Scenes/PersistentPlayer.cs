@@ -19,6 +19,30 @@ public class PersistentPlayer : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    public static void HideCurrent()
+    {
+        if (Instance == null) return;
+
+        Instance.gameObject.SetActive(false);
+    }
+
+    public static void ShowCurrent()
+    {
+        if (Instance == null) return;
+
+        Instance.gameObject.SetActive(true);
+    }
+
+    public static void DestroyCurrent()
+    {
+        if (Instance == null) return;
+
+        GameObject target = Instance.gameObject;
+        Instance = null;
+
+        Destroy(target);
+    }
+
     private void OnDestroy()
     {
         if (Instance == this)
