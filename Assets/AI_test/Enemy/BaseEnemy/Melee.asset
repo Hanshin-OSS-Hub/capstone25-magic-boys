@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Melee
   m_EditorClassIdentifier: 
   EnemyName: Melee
-  EnemyDescription: Test Mob1's Description
+  EnemyDescription: Melee Enemy Stats
   CombatType: 0
-  MaxHP: 1
+  MaxHP: 20
   Damage: 10
   MoveSpeed: 3
   DetectionRange: 10

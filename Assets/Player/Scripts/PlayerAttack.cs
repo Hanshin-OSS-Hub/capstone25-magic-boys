@@ -168,7 +168,9 @@ public class PlayerAttack : MonoBehaviour
         }
 
         DisableHammerCollider();
-        Debug.Log("[PlayerAttack] Attack 상태 종료 확인 - hammerCollider OFF");
+        IsAttacking = false;
+        attackTimer = 0f;
+        Debug.Log("[PlayerAttack] Attack 상태 종료 확인 - hammerCollider OFF, IsAttacking reset");
 
         hammerByAnimatorRunning = false;
         hammerMonitorCoroutine = null;

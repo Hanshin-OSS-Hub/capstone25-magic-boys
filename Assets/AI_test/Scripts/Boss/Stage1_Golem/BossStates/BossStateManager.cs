@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -39,6 +39,9 @@ public class BossStateManager : MonoBehaviour, IDamageable
     [HideInInspector] public Animator animator;
     [HideInInspector] public Transform playerTransform;
 
+    private Renderer[] renderers;
+    private Material[][] originalMaterials;
+
     [Header("Boss Sounds")]
     public AudioClip attackSound;
     public AudioClip smashSound;
@@ -57,6 +60,13 @@ public class BossStateManager : MonoBehaviour, IDamageable
         navMeshAgent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
         if (weakPointObject != null) weakPointObject.SetActive(false);
+
+        renderers = GetComponentsInChildren<Renderer>();
+        originalMaterials = new Material[renderers.Length][];
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            originalMaterials[i] = renderers[i].materials;
+        }
     }
 
     void Start()
@@ -222,10 +232,38 @@ public class BossStateManager : MonoBehaviour, IDamageable
     {
         if (currentHP <= 0) return;
 
+        TriggerHitVisual();
         currentHP -= damage;
         Debug.Log($"보스 HP: {currentHP}");
 
         if (currentHP <= 0) TransitionToState(deadState);
+    }
+
+    public void TriggerHitVisual()
+    {
+        var hitMat = Resources.Load<Material>("HitMaterial");
+        if (hitMat != null) StartCoroutine(HitFlashCoroutine(hitMat));
+    }
+
+    IEnumerator HitFlashCoroutine(Material hitMat)
+    {
+        if (renderers == null) yield break;
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            if (renderers[i] == null) continue;
+            Material[] hitMats = new Material[renderers[i].materials.Length];
+            for (int j = 0; j < hitMats.Length; j++) hitMats[j] = hitMat;
+            renderers[i].materials = hitMats;
+        }
+
+        yield return new WaitForSeconds(0.2f);
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            if (renderers[i] == null) continue;
+            renderers[i].materials = originalMaterials[i];
+        }
     }
 
     public void StartDeathSequence()

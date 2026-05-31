@@ -1988,7 +1988,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackLockTime: 1.1
-  hammerCollider: {fileID: 0}
+  hammerHitbox: {fileID: 1685358663}
   playerCamera: {fileID: 1228341683}
   chestHitRange: 5
   chestDamage: 1

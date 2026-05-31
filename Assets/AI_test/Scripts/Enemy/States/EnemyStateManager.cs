@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -25,16 +25,20 @@ public class EnemyStateManager : MonoBehaviour, IDamageable
     public AudioClip attackSound;
     public AudioClip deadSound;
 
-    private Renderer rend;
-    private Material originalMaterial;
+    private Renderer[] renderers;
+    private Material[][] originalMaterials;
 
     void Awake()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
 
-        rend = GetComponentInChildren<Renderer>();
-        if (rend != null) originalMaterial = rend.material;
+        renderers = GetComponentsInChildren<Renderer>();
+        originalMaterials = new Material[renderers.Length][];
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            originalMaterials[i] = renderers[i].materials;
+        }
     }
 
     void Start()
@@ -132,11 +136,22 @@ public class EnemyStateManager : MonoBehaviour, IDamageable
 
     IEnumerator HitFlashCoroutine(Material hitMat)
     {
-        if (rend != null)
+        if (renderers == null) yield break;
+
+        for (int i = 0; i < renderers.Length; i++)
         {
-            rend.material = hitMat;
-            yield return new WaitForSeconds(0.2f);
-            rend.material = originalMaterial;
+            if (renderers[i] == null) continue;
+            Material[] hitMats = new Material[renderers[i].materials.Length];
+            for (int j = 0; j < hitMats.Length; j++) hitMats[j] = hitMat;
+            renderers[i].materials = hitMats;
+        }
+
+        yield return new WaitForSeconds(0.2f);
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            if (renderers[i] == null) continue;
+            renderers[i].materials = originalMaterials[i];
         }
     }
 
