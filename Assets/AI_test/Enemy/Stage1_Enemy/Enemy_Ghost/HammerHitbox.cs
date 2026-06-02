@@ -44,6 +44,10 @@ public class HammerHitbox : MonoBehaviour
         if (rootObject == null)
             return;
 
+        // 플레이어에게는 데미지를 입히지 않음
+        if (rootObject.CompareTag("Player"))
+            return;
+
         // 쿨타임 체크
         if (lastHitTimes.TryGetValue(rootObject, out float lastHitTime))
         {
