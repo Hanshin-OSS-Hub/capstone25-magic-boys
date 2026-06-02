@@ -1594,10 +1594,10 @@ MonoBehaviour:
   restoreLightsAfterDebugging: 0
   reloadKey: 8
   toggleMapKey: 109
-  mainLength: 18
-  branchLength: 9
-  numBranches: 2
-  doorPercent: 25
+  mainLength: 5
+  branchLength: 2
+  numBranches: 1
+  doorPercent: 50
   constructionDelay: 0
   uiCanvas: {fileID: 0}
   crosshairCanvas: {fileID: 0}
@@ -1988,7 +1988,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackLockTime: 1.1
-  hammerHitbox: {fileID: 1685358663}
+  hammerCollider: {fileID: 0}
   playerCamera: {fileID: 1228341683}
   chestHitRange: 5
   chestDamage: 1
@@ -13356,6 +13356,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HammerHitbox
   damage: 10
+  hitCooldown: 0.5
 --- !u!65 &1685358664
 BoxCollider:
   m_ObjectHideFlags: 0
