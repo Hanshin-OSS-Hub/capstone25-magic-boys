@@ -5768,7 +5768,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb17de39bc7c06247ae100e665614c87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 1870008911}
+  player: {fileID: 0}
   hpSlider: {fileID: 446627721}
   hpText: {fileID: 2049074602}
   mpSlider: {fileID: 1245021723}
@@ -12549,7 +12549,7 @@ MonoBehaviour:
   toggleKey: 107
   holdViewKey: 99
   statsPanel: {fileID: 1648342597}
-  player: {fileID: 1870008911}
+  player: {fileID: 0}
   pointText: {fileID: 465082887}
   btnSTR: {fileID: 1472097859}
   btnDEX: {fileID: 1188689015}
