@@ -1,34 +1,32 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PuzzleTravelManager : MonoBehaviour
 {
     public static PuzzleTravelManager Instance { get; private set; }
-
     [Header("Player")]
     [SerializeField] private string playerTag = "Player";
-
     [Header("Puzzle Spawn")]
-    [Tooltip("퍼즐방 씬 안에 만들 빈 오브젝트 이름")]
     [SerializeField] private string puzzleSpawnPointName = "PuzzleSpawnPoint";
-
-    [Tooltip("태그 방식으로 찾고 싶으면 사용. 태그가 없어도 문제 없게 처리됨")]
     [SerializeField] private string puzzleSpawnTag = "PuzzleSpawn";
 
-    private string savedDungeonSceneName;
-    private string currentPuzzleSceneName;
-
+    // 현재 세션의 던전만 보관한다. Single 로드로 떠날 때는 함께 해제된다.
+    private Scene dungeonScene;
+    private Scene puzzleScene;
+    private readonly List<GameObject> suspendedDungeonRoots = new List<GameObject>();
+    private Transform playerTransform;
     private Vector3 savedReturnPosition;
     private Quaternion savedReturnRotation;
-
-    private Transform playerTransform;
-
-    private bool hasReturnData = false;
-    private bool pendingMoveToPuzzleSpawn = false;
-    private bool pendingReturnToDungeon = false;
-    private bool isLoading = false;
-
+    private Vector3 departurePosition;
+    private Quaternion departureRotation;
+    private string currentPuzzleSceneName;
+    private string dungeonBeforeTravel;
+    private bool hasReturnData;
+    private bool inPuzzle;
+    private bool isLoading;
+    private int transitionNumber;
     public bool IsLoading => isLoading;
 
     private void Awake()
@@ -38,197 +36,266 @@ public class PuzzleTravelManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-
         Instance = this;
         DontDestroyOnLoad(gameObject);
-
         SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.sceneUnloaded += OnSceneUnloaded;
     }
 
     private void OnDestroy()
     {
-        if (Instance == this)
-        {
-            SceneManager.sceneLoaded -= OnSceneLoaded;
-            Instance = null;
-        }
+        if (Instance != this) return;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneUnloaded -= OnSceneUnloaded;
+        Instance = null;
     }
 
-    public void EnterPuzzleRoom(string puzzleSceneName, Transform player, Transform returnPoint = null)
+    public void EnterPuzzleRoom(string sceneName, Transform player, Transform returnPoint = null,
+        Transform entryPortal = null)
     {
-        if (isLoading) return;
-
-        if (string.IsNullOrEmpty(puzzleSceneName))
+        if (isLoading || inPuzzle) return;
+        if (player == null || string.IsNullOrEmpty(sceneName)) return;
+        if (!player.root.CompareTag(playerTag)) return;
+        Scene source = entryPortal != null ? entryPortal.gameObject.scene : SceneManager.GetActiveScene();
+        DungeonGenerator generator = FindInScene<DungeonGenerator>(source);
+        if (generator == null || generator.dungeonState != DungeonGenState.completed)
         {
-            Debug.LogError("[PuzzleTravelManager] puzzleSceneName이 비어있음");
+            Debug.LogWarning("[PuzzleTravel] 생성 완료된 던전에서만 진입할 수 있습니다.");
+            return;
+        }
+        if (SceneManager.GetSceneByName(sceneName).isLoaded)
+        {
+            Debug.LogError("[PuzzleTravel] 목적 퍼즐 씬이 이미 로드되어 있습니다: " + sceneName);
             return;
         }
 
-        if (player == null)
-        {
-            Debug.LogError("[PuzzleTravelManager] Player를 찾지 못함");
-            return;
-        }
-
-        playerTransform = player;
-
-        savedDungeonSceneName = SceneManager.GetActiveScene().name;
-        currentPuzzleSceneName = puzzleSceneName;
-
-        if (returnPoint != null)
-        {
-            savedReturnPosition = returnPoint.position;
-            savedReturnRotation = returnPoint.rotation;
-        }
-        else
-        {
-            savedReturnPosition = player.position;
-            savedReturnRotation = player.rotation;
-        }
-
+        playerTransform = player.root;
+        departurePosition = playerTransform.position;
+        departureRotation = playerTransform.rotation;
+        savedReturnPosition = returnPoint != null ? returnPoint.position : departurePosition;
+        savedReturnRotation = returnPoint != null ? returnPoint.rotation : departureRotation;
+        dungeonScene = source;
+        currentPuzzleSceneName = sceneName;
+        dungeonBeforeTravel = DescribeDungeon(source);
         hasReturnData = true;
+        isLoading = true;
+        transitionNumber++;
 
+        // 음성 객체 둘만 기존 플레이어의 수명에 맞춘다. 던전 전체를 DDOL로 옮기지 않는다.
+        VoiceCommandSystem voice = FindInScene<VoiceCommandSystem>(source);
+        if (voice != null) voice.KeepWithPlayer(playerTransform);
         playerTransform.SetParent(null);
         DontDestroyOnLoad(playerTransform.gameObject);
+        playerTransform.gameObject.SetActive(false);
+        suspendedDungeonRoots.Clear();
+        foreach (GameObject root in source.GetRootGameObjects())
+        {
+            if (!root.activeSelf) continue;
+            suspendedDungeonRoots.Add(root);
+            root.SetActive(false);
+        }
+        Debug.Log($"[PuzzleTravel #{transitionNumber}] 진입 {dungeonBeforeTravel} " +
+            $"portal={(entryPortal != null ? entryPortal.GetInstanceID() : 0)} " +
+            $"player={playerTransform.GetInstanceID()} return={savedReturnPosition} -> {sceneName}");
+        StartCoroutine(EnterRoutine());
+    }
 
-        pendingMoveToPuzzleSpawn = true;
-        pendingReturnToDungeon = false;
-
-        Debug.Log($"[PuzzleTravelManager] 퍼즐방 이동: {savedDungeonSceneName} -> {puzzleSceneName}");
-
-        StartCoroutine(LoadSceneRoutine(puzzleSceneName));
+    private IEnumerator EnterRoutine()
+    {
+        AsyncOperation load = null;
+        try { load = SceneManager.LoadSceneAsync(currentPuzzleSceneName, LoadSceneMode.Additive); }
+        catch (System.Exception error) { Debug.LogError("[PuzzleTravel] 퍼즐 로드 실패: " + error.Message); }
+        if (load != null) yield return load;
+        // sceneLoaded에서는 Start가 아직 끝나지 않았다. 배치는 한 프레임 뒤에 한다.
+        yield return null;
+        if (!puzzleScene.IsValid() || !puzzleScene.isLoaded)
+        {
+            yield return CancelEntry("퍼즐 씬을 로드하지 못했습니다.");
+            yield break;
+        }
+        Transform spawn = FindPuzzleSpawnPoint(puzzleScene);
+        Physics.SyncTransforms();
+        if (spawn == null || !TryPlacePlayer(puzzleScene, spawn.position, spawn.rotation))
+        {
+            yield return CancelEntry("퍼즐 스폰 지점 또는 해당 씬의 안전한 바닥을 찾지 못했습니다.");
+            yield break;
+        }
+        inPuzzle = true;
+        playerTransform.gameObject.SetActive(true);
+        yield return null;
+        isLoading = false;
     }
 
     public void ReturnToDungeon()
     {
         if (isLoading) return;
-
-        if (!hasReturnData || string.IsNullOrEmpty(savedDungeonSceneName))
+        if (!inPuzzle || !hasReturnData || !dungeonScene.IsValid() || !dungeonScene.isLoaded)
         {
-            Debug.LogError("[PuzzleTravelManager] 돌아갈 던전 정보가 없음");
+            Debug.LogError("[PuzzleTravel] 보관 중인 던전이 없습니다. 좌표만으로 새 던전을 만들지 않습니다.");
             return;
         }
-
-        pendingMoveToPuzzleSpawn = false;
-        pendingReturnToDungeon = true;
-
-        Debug.Log($"[PuzzleTravelManager] 던전 복귀: {savedDungeonSceneName}");
-
-        StartCoroutine(LoadSceneRoutine(savedDungeonSceneName));
+        isLoading = true;
+        transitionNumber++;
+        playerTransform.gameObject.SetActive(false);
+        StartCoroutine(ReturnRoutine());
     }
 
-    private IEnumerator LoadSceneRoutine(string sceneName)
+    private IEnumerator ReturnRoutine()
     {
-        isLoading = true;
+        SceneManager.SetActiveScene(dungeonScene);
+        yield return SceneManager.UnloadSceneAsync(puzzleScene);
+        puzzleScene = default;
+        ResumeDungeon();
+        yield return null;
+        Physics.SyncTransforms();
+        bool placed = TryPlacePlayer(dungeonScene, savedReturnPosition, savedReturnRotation)
+            || TryPlacePlayer(dungeonScene, departurePosition, departureRotation);
+        string after = DescribeDungeon(dungeonScene);
+        Debug.Log($"[PuzzleTravel #{transitionNumber}] 던전 복귀 {after} " +
+            $"동일던전={after == dungeonBeforeTravel} 배치={placed}");
+        FinishReturn(placed);
+    }
 
-        AsyncOperation op = SceneManager.LoadSceneAsync(sceneName);
+    private IEnumerator CancelEntry(string reason)
+    {
+        Debug.LogError("[PuzzleTravel] 진입 취소: " + reason);
+        SceneManager.SetActiveScene(dungeonScene);
+        if (puzzleScene.IsValid() && puzzleScene.isLoaded)
+            yield return SceneManager.UnloadSceneAsync(puzzleScene);
+        puzzleScene = default;
+        ResumeDungeon();
+        yield return null;
+        Physics.SyncTransforms();
+        FinishReturn(TryPlacePlayer(dungeonScene, departurePosition, departureRotation));
+    }
 
-        while (!op.isDone)
-        {
-            yield return null;
-        }
+    private void ResumeDungeon()
+    {
+        foreach (GameObject root in suspendedDungeonRoots)
+            if (root != null) root.SetActive(true);
+        suspendedDungeonRoots.Clear();
+    }
 
+    private void FinishReturn(bool placed)
+    {
+        inPuzzle = false;
+        hasReturnData = false;
+        currentPuzzleSceneName = null;
         isLoading = false;
+        if (placed) playerTransform.gameObject.SetActive(true);
+        else Debug.LogError("[PuzzleTravel] 안전한 복귀 바닥이 없습니다. 추락 방지를 위해 플레이어를 정지했습니다.");
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (pendingMoveToPuzzleSpawn && scene.name == currentPuzzleSceneName)
-        {
-            MovePlayerToPuzzleSpawn();
-            pendingMoveToPuzzleSpawn = false;
-        }
-
-        if (pendingReturnToDungeon && scene.name == savedDungeonSceneName)
-        {
-            TeleportPlayer(savedReturnPosition, savedReturnRotation);
-            pendingReturnToDungeon = false;
-        }
+        if (!isLoading || inPuzzle || mode != LoadSceneMode.Additive || scene.name != currentPuzzleSceneName) return;
+        puzzleScene = scene;
+        // 퍼즐 Start에서 생성하는 객체도 퍼즐 씬에 속하도록 먼저 바꾼다.
+        SceneManager.SetActiveScene(scene);
     }
 
-    private void MovePlayerToPuzzleSpawn()
+    private void OnSceneUnloaded(Scene scene)
     {
-        Transform spawnPoint = FindPuzzleSpawnPoint();
-
-        if (spawnPoint == null)
-        {
-            Debug.LogWarning("[PuzzleTravelManager] PuzzleSpawnPoint를 찾지 못해서 현재 위치 유지");
-            return;
-        }
-
-        TeleportPlayer(spawnPoint.position, spawnPoint.rotation);
+        if (dungeonScene.handle == 0 || scene.handle != dungeonScene.handle) return;
+        StopAllCoroutines();
+        suspendedDungeonRoots.Clear();
+        hasReturnData = inPuzzle = isLoading = false;
+        dungeonScene = puzzleScene = default;
+        currentPuzzleSceneName = null;
     }
 
-    private Transform FindPuzzleSpawnPoint()
+    private Transform FindPuzzleSpawnPoint(Scene scene)
     {
-        if (!string.IsNullOrEmpty(puzzleSpawnPointName))
+        foreach (GameObject root in scene.GetRootGameObjects())
+        foreach (Transform candidate in root.GetComponentsInChildren<Transform>(true))
         {
-            GameObject point = GameObject.Find(puzzleSpawnPointName);
-            if (point != null)
-                return point.transform;
+            if (!candidate.gameObject.activeInHierarchy) continue;
+            if (candidate.name == puzzleSpawnPointName ||
+                (!string.IsNullOrEmpty(puzzleSpawnTag) && candidate.gameObject.tag == puzzleSpawnTag))
+                return candidate;
         }
-
-        if (!string.IsNullOrEmpty(puzzleSpawnTag))
-        {
-            try
-            {
-                GameObject point = GameObject.FindWithTag(puzzleSpawnTag);
-                if (point != null)
-                    return point.transform;
-            }
-            catch
-            {
-                // 태그가 등록 안 되어 있어도 에러 안 나게 무시
-            }
-        }
-
         return null;
     }
 
-    private void TeleportPlayer(Vector3 position, Quaternion rotation)
+    private bool TryPlacePlayer(Scene scene, Vector3 anchor, Quaternion rotation)
     {
-        Transform player = GetPlayerTransform();
-
-        if (player == null)
+        if (playerTransform == null) return false;
+        CharacterController controller = playerTransform.GetComponent<CharacterController>();
+        RaycastHit[] hits = Physics.RaycastAll(anchor + Vector3.up * 2f, Vector3.down, 12f,
+            ~0, QueryTriggerInteraction.Ignore);
+        System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+        foreach (RaycastHit hit in hits)
         {
-            Debug.LogError("[PuzzleTravelManager] 이동시킬 Player를 찾지 못함");
-            return;
+            if (hit.collider.gameObject.scene.handle != scene.handle || hit.normal.y < 0.5f
+                || hit.point.y > anchor.y + 0.5f) continue;
+            Vector3 position = anchor;
+            float scaleY = Mathf.Abs(playerTransform.lossyScale.y);
+            float bottom = controller != null ? (controller.center.y - controller.height * 0.5f) * scaleY : 0f;
+            float clearance = controller != null ? Mathf.Max(0.05f, controller.skinWidth) : 0.05f;
+            position.y = hit.point.y - bottom + clearance;
+            if (controller != null && IsBlocked(scene, controller, position, rotation)) continue;
+
+            bool controllerEnabled = controller != null && controller.enabled;
+            if (controllerEnabled) controller.enabled = false;
+            Rigidbody body = playerTransform.GetComponent<Rigidbody>();
+            if (body != null)
+            {
+                body.linearVelocity = Vector3.zero;
+                body.angularVelocity = Vector3.zero;
+            }
+            playerTransform.SetPositionAndRotation(position, rotation);
+            StarterAssets.ThirdPersonController movement = playerTransform.GetComponent<StarterAssets.ThirdPersonController>();
+            if (movement != null) movement.ResetAfterTeleport();
+            Physics.SyncTransforms();
+            if (controllerEnabled) controller.enabled = true;
+            Debug.Log($"[PuzzleTravel #{transitionNumber}] 배치 scene={scene.name}#{scene.handle} " +
+                $"player={playerTransform.GetInstanceID()} anchor={anchor} position={position} " +
+                $"floor={hit.collider.name}#{hit.collider.GetInstanceID()}");
+            return true;
         }
-
-        CharacterController controller = player.GetComponent<CharacterController>();
-        bool controllerWasEnabled = controller != null && controller.enabled;
-
-        if (controllerWasEnabled)
-            controller.enabled = false;
-
-        Rigidbody rb = player.GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-        }
-
-        player.SetPositionAndRotation(position, rotation);
-
-        if (controllerWasEnabled)
-            controller.enabled = true;
-
-        Debug.Log($"[PuzzleTravelManager] Player 위치 이동 완료: {position}");
+        return false;
     }
 
-    private Transform GetPlayerTransform()
+    private bool IsBlocked(Scene scene, CharacterController controller, Vector3 position, Quaternion rotation)
     {
-        if (playerTransform != null)
-            return playerTransform;
-
-        GameObject playerObj = GameObject.FindGameObjectWithTag(playerTag);
-
-        if (playerObj != null)
+        Vector3 scale = playerTransform.lossyScale;
+        float radius = controller.radius * Mathf.Max(Mathf.Abs(scale.x), Mathf.Abs(scale.z));
+        float halfHeight = Mathf.Max(radius, controller.height * Mathf.Abs(scale.y) * 0.5f);
+        Vector3 center = position + rotation * Vector3.Scale(controller.center, scale);
+        Vector3 offset = Vector3.up * (halfHeight - radius);
+        foreach (Collider obstacle in Physics.OverlapCapsule(center - offset, center + offset,
+            Mathf.Max(0.01f, radius - 0.02f), ~0, QueryTriggerInteraction.Ignore))
         {
-            playerTransform = playerObj.transform;
-            return playerTransform;
+            if (obstacle.gameObject.scene.handle == scene.handle &&
+                !obstacle.transform.IsChildOf(playerTransform)) return true;
         }
+        return false;
+    }
 
+    private static T FindInScene<T>(Scene scene) where T : Component
+    {
+        if (!scene.IsValid() || !scene.isLoaded) return null;
+        foreach (GameObject root in scene.GetRootGameObjects())
+        {
+            T component = root.GetComponentInChildren<T>(true);
+            if (component != null) return component;
+        }
         return null;
+    }
+
+    private static string DescribeDungeon(Scene scene)
+    {
+        DungeonGenerator generator = FindInScene<DungeonGenerator>(scene);
+        if (generator == null) return scene.name + " 생성기 없음";
+        int layout = 17;
+        unchecked
+        {
+            foreach (Tile tile in generator.genneratedTiles)
+                if (tile.tile != null)
+                    layout = layout * 31 + tile.tile.GetInstanceID() + tile.tile.position.GetHashCode()
+                        + tile.tile.rotation.GetHashCode();
+        }
+        return $"{scene.name}#{scene.handle} generator={generator.GetInstanceID()} " +
+            $"seed={DungeonGenerator.saveSeed} rooms={generator.genneratedTiles.Count} layout={layout:X8}";
     }
 }

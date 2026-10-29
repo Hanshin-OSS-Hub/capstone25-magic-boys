@@ -11,6 +11,16 @@ public class VoiceCommandSystem : MonoBehaviour
 
     private Coroutine clearTextCoroutine;
 
+    public void KeepWithPlayer(Transform player)
+    {
+        magicAttack = player.GetComponent<MagicAttack>();
+        input = player.GetComponent<PlayerInput>();
+        transform.SetParent(player, true);
+        if (whisper != null) whisper.transform.SetParent(player, true);
+        Debug.Log($"[VoiceFlow] 플레이어 연결 player={player.GetInstanceID()} " +
+            $"magic={(magicAttack != null ? magicAttack.GetInstanceID() : 0)}");
+    }
+
     void Awake()
     {
         if (!magicAttack) magicAttack = GetComponent<MagicAttack>();
@@ -19,10 +29,17 @@ public class VoiceCommandSystem : MonoBehaviour
 
     void Update()
     {
-        if (!whisper || !magicAttack) return;
+        if (!whisper) return;
 
         string text = whisper.GetText();
         if (string.IsNullOrEmpty(text)) return;
+
+        if (!magicAttack)
+        {
+            Debug.LogError("[VoiceFlow] 인식 결과는 받았지만 마법 대상이 없습니다: " + text);
+            whisper.ClearText();
+            return;
+        }
 
         text = text.ToLower().Trim();
         bool matched = false;
@@ -49,6 +66,9 @@ public class VoiceCommandSystem : MonoBehaviour
         // Y - Reserved (Skill 5)
         else if (text.Contains("ultimate")) { matched = true; displayWord = "ultimate"; magicAttack.SelectSkill(MagicAttack.SkillSlot.Y); }
         else if (text.Contains("skill y")) { matched = true; displayWord = "skill y"; magicAttack.SelectSkill(MagicAttack.SkillSlot.Y); }
+
+        Debug.Log($"[VoiceFlow] scene={UnityEngine.SceneManagement.SceneManager.GetActiveScene().name} " +
+            $"player={magicAttack.gameObject.GetInstanceID()} text={text} 명령전달={matched}");
 
         if (voiceCommandText != null)
         {

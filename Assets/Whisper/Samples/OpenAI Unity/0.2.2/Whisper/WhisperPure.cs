@@ -20,6 +20,24 @@ public class WhisperPure : MonoBehaviour
     private float time;
 
     private string lastText = "";
+    private UnityWebRequest pendingRequest;
+    private int recordingNumber;
+    private int transitionVersion;
+
+    private void OnDisable()
+    {
+        transitionVersion++;
+        if (isRecording) Microphone.End(microphoneDevice);
+        isRecording = false;
+        lastText = "";
+        if (pendingRequest != null)
+        {
+            pendingRequest.Abort();
+            pendingRequest.Dispose();
+            pendingRequest = null;
+        }
+        Debug.Log("[VoiceFlow] 전환 중 녹음·대기 요청·이전 결과 정리");
+    }
 
     public event Action OnRecordEnd;
     public event Action OnUploadStart;
@@ -57,7 +75,7 @@ public class WhisperPure : MonoBehaviour
 
     public void StartRecording()
     {
-        if (isRecording) return;
+        if (isRecording || pendingRequest != null) return;
         if (string.IsNullOrEmpty(microphoneDevice))
         {
             Debug.LogWarning("Microphone device not found!");
@@ -65,11 +83,13 @@ public class WhisperPure : MonoBehaviour
         }
 
         isRecording = true;
+        recordingNumber++;
         time = 0f;
 
         //clip = Microphone.Start(microphoneDevice, false, duration, 44100);
         clip = Microphone.Start(microphoneDevice, false, duration, 16000);
         Debug.Log("[Whisper] Recording...");
+        Debug.Log($"[VoiceFlow] 녹음 #{recordingNumber} scene={UnityEngine.SceneManagement.SceneManager.GetActiveScene().name}");
     }
 
     public void EndRecording()
@@ -82,10 +102,10 @@ public class WhisperPure : MonoBehaviour
         Debug.Log("[Whisper] Sending to server...");
 
         byte[] wavData = SaveWav.Save(fileName, clip);
-        StartCoroutine(SendToServer(wavData));
+        StartCoroutine(SendToServer(wavData, recordingNumber, transitionVersion));
     }
 
-    IEnumerator SendToServer(byte[] wavData)
+    IEnumerator SendToServer(byte[] wavData, int number, int version)
     {
         OnUploadStart?.Invoke();
         WWWForm form = new WWWForm();
@@ -93,13 +113,18 @@ public class WhisperPure : MonoBehaviour
 
         using (UnityWebRequest req = UnityWebRequest.Post("http://localhost:5000/transcribe", form))
         {
+            pendingRequest = req;
             yield return req.SendWebRequest();
+
+            if (version != transitionVersion) yield break;
+            pendingRequest = null;
 
             if (req.result == UnityWebRequest.Result.Success)
             {
                 WhisperResponse res = JsonUtility.FromJson<WhisperResponse>(req.downloadHandler.text);
                 lastText = res.text;
                 Debug.Log("[Whisper] Result = " + lastText);
+                Debug.Log($"[VoiceFlow] 응답 #{number} scene={UnityEngine.SceneManagement.SceneManager.GetActiveScene().name} text='{lastText}'");
                 OnResponseReceived?.Invoke(lastText);
             }
             else

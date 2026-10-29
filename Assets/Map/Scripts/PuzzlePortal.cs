@@ -19,6 +19,12 @@ public class PuzzlePortal : MonoBehaviour
     private bool playerInside = false;
     private Transform currentPlayer;
 
+    private void OnDisable()
+    {
+        playerInside = false;
+        currentPlayer = null;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (!TryGetPlayer(other, out Transform player)) return;
@@ -60,7 +66,8 @@ public class PuzzlePortal : MonoBehaviour
             PuzzleTravelManager.Instance.EnterPuzzleRoom(
                 puzzleSceneName,
                 currentPlayer,
-                returnPoint
+                returnPoint,
+                transform
             );
         }
     }

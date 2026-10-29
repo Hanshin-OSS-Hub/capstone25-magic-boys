@@ -1,0 +1,10 @@
+# 프로젝트 전용 실행 환경과 다운로드 파일
+.tools/
+.python/
+.venv/
+.cache/
+models/
+.runtime/
+PortalTravelTests/
+__pycache__/
+*.pyc

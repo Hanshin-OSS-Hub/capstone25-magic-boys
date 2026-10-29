@@ -1,12 +1,16 @@
 from faster_whisper import WhisperModel
 from flask import Flask, request, jsonify
 import tempfile
+from pathlib import Path
 
 app = Flask(__name__)
 
-print("🔁 Whisper 모델 로딩 중 (GPU)...")
-model = WhisperModel("small", device="cpu", compute_type="int8")
-print("🔥 GPU Whisper 모델 준비 완료!")
+model_dir = Path(__file__).resolve().parent / "models" / "small"
+if not (model_dir / "model.bin").is_file():
+    raise FileNotFoundError("모델이 없습니다. WhisperServer/setup.ps1을 먼저 실행하세요.")
+print("Whisper small 모델 로딩 중 (CPU / INT8)...", flush=True)
+model = WhisperModel(str(model_dir), device="cpu", compute_type="int8", local_files_only=True)
+print("Whisper 모델 준비 완료 (CPU / INT8).", flush=True)
 
 @app.post("/transcribe")
 def transcribe():

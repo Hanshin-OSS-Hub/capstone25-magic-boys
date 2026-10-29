@@ -148,6 +148,24 @@ namespace StarterAssets
             _fallTimeoutDelta = FallTimeout;
         }
 
+        public void ResetAfterTeleport()
+        {
+            // Rigidbody와 별도로 보관하던 낙하·밀림 속도도 전환 때 한 번 초기화한다.
+            StopAllCoroutines();
+            _verticalVelocity = -2f;
+            _knockbackVelocity = Vector3.zero;
+            _isBeingKnockedBack = false;
+            _speed = 0f;
+            Grounded = true;
+            _fallTimeoutDelta = FallTimeout;
+            _jumpTimeoutDelta = JumpTimeout;
+            if (_input != null)
+            {
+                _input.move = Vector2.zero;
+                _input.jump = false;
+            }
+        }
+
         private void Update()
         {
             _hasAnimator = TryGetComponent(out _animator);

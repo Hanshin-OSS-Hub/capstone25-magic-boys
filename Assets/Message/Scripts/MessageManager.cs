@@ -17,6 +17,16 @@ public class MessageManager : MonoBehaviour
     private Queue<string> messageQueue = new Queue<string>();
     private bool isMessageActive = false;
 
+    private void OnEnable()
+    {
+        instance = this;
+    }
+
+    private void OnDisable()
+    {
+        if (instance == this) instance = null;
+    }
+
     private void Awake()
     {
         if (instance == null) instance = this;
