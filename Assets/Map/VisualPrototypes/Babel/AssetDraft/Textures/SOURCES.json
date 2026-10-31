@@ -1,0 +1,72 @@
+﻿[
+    {
+        "asset":  "medieval_blocks_03",
+        "map":  "Diffuse",
+        "resolution":  "2k",
+        "url":  "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/medieval_blocks_03/medieval_blocks_03_diff_2k.jpg",
+        "bytes":  3839924,
+        "md5":  "1154ad6a83952dc50e14d27e236caa86",
+        "license":  "CC0-1.0",
+        "source":  "https://polyhaven.com/a/medieval_blocks_03"
+    },
+    {
+        "asset":  "medieval_blocks_03",
+        "map":  "nor_gl",
+        "resolution":  "2k",
+        "url":  "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/medieval_blocks_03/medieval_blocks_03_nor_gl_2k.jpg",
+        "bytes":  5073770,
+        "md5":  "582bb92fd15482dd965051f2c9f45a6b",
+        "license":  "CC0-1.0",
+        "source":  "https://polyhaven.com/a/medieval_blocks_03"
+    },
+    {
+        "asset":  "stone_tiles",
+        "map":  "Diffuse",
+        "resolution":  "2k",
+        "url":  "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/stone_tiles/stone_tiles_diff_2k.jpg",
+        "bytes":  3512589,
+        "md5":  "a2235444e6babe50a2d02ceee6beb828",
+        "license":  "CC0-1.0",
+        "source":  "https://polyhaven.com/a/stone_tiles"
+    },
+    {
+        "asset":  "stone_tiles",
+        "map":  "nor_gl",
+        "resolution":  "2k",
+        "url":  "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/stone_tiles/stone_tiles_nor_gl_2k.jpg",
+        "bytes":  3610812,
+        "md5":  "7bc9806abef183f848ff945f739ae079",
+        "license":  "CC0-1.0",
+        "source":  "https://polyhaven.com/a/stone_tiles"
+    },
+    {
+        "asset":  "fabric_pattern_07",
+        "map":  "nor_gl",
+        "resolution":  "1k",
+        "url":  "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/fabric_pattern_07/fabric_pattern_07_nor_gl_1k.jpg",
+        "bytes":  828071,
+        "md5":  "cdbbc2ebe5d75f6edd66ba090f3be49f",
+        "license":  "CC0-1.0",
+        "source":  "https://polyhaven.com/a/fabric_pattern_07"
+    },
+    {
+        "asset":  "leather_red_02",
+        "map":  "coll1",
+        "resolution":  "1k",
+        "url":  "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/leather_red_02/leather_red_02_coll1_1k.jpg",
+        "bytes":  1002834,
+        "md5":  "a91110dd3cea1bfb5d8f34b5c3c6536d",
+        "license":  "CC0-1.0",
+        "source":  "https://polyhaven.com/a/leather_red_02"
+    },
+    {
+        "asset":  "leather_red_02",
+        "map":  "nor_gl",
+        "resolution":  "1k",
+        "url":  "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/leather_red_02/leather_red_02_nor_gl_1k.jpg",
+        "bytes":  1033319,
+        "md5":  "6edef21f3d06f4acff1f567d9908f42d",
+        "license":  "CC0-1.0",
+        "source":  "https://polyhaven.com/a/leather_red_02"
+    }
+]

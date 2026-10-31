@@ -1,0 +1,212 @@
+{
+  "generator": "rig_dwarf.py",
+  "source_has_rig": false,
+  "bones": 52,
+  "meshes": [
+    {
+      "object": "ShoePart1_low",
+      "vertices": 516,
+      "unweighted": 0
+    },
+    {
+      "object": "Hair_low",
+      "vertices": 800,
+      "unweighted": 0
+    },
+    {
+      "object": "GloveRivets_low",
+      "vertices": 432,
+      "unweighted": 0
+    },
+    {
+      "object": "GloveCords_low",
+      "vertices": 580,
+      "unweighted": 0
+    },
+    {
+      "object": "GearHolderDrills_low",
+      "vertices": 550,
+      "unweighted": 0
+    },
+    {
+      "object": "BraidEnds_low",
+      "vertices": 1036,
+      "unweighted": 0
+    },
+    {
+      "object": "BagMetal2_low",
+      "vertices": 621,
+      "unweighted": 0
+    },
+    {
+      "object": "Fur_low",
+      "vertices": 303,
+      "unweighted": 0
+    },
+    {
+      "object": "Braid3_low",
+      "vertices": 258,
+      "unweighted": 0
+    },
+    {
+      "object": "Braid2_low",
+      "vertices": 148,
+      "unweighted": 0
+    },
+    {
+      "object": "Braid1_low",
+      "vertices": 1089,
+      "unweighted": 0
+    },
+    {
+      "object": "Body_low",
+      "vertices": 1597,
+      "unweighted": 0
+    },
+    {
+      "object": "Eyes_low",
+      "vertices": 484,
+      "unweighted": 0
+    },
+    {
+      "object": "ShoePart3_low",
+      "vertices": 412,
+      "unweighted": 0
+    },
+    {
+      "object": "Pants_low",
+      "vertices": 525,
+      "unweighted": 0
+    },
+    {
+      "object": "Gloves_low",
+      "vertices": 1370,
+      "unweighted": 0
+    },
+    {
+      "object": "HammerSmallHandle_low",
+      "vertices": 24,
+      "unweighted": 0
+    },
+    {
+      "object": "BagLit_low",
+      "vertices": 102,
+      "unweighted": 0
+    },
+    {
+      "object": "BagBody_low",
+      "vertices": 276,
+      "unweighted": 0
+    },
+    {
+      "object": "BagSchnalle_low",
+      "vertices": 76,
+      "unweighted": 0
+    },
+    {
+      "object": "BagStripes_low",
+      "vertices": 240,
+      "unweighted": 0
+    },
+    {
+      "object": "BagMetal1_low",
+      "vertices": 96,
+      "unweighted": 0
+    },
+    {
+      "object": "HammerSmall_low",
+      "vertices": 40,
+      "unweighted": 0
+    },
+    {
+      "object": "GearHolderStripes_low",
+      "vertices": 132,
+      "unweighted": 0
+    },
+    {
+      "object": "GearHolderBase_low",
+      "vertices": 168,
+      "unweighted": 0
+    },
+    {
+      "object": "PaperScroll_low",
+      "vertices": 120,
+      "unweighted": 0
+    },
+    {
+      "object": "Nail_low",
+      "vertices": 113,
+      "unweighted": 0
+    },
+    {
+      "object": "Chisel_low",
+      "vertices": 90,
+      "unweighted": 0
+    },
+    {
+      "object": "Plier2_low",
+      "vertices": 446,
+      "unweighted": 0
+    },
+    {
+      "object": "BeltSmall_low",
+      "vertices": 115,
+      "unweighted": 0
+    },
+    {
+      "object": "Belt_low",
+      "vertices": 414,
+      "unweighted": 0
+    },
+    {
+      "object": "Apron_low",
+      "vertices": 607,
+      "unweighted": 0
+    },
+    {
+      "object": "BeltBuckle_low",
+      "vertices": 116,
+      "unweighted": 0
+    },
+    {
+      "object": "ShoeRivets_low",
+      "vertices": 2808,
+      "unweighted": 0
+    },
+    {
+      "object": "ShoeTabs_low",
+      "vertices": 1080,
+      "unweighted": 0
+    },
+    {
+      "object": "ShoeLocks_low",
+      "vertices": 2392,
+      "unweighted": 0
+    },
+    {
+      "object": "ShoeMetal_low",
+      "vertices": 446,
+      "unweighted": 0
+    },
+    {
+      "object": "Sherpe_low",
+      "vertices": 344,
+      "unweighted": 0
+    },
+    {
+      "object": "ShoePart2_low",
+      "vertices": 360,
+      "unweighted": 0
+    },
+    {
+      "object": "ShoulderPlate_low",
+      "vertices": 584,
+      "unweighted": 0
+    },
+    {
+      "object": "Goggles_low",
+      "vertices": 602,
+      "unweighted": 0
+    }
+  ]
+}
