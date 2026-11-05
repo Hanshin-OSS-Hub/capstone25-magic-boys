@@ -32,7 +32,7 @@ MonoBehaviour:
   ThrowSpeed: 20
   ThrowCastTime: 1.5
   ThrowCooldown: 8
-  RushChargeTime: 1
+  RushChargeTime: 0.5
   RushSpeed: 30
   RushDamage: 15
   RushKnockback: 30
