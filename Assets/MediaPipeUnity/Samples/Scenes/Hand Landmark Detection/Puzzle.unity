@@ -7395,6 +7395,8 @@ MonoBehaviour:
     m_Bits: 0
   sphereRadius: 0.2
   extraBack: 0.1
+  dashFovBoost: 8
+  obstructionPullInLerp: 25
   isFirstPerson: 1
 --- !u!1001 &638297364
 PrefabInstance:
@@ -21513,6 +21515,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bossTag: Boss
   toggleKey: 103
+  lockOnRange: 25
+  breakRange: 35
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  maxScreenAngle: 70
+  showMarker: 1
+  markerColor: {r: 1, g: 0.35, b: 0.25, a: 0.95}
+  markerSize: 26
 --- !u!114 &1870008914
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21541,7 +21552,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0c38d06a4a8b7746ab64d2d1ad53375, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackLockTime: 1.1
+  comboSafetyTimeout: 3
+  comboStates:
+  - Attack1
+  - Attack2
+  - Attack3
+  hitStart:
+  - 0.38
+  - 0.22
+  - 0.17
+  hitEnd:
+  - 0.88
+  - 0.86
+  - 0.38
+  linkTime:
+  - 0.84
+  - 0.84
+  - 1.1
+  moveCancelTime:
+  - 0.9
+  - 0.9
+  - 0.5
+  damageMultiplier:
+  - 1
+  - 1.2
+  - 2
+  inputBufferOpen: 0.2
+  firstCrossFade: 0.1
+  comboCrossFade: 0.08
+  returnCrossFade: 0.2
+  hitStopDuration: 0.055
+  finisherHitStopMultiplier: 1.8
+  hitShakeAmplitude: 0.06
   hammerCollider: {fileID: 0}
   playerCamera: {fileID: 33370557}
   chestHitRange: 5
@@ -21585,15 +21627,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecb304bc2e992ce44b7bd9eda83c09b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveSpeed: 2
-  SprintSpeed: 5.335
-  RotationSmoothTime: 0.12
-  SpeedChangeRate: 10
+  WalkSpeed: 2
+  RunSpeed: 5
+  DashSpeed: 7
+  WalkKey: 308
+  Acceleration: 35
+  Deceleration: 28
+  TurnAcceleration: 60
+  AirAcceleration: 10
+  AttackDeceleration: 20
+  TurnSpeedIdle: 1500
+  TurnSpeedMoving: 720
+  AirTurnMultiplier: 0.5
+  AttackTurnWindow: 0.15
+  AnimationBlendRate: 12
+  DashAnimationSpeed: 1.2
+  AttackLungeSpeed: 3.5
+  FinisherLungeMultiplier: 1.4
+  LockOnFacingSpeed: 540
+  LockOnCameraSharpness: 10
   LandingAudioClip: {fileID: 8300000, guid: ff697d3070687ce4583faa0561a145a2, type: 3}
   FootstepAudioClips: []
   FootstepAudioVolume: 0.5
+  MinLandingAirTime: 0.35
+  GroundSnapDistance: 0.5
   JumpHeight: 1.2
   Gravity: -15
+  FallGravityMultiplier: 1.6
+  CoyoteTime: 0.12
+  JumpBufferTime: 0.15
   JumpTimeout: 0
   FallTimeout: 0.15
   Grounded: 1
@@ -21608,6 +21670,48 @@ MonoBehaviour:
   CameraAngleOverride: 0
   LockCameraPosition: 0
   RollSpeed: 8
+  RollSpeedCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1.25
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.35
+      value: 1.05
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.75
+      value: 0.6
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0.3
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   IsLockOn: 0
   LockOnTarget: {fileID: 0}
 --- !u!114 &1870008918
