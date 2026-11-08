@@ -9,6 +9,7 @@ TagManager:
   - Boss
   - Global Resource
   - Movable
+  - EnemySpawnPoint
   layers:
   - Default
   - TransparentFX
