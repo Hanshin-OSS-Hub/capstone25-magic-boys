@@ -96,12 +96,15 @@ public class WhisperPure : MonoBehaviour
     {
         if (!isRecording) return;
         isRecording = false;
+        // 녹음 버퍼 전체(duration초)가 아니라 실제로 녹음된 길이만 보냄 → 무음이 줄어 인식이 빨라짐
+        int recordedSamples = Microphone.GetPosition(microphoneDevice);
         Microphone.End(microphoneDevice);
 
         OnRecordEnd?.Invoke();
         Debug.Log("[Whisper] Sending to server...");
 
-        byte[] wavData = SaveWav.Save(fileName, clip);
+        AudioClip toSend = TrimToRecorded(clip, recordedSamples);
+        byte[] wavData = SaveWav.Save(fileName, toSend);
         StartCoroutine(SendToServer(wavData, recordingNumber, transitionVersion));
     }
 
@@ -134,6 +137,18 @@ public class WhisperPure : MonoBehaviour
             }
 }
         
+    }
+
+    private static AudioClip TrimToRecorded(AudioClip source, int samples)
+    {
+        if (source == null || samples <= 0 || samples >= source.samples) return source;
+        // 너무 짧으면 인식이 불안정하므로 최소 0.5초
+        samples = Mathf.Min(source.samples, Mathf.Max(samples, source.frequency / 2));
+        var data = new float[samples * source.channels];
+        source.GetData(data, 0);
+        var trimmed = AudioClip.Create("recorded", samples, source.channels, source.frequency, false);
+        trimmed.SetData(data, 0);
+        return trimmed;
     }
 
     public string GetText()

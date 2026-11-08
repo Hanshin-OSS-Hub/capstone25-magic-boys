@@ -1,0 +1,3 @@
+# NVIDIA GPU가 있는 PC에서만 설치 (음성 인식 약 10배 빨라짐). 없으면 서버가 자동으로 CPU 사용.
+nvidia-cublas-cu12==12.9.2.10
+nvidia-cudnn-cu12==9.28.1.4

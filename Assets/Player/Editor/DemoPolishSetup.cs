@@ -31,6 +31,10 @@ public static class DemoPolishSetup
     public static void ApplyAll()
     {
         SetupAttackCombo();
+        SetupDeathAnimation();
+        RecolorEnemies();
+        SetupFxLibrary();
+        FixPropSizes();
         ScaleDungeon();
     }
 
@@ -89,6 +93,39 @@ public static class DemoPolishSetup
         EditorUtility.SetDirty(ctrl);
         AssetDatabase.SaveAssets();
         Debug.Log("[DemoPolish] 3단 콤보 상태(Attack1~3) 설정 완료");
+    }
+
+    // ───────────────────────── 사망 애니메이션 ─────────────────────────
+    const string DeathClipFbx = "Assets/Player/Kevin Iglesias/Human Animations/Animations/Male/Combat/HumanM@Death01.fbx";
+
+    [MenuItem("Tools/Magic Boys/Setup Death Animation")]
+    public static void SetupDeathAnimation()
+    {
+        var clip = AssetDatabase.LoadAllAssetsAtPath(DeathClipFbx)
+            .OfType<AnimationClip>().FirstOrDefault(c => !c.name.StartsWith("__preview"));
+        if (clip == null)
+        {
+            Debug.LogError("[DemoPolish] 사망 클립을 찾지 못했습니다: " + DeathClipFbx);
+            return;
+        }
+
+        var ctrl = AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath);
+        var sm = ctrl.layers[0].stateMachine;
+        var st = sm.states.Select(s => s.state).FirstOrDefault(s => s.name == "Death");
+        if (st == null)
+        {
+            var roll = sm.states.FirstOrDefault(s => s.state.name == "Roll");
+            st = sm.AddState("Death", roll.position + new Vector3(0f, 120f, 0f));
+        }
+        st.motion = clip;
+        st.speed = 1f;
+        st.iKOnFeet = true;
+        // 사망 상태에서는 다른 상태로 나가지 않음 (PlayerDeath가 CrossFade로 진입)
+        foreach (var t in st.transitions.ToArray()) st.RemoveTransition(t);
+
+        EditorUtility.SetDirty(ctrl);
+        AssetDatabase.SaveAssets();
+        Debug.Log("[DemoPolish] 사망 상태(Death) 설정 완료");
     }
 
     static AnimationClip CreateTrimmedClip(AnimationClip src, float t0, float t1, string path)
@@ -151,8 +188,8 @@ public static class DemoPolishSetup
         foreach (var path in Directory.GetFiles(RoomFolder, "*.prefab").Select(p => p.Replace('\\', '/')).OrderBy(p => p))
         {
             string file = Path.GetFileNameWithoutExtension(path);
-            bool isTile = file.StartsWith("Hall") || file.StartsWith("Room") || file.StartsWith("Odd Room");
-            if (!isTile) continue; // 문/막힌 벽(연결점 따라 자동 확대), 보스맵(별도 아레나) 제외
+            bool isTile = file.StartsWith("Hall") || file.StartsWith("Room") || file.StartsWith("Odd Room") || file.StartsWith("bossmap");
+            if (!isTile) continue; // 문/막힌 벽은 연결점(Connector) 자식으로 붙으므로 자동 확대
 
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
             if (Mathf.Abs(prefab.transform.localScale.x - 1f) > 0.001f)
@@ -195,11 +232,11 @@ public static class DemoPolishSetup
                 l.range *= scale;
 
             string navInfo = "";
-            var surface = inst.GetComponent<Unity.AI.Navigation.NavMeshSurface>();
-            if (surface != null)
+            int surfaceIndex = 0;
+            foreach (var surface in inst.GetComponentsInChildren<Unity.AI.Navigation.NavMeshSurface>(true))
             {
                 surface.BuildNavMesh();
-                string navPath = $"{NavMeshFolder}/NavMesh-{Sanitize(file)}.asset";
+                string navPath = $"{NavMeshFolder}/NavMesh-{Sanitize(file)}{(surfaceIndex++ > 0 ? "_" + surfaceIndex : "")}.asset";
                 if (AssetDatabase.LoadAssetAtPath<UnityEngine.AI.NavMeshData>(navPath) != null)
                     AssetDatabase.DeleteAsset(navPath);
                 AssetDatabase.CreateAsset(surface.navMeshData, navPath);
@@ -227,6 +264,178 @@ public static class DemoPolishSetup
         if (Mathf.Max(b.size.x, b.size.z) >= 2.5f) return true;        // 큰 바닥 장식/구조물
         if (b.size.y >= 3f) return true;
         return false;
+    }
+
+    // ───────────────────────── 몬스터 테마 (드워프/광산/대장간) ─────────────────────────
+    const string ThemedMaterialFolder = "Assets/AI_test/Enemy/Stage1_Enemy/ThemedMaterials";
+    const string SpiderPrefab = "Assets/AI_test/Enemy/Stage1_Enemy/Enemy_Spider/Enemy_Spider.prefab";
+    const string GhostPrefab = "Assets/AI_test/Enemy/Stage1_Enemy/Enemy_Ghost/Enemy_Ghost.prefab";
+
+    [MenuItem("Tools/Magic Boys/Recolor Enemies (Lava Spider, Mine Wraith)")]
+    public static void RecolorEnemies()
+    {
+        EnsureFolder(ThemedMaterialFolder);
+
+        // 용암 거미: 어두운 몸 + 주황빛 발광 (보스 용암 골렘과 같은 계열)
+        EditPrefab(SpiderPrefab, root =>
+        {
+            foreach (var r in root.GetComponentsInChildren<Renderer>(true))
+                r.sharedMaterials = r.sharedMaterials.Select(m => Themed(m, "Lava",
+                    baseTint: new Color(0.3f, 0.22f, 0.2f), emission: new Color(1f, 0.3f, 0.05f) * 3.5f, emissionFromBase: true)).ToArray();
+        });
+
+        // 광산 망령: 청록색 유령 + 랜턴 불빛
+        EditPrefab(GhostPrefab, root =>
+        {
+            foreach (var r in root.GetComponentsInChildren<Renderer>(true))
+            {
+                bool body = r is SkinnedMeshRenderer;
+                bool eyes = r.name.Contains("Devil_Head");
+                r.sharedMaterials = r.sharedMaterials.Select(m => Themed(m, body ? "WraithBody" : eyes ? "WraithEyes" : "WraithGear",
+                    baseTint: body ? new Color(0.45f, 0.95f, 0.88f) : new Color(0.55f, 0.6f, 0.6f),
+                    emission: body ? new Color(0.05f, 0.75f, 0.65f) * 0.9f : eyes ? new Color(0.2f, 1f, 0.9f) * 3f : Color.black)).ToArray();
+            }
+
+            var lantern = root.transform.Find("MineLantern");
+            if (lantern == null)
+            {
+                lantern = new GameObject("MineLantern").transform;
+                lantern.SetParent(root.transform, false);
+            }
+            lantern.localPosition = new Vector3(0f, 1.3f, 0.3f);
+            var light = lantern.GetComponent<Light>();
+            if (light == null) light = lantern.gameObject.AddComponent<Light>();
+            light.type = LightType.Point;
+            light.color = new Color(0.3f, 1f, 0.9f);
+            light.range = 4.5f;
+            light.intensity = 2.5f;
+            light.shadows = LightShadows.None;
+        });
+
+        AssetDatabase.SaveAssets();
+        Debug.Log("[DemoPolish] 몬스터 테마 적용 완료 (용암 거미, 광산 망령)");
+    }
+
+    static Material Themed(Material src, string tag, Color baseTint, Color emission, bool emissionFromBase = false)
+    {
+        if (src == null) return null;
+        Material mat;
+        if (src.name.StartsWith(tag + "_"))
+        {
+            mat = src; // 이미 테마 머티리얼: 값만 다시 적용
+        }
+        else
+        {
+            string path = $"{ThemedMaterialFolder}/{tag}_{Sanitize(src.name)}.mat";
+            mat = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (mat == null)
+            {
+                mat = new Material(src) { name = $"{tag}_{src.name}" };
+                AssetDatabase.CreateAsset(mat, path);
+            }
+            else
+            {
+                mat.CopyPropertiesFromMaterial(src);
+                mat.name = $"{tag}_{src.name}";
+            }
+        }
+
+        if (mat.HasProperty("_BaseColor"))
+        {
+            float a = src.HasProperty("_BaseColor") ? src.GetColor("_BaseColor").a : 1f;
+            Color c = baseTint; c.a = a;
+            mat.SetColor("_BaseColor", c);
+        }
+        if (emission.maxColorComponent > 0.001f && mat.HasProperty("_EmissionColor"))
+        {
+            mat.EnableKeyword("_EMISSION");
+            mat.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
+            if (mat.HasProperty("_EmissionMap") && mat.HasProperty("_BaseMap") && (emissionFromBase || mat.GetTexture("_EmissionMap") == null))
+                mat.SetTexture("_EmissionMap", mat.GetTexture("_BaseMap")); // 무늬를 따라 빛나게
+            mat.SetColor("_EmissionColor", emission);
+        }
+        EditorUtility.SetDirty(mat);
+        return mat;
+    }
+
+    static void EditPrefab(string path, System.Action<GameObject> edit)
+    {
+        var root = PrefabUtility.LoadPrefabContents(path);
+        try
+        {
+            edit(root);
+            PrefabUtility.SaveAsPrefabAsset(root, path);
+        }
+        finally
+        {
+            PrefabUtility.UnloadPrefabContents(root);
+        }
+    }
+
+    // ───────────────────────── 연출 라이브러리 ─────────────────────────
+    const string FxLibraryPath = "Assets/Player/Resources/FxLibrary.asset";
+
+    [MenuItem("Tools/Magic Boys/Setup Fx Library")]
+    public static void SetupFxLibrary()
+    {
+        EnsureFolder("Assets/Player/Resources");
+        var lib = AssetDatabase.LoadAssetAtPath<FxLibrary>(FxLibraryPath);
+        if (lib == null)
+        {
+            lib = ScriptableObject.CreateInstance<FxLibrary>();
+            AssetDatabase.CreateAsset(lib, FxLibraryPath);
+        }
+        const string vfx = "Assets/SineVFX/TopDownEffects/CompleteEffects/";
+        const string sfx = "Assets/Sound/SFX/CombatMagicSpellsVIISFX/";
+        lib.meteorStrike = AssetDatabase.LoadAssetAtPath<GameObject>(vfx + "MeteorStrike.prefab");
+        lib.lavaPillar = AssetDatabase.LoadAssetAtPath<GameObject>(vfx + "MoltenPillar.prefab");
+        lib.lavaPool = AssetDatabase.LoadAssetAtPath<GameObject>(vfx + "ConjureLavaPool.prefab");
+        lib.meteorImpact = AssetDatabase.LoadAssetAtPath<AudioClip>(sfx + "Fire1/SFX_Spell02Fire.wav");
+        lib.bossSmashImpact = AssetDatabase.LoadAssetAtPath<AudioClip>(sfx + "Earth1/SFX_Spell01Earth.wav");
+        lib.bossRush = AssetDatabase.LoadAssetAtPath<AudioClip>(sfx + "Earth1/SFX_Spell01Layer01.wav");
+        lib.lavaBurst = AssetDatabase.LoadAssetAtPath<AudioClip>(sfx + "Fire1/SFX_Spell01Layer01.wav");
+        EditorUtility.SetDirty(lib);
+        AssetDatabase.SaveAssets();
+        Debug.Log($"[DemoPolish] Fx Library 설정 완료 (meteor={lib.meteorStrike != null}, pillar={lib.lavaPillar != null}, pool={lib.lavaPool != null}, sfx={lib.meteorImpact != null}/{lib.bossSmashImpact != null})");
+    }
+
+    // ───────────────────────── 소품 크기 ─────────────────────────
+    // 일부 에셋 소품(통 등)이 원래부터 캐릭터(약 1.75m)보다 커서 비율이 어색함 → 현실적인 높이로 맞춤
+    static readonly (string name, float targetHeight)[] PropHeights =
+    {
+        ("Barrel", 1.1f),
+    };
+
+    [MenuItem("Tools/Magic Boys/Fix Prop Sizes")]
+    public static void FixPropSizes()
+    {
+        var log = new StringBuilder();
+        foreach (var path in Directory.GetFiles(RoomFolder, "*.prefab").Select(p => p.Replace(System.IO.Path.DirectorySeparatorChar, '/')))
+        {
+            var root = PrefabUtility.LoadPrefabContents(path);
+            bool changed = false;
+            try
+            {
+                foreach (var r in root.GetComponentsInChildren<Renderer>(true))
+                {
+                    foreach (var (name, h) in PropHeights)
+                    {
+                        if (!r.name.StartsWith(name)) continue;
+                        Bounds b = r.bounds;
+                        if (b.size.y <= h * 1.05f) continue; // 이미 적당한 크기
+                        float k = h / b.size.y;
+                        float floorY = b.min.y;
+                        r.transform.localScale *= k;
+                        r.transform.position += Vector3.up * (floorY - r.bounds.min.y); // 바닥에 붙인 채로
+                        log.AppendLine($"{Path.GetFileNameWithoutExtension(path)}/{r.name}: {b.size.y:0.00}m → {r.bounds.size.y:0.00}m");
+                        changed = true;
+                    }
+                }
+                if (changed) PrefabUtility.SaveAsPrefabAsset(root, path);
+            }
+            finally { PrefabUtility.UnloadPrefabContents(root); }
+        }
+        Debug.Log("[DemoPolish] 소품 크기 조정\n" + log);
     }
 
     // ───────────────────────── 유틸 ─────────────────────────

@@ -3149,36 +3149,37 @@ MonoBehaviour:
   spawnHeightOffset: 1.2
   qSpawnPoint: {fileID: 1685358659}
   qProjectilePrefab: {fileID: 1361920804652561843, guid: f9187c7e27a92e74eacfa3f1aa8fdc93, type: 3}
-  qMpCost: 5
-  qCooldown: 1.2
-  qBaseDamage: 8
-  qProjectileSpeed: 14
+  qMpCost: 3
+  qCooldown: 0.5
+  qBaseDamage: 4
+  qProjectileSpeed: 20
   qMaxDistance: 20
   qSpawnOffset: {x: 0, y: -0.4, z: 0}
   eWaterFieldPrefab: {fileID: 509412756994637923, guid: d28fce3b24ad1294e83caae512341773, type: 3}
-  eMpCost: 12
-  eCooldown: 6
-  eBaseTickDamage: 4
-  eDuration: 4
-  eTickInterval: 0.5
-  eSlowMultiplier: 0.6
-  eSlowDuration: 0.7
+  eMpCost: 10
+  eCooldown: 7
+  eBaseTickDamage: 0
+  eDuration: 5
+  eTickInterval: 1
+  eSlowMultiplier: 0.4
+  eSlowDuration: 1.2
   rEarthWallPrefab: {fileID: 4314491717161609544, guid: eabd2b88945ae474f9fbe21a632de1d1, type: 3}
-  rMpCost: 15
-  rCooldown: 8
-  rBaseDamage: 10
-  rLifeTime: 5
+  rMpCost: 12
+  rCooldown: 9
+  rBaseDamage: 6
+  rLifeTime: 10
   tThunderRainPrefab: {fileID: 9190732251731332281, guid: a6cf37740ea3d77498185ab1a3180944, type: 3}
-  tMpCost: 18
-  tCooldown: 10
-  tBaseDamagePerStrike: 6
-  tAreaRadius: 4
+  tMpCost: 22
+  tCooldown: 12
+  tBaseDamagePerStrike: 14
+  tAreaRadius: 5
   tSingleStrikeRadius: 1.3
   tStrikeCount: 8
   tWarningDuration: 0.7
   tTotalStrikeDuration: 2.4
-  yMpCost: 20
-  yCooldown: 12
+  yMeteorVfxPrefab: {fileID: 2842540418666017718, guid: 40eeb2fa0cb8416bbf3c301b58939ae1, type: 3}
+  yMpCost: 30
+  yCooldown: 18
 --- !u!114 &211820193
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5062,7 +5063,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae5cf1be6303feb44bdea0e51a42f7c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StagePuzzleChestReward
-  stageIndex: 5
+  stageIndex: 1
   portalToShow: {fileID: 0}
   hidePortalOnStart: 1
 --- !u!114 &347958070

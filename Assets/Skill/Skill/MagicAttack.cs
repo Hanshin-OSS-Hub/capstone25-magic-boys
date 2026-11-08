@@ -55,44 +55,54 @@ public class MagicAttack : MonoBehaviour
     [Header("Q - Fireball")]
     public Transform qSpawnPoint;
     public GameObject qProjectilePrefab;
-    public int qMpCost = 5;
-    public float qCooldown = 1.2f;
-    public int qBaseDamage = 8;
-    public float qProjectileSpeed = 14f;
+    public int qMpCost = 3;
+    public float qCooldown = 0.5f;
+    public int qBaseDamage = 4;
+    public float qProjectileSpeed = 20f;
     public float qMaxDistance = 20f;
     public Vector3 qSpawnOffset = new Vector3(0f, -0.4f, 0f);
 
     [Header("E - Water Field")]
     public GameObject eWaterFieldPrefab;
-    public int eMpCost = 12;
-    public float eCooldown = 6f;
-    public int eBaseTickDamage = 4;
-    public float eDuration = 4f;
-    public float eTickInterval = 0.5f;
-    [Range(0.1f, 1f)] public float eSlowMultiplier = 0.6f;
-    public float eSlowDuration = 0.7f;
+    public int eMpCost = 10;
+    public float eCooldown = 7f;
+    public int eBaseTickDamage = 0;
+    public float eDuration = 5f;
+    public float eTickInterval = 1f;
+    [Range(0.1f, 1f)] public float eSlowMultiplier = 0.4f;
+    public float eSlowDuration = 1.2f;
 
     [Header("R - Earth Wall")]
     public GameObject rEarthWallPrefab;
-    public int rMpCost = 15;
-    public float rCooldown = 8f;
-    public int rBaseDamage = 10;
-    public float rLifeTime = 5f;
+    public int rMpCost = 12;
+    public float rCooldown = 9f;
+    public int rBaseDamage = 6;
+    public float rLifeTime = 10f;
 
     [Header("T - Thunder Rain")]
     public GameObject tThunderRainPrefab;
-    public int tMpCost = 18;
-    public float tCooldown = 10f;
-    public int tBaseDamagePerStrike = 6;
-    public float tAreaRadius = 4f;
+    public int tMpCost = 22;
+    public float tCooldown = 12f;
+    public int tBaseDamagePerStrike = 14;
+    public float tAreaRadius = 5f;
     public float tSingleStrikeRadius = 1.3f;
     public int tStrikeCount = 8;
     public float tWarningDuration = 0.7f;
     public float tTotalStrikeDuration = 2.4f;
 
-    [Header("Y - Test Fail")]
-    public int yMpCost = 20;
-    public float yCooldown = 12f;
+    [Header("Y - Meteor (궁극기)")]
+    public GameObject yMeteorVfxPrefab;
+    public int yMpCost = 30;
+    public float yCooldown = 18f;
+    public int yBaseDamage = 40;
+    public float yRadius = 5f;
+    public float yImpactDelay = 1.0f;
+    public float yKnockback = 12f;
+
+    [Header("Cast Success Voice - Meteor")]
+    public string meteorSuccessSfxName = "Meteor_Voice";
+    [Range(0f, 1f)] public float meteorSuccessSfxVolume = 1f;
+    public float meteorSuccessSfxPitch = 1f;
 
     private float qRemain;
     private float eRemain;
@@ -471,10 +481,30 @@ public class MagicAttack : MonoBehaviour
 
     public bool TryCastY()
     {
-        Vector3 pos = GetCastEffectPosition();
-        Quaternion rot = GetFlatLookRotation();
+        TryGetAimPoint(out Vector3 point);
 
-        return FailCast("Y 테스트 실패", pos, rot);
+        Vector3 fxPos = GetCastEffectPosition();
+        Quaternion fxRot = GetFlatLookRotation();
+
+        if (!IsUnlocked(4)) return FailCast("Y 잠금 상태", fxPos, fxRot);
+        if (yRemain > 0f) return FailCast("Y 쿨타임", fxPos, fxRot);
+        if (!TrySpendMP(yMpCost, "Y")) return FailCast("Y MP 부족", fxPos, fxRot);
+
+        // 허공/벽을 조준해도 운석은 바닥에 떨어지게
+        int groundOnly = groundMask & ~LayerMask.GetMask("Enemy", "Boss", "Player");
+        if (Physics.Raycast(point + Vector3.up * 2f, Vector3.down, out RaycastHit ground, 40f, groundOnly, QueryTriggerInteraction.Ignore))
+            point = ground.point;
+
+        var go = new GameObject("MeteorStrike");
+        go.transform.position = point + Vector3.up * 0.05f;
+        var meteor = go.AddComponent<MeteorStrikeSkill>();
+
+        int damage = playerStats.GetMagicDamage(yBaseDamage);
+        meteor.Init(playerStats, enemyMask, damage, yRadius, yImpactDelay, yKnockback, yMeteorVfxPrefab, transform.position);
+
+        yRemain = yCooldown;
+
+        return SuccessCast(fxPos, fxRot, meteorSuccessSfxName, meteorSuccessSfxVolume, meteorSuccessSfxPitch);
     }
 
     public float GetCooldownRatio(int slotIndex)

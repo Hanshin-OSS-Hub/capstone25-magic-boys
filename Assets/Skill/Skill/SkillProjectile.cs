@@ -4,6 +4,9 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class SkillProjectile : MonoBehaviour
 {
+    [Header("Hit Feedback")]
+    public HitElement hitElement = HitElement.Fire;
+
     int damage;
     PlayerStats owner;
     LayerMask enemyMask;
@@ -84,6 +87,7 @@ public class SkillProjectile : MonoBehaviour
 
         if (dmgable != null) dmgable.TakeDamage(damage);
         else simple.TakeDamage(damage, owner);
+        HitFeedback.Play(other, hitPos, damage, hitElement, transform.forward, 5f);
 
         Destroy(gameObject);
     }

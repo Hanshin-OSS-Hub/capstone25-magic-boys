@@ -22,6 +22,7 @@ public class OverloadState : IBossState
         {
             stunTimer = 5f;
         }
+        BossFX.Overload(boss.transform, stunTimer); // 용암 장판 + 붉은 빛 + 불씨
     }
 
     public void UpdateState(BossStateManager boss)

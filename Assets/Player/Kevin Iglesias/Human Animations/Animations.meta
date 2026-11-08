@@ -1,9 +1,5 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/Player/Kevin Iglesias/Human Animations/Animations.meta
 guid: efeb8c36a1723364392603dda24becb0
-========
-guid: 55d335bedf952014ca855545406f9146
->>>>>>>> origin/roguelike_test:Assets/SineVFX/TopDownEffects/AssetResources/Animations.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

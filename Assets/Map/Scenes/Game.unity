@@ -915,7 +915,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bossTag: Boss
-  toggleKey: 116
+  toggleKey: 9
 --- !u!114 &198286351
 MonoBehaviour:
   m_ObjectHideFlags: 0

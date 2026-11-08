@@ -63,7 +63,9 @@ public class VoiceCommandSystem : MonoBehaviour
         else if (text.Contains("lightning")) { matched = true; displayWord = "lightning"; magicAttack.SelectSkill(MagicAttack.SkillSlot.T); }
         else if (text.Contains("storm")) { matched = true; displayWord = "storm"; magicAttack.SelectSkill(MagicAttack.SkillSlot.T); }
 
-        // Y - Reserved (Skill 5)
+        // Y - Meteor (ultimate)
+        else if (text.Contains("meteor") || text.Contains("meteo")) { matched = true; displayWord = "meteor"; magicAttack.SelectSkill(MagicAttack.SkillSlot.Y); }
+        else if (text.Contains("anvil")) { matched = true; displayWord = "anvil"; magicAttack.SelectSkill(MagicAttack.SkillSlot.Y); }
         else if (text.Contains("ultimate")) { matched = true; displayWord = "ultimate"; magicAttack.SelectSkill(MagicAttack.SkillSlot.Y); }
         else if (text.Contains("skill y")) { matched = true; displayWord = "skill y"; magicAttack.SelectSkill(MagicAttack.SkillSlot.Y); }
 

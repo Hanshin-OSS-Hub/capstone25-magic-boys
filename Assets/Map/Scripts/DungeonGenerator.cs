@@ -213,6 +213,8 @@ void SpawnDoors()
                             int doorIndex = Random.Range(0, doorPrefabs.Length);
                             GameObject goDoor = Instantiate(doorPrefabs[doorIndex], pos, myconnector.transform.rotation, myconnector.transform) as GameObject;
                             goDoor.name = doorPrefabs[doorIndex].name;
+                            // 연결부 반대편 연결점에서 문 중복 검사가 바로 보이도록 물리 동기화 (문 2개 겹침 방지)
+                            Physics.SyncTransforms();
                         }
                     }
                 }

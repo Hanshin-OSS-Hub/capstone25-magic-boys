@@ -65,6 +65,9 @@ public class HammerHitbox : MonoBehaviour
         lastHitTimes[rootObject] = Time.time;
         float finalDamage = damage * (playerAttack != null ? playerAttack.CurrentDamageMultiplier : 1f);
         damageable.TakeDamage(finalDamage);
+        Vector3 from = playerAttack != null ? playerAttack.transform.position : transform.position;
+        bool finisher = playerAttack != null && playerAttack.ComboStep >= 3;
+        HitFeedback.Play(other, other.ClosestPoint(transform.position), finalDamage, HitElement.Physical, other.transform.position - from, finisher ? 8f : 4f);
         if (playerAttack != null) playerAttack.NotifyHitLanded();
     }
 }

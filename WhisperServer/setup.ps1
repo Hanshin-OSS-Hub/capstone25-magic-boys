@@ -51,6 +51,10 @@ try {
     }
     Write-Host '기존 환경 명세의 라이브러리 설치 및 의존성 검사 중...'
     Invoke-Uv pip install --python $python -r (Join-Path $PSScriptRoot 'requirements.txt') --no-config
+    if (Get-Command nvidia-smi -ErrorAction SilentlyContinue) {
+        Write-Host 'NVIDIA GPU 감지: GPU 음성 인식 라이브러리 설치 중 (최초 약 1GB)...'
+        Invoke-Uv pip install --python $python -r (Join-Path $PSScriptRoot 'requirements-gpu.txt') --no-config
+    }
     Invoke-Uv pip check --python $python --no-config
     & $python (Join-Path $PSScriptRoot 'prepare_model.py')
     if ($LASTEXITCODE -ne 0) { throw '모델 준비에 실패했습니다. 위 오류를 확인하고 다시 실행하세요.' }

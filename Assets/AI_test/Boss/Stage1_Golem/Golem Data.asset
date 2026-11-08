@@ -13,17 +13,17 @@ MonoBehaviour:
   m_Name: Golem Data
   m_EditorClassIdentifier: 
   BossName: Golem
-  MaxHP: 100
+  MaxHP: 500
   MoveSpeed: 5
   Damage: 10
   DetectionRange: 5
-  AttackRange: 5
+  AttackRange: 6.75
   AttackCooldown: 2
   OverheatInterval: 5
   VentingDuration: 5
   OverloadDuration: 8
   SmashDamage: 20
-  SmashRadius: 8
+  SmashRadius: 10.8
   SmashCastTime: 1.8
   KnockbackForce: 15
   SmashCooldown: 8

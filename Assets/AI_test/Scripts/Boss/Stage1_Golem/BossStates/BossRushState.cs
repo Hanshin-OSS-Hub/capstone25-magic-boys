@@ -76,6 +76,7 @@ public class BossRushState : IBossState
 
     public void ExitState(BossStateManager boss)
     {
+        BossFX.RushEnd(boss.transform);
         boss.animator.SetBool("isRushing", false);
         // 상태 복구 (속도 등 원상복구)
         boss.navMeshAgent.isStopped = false;
@@ -89,6 +90,7 @@ public class BossRushState : IBossState
     {
         Debug.Log("보스: 돌진!!!!");
         isRushing = true;
+        BossFX.RushStart(boss.transform); // 먼지 폭발 + 발밑 먼지/불씨 자국
 
         if (data == null || boss.playerTransform == null) return;
 
@@ -159,6 +161,7 @@ public class BossRushState : IBossState
                     Vector3 finalKnockbackVelocity = horizontalVelocity + verticalVelocity;
 
                     playerController.TakeKnockback(finalKnockbackVelocity, 0.7f);
+                    BossFX.RushHit(hitCollider.transform.position);
 
                     Debug.Log(dot > 0 ? "오른쪽 대각선으로 쳐냄!" : "왼쪽 대각선으로 쳐냄!");
                 }

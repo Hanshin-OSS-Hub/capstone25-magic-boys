@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b099da856d8eb54cb249cf63f7821e6, type: 3}
+  m_Name: FxLibrary
+  m_EditorClassIdentifier: Assembly-CSharp::FxLibrary
+  meteorStrike: {fileID: 2842540418666017718, guid: 40eeb2fa0cb8416bbf3c301b58939ae1, type: 3}
+  lavaPillar: {fileID: 6875353632986109546, guid: 4a2ac0a10ae54964bd22fa12345a597b, type: 3}
+  lavaPool: {fileID: 8632717348514136560, guid: 6f0e40a9acd145a486148ad8f9edbb40, type: 3}
+  meteorImpact: {fileID: 8300000, guid: f704b913e08c9ee46982c22d8fff0dcf, type: 3}
+  bossSmashImpact: {fileID: 8300000, guid: fa281d030f6040340ad5333cd0dab32b, type: 3}
+  bossRush: {fileID: 8300000, guid: 063b45e1aa32f364097f24aea93eb596, type: 3}
+  lavaBurst: {fileID: 8300000, guid: 96919afe7d13ba1448782dc8885aa719, type: 3}

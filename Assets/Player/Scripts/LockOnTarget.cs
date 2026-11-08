@@ -1,12 +1,12 @@
 using UnityEngine;
 using StarterAssets;
 
-// T: 화면 중앙에 가장 가까운 적/보스를 락온, 다시 누르면 해제.
+// Tab: 화면 중앙에 가장 가까운 적/보스를 락온, 다시 누르면 해제.
 // 대상이 죽거나(비활성) 너무 멀어지면 자동 해제. 대상 위에 표시를 그린다.
 public class LockOnTarget : MonoBehaviour
 {
     public string bossTag = "Boss";
-    public KeyCode toggleKey = KeyCode.T;
+    public KeyCode toggleKey = KeyCode.Tab;
 
     [Header("Targeting")]
     [Tooltip("락온 가능한 최대 거리")]

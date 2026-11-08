@@ -175,6 +175,8 @@ namespace StarterAssets
             new Keyframe(0.35f, 1.05f),
             new Keyframe(0.75f, 0.6f),
             new Keyframe(1.0f, 0.3f));
+        /// <summary>사망 시 PlayerDeath가 켬: 입력 무시, 중력만 적용</summary>
+        [HideInInspector] public bool IsDead = false;
         [HideInInspector] public bool IsLockOn = false;
         [HideInInspector] public Transform LockOnTarget = null;
         /// <summary>락온 시 카메라가 바라볼 지점 (LockOnTarget 스크립트가 매 프레임 갱신). 없으면 대상 위치 + 1.2m</summary>
@@ -229,6 +231,10 @@ namespace StarterAssets
 
             _attack = GetComponent<PlayerAttack>();
             _roll = GetComponent<PlayerRoll>();
+
+            // HP 0 → 사망 애니메이션/게임오버 처리 (씬 수정 없이 자동 추가)
+            if (GetComponent<PlayerStats>() != null && GetComponent<PlayerDeath>() == null)
+                gameObject.AddComponent<PlayerDeath>();
 
             AssignAnimationIDs();
 
@@ -372,6 +378,15 @@ namespace StarterAssets
                 _knockbackVelocity.y += Gravity * dt;
                 _controller.Move(_knockbackVelocity * dt);
                 _horizontalVelocity = Vector3.zero;
+                return;
+            }
+
+            if (IsDead)
+            {
+                // 사망: 미끄러지듯 멈추고 중력만 적용
+                _horizontalVelocity = Vector3.MoveTowards(_horizontalVelocity, Vector3.zero, Deceleration * dt);
+                _controller.Move((_horizontalVelocity + Vector3.up * _verticalVelocity) * dt);
+                if (_hasAnimator) _animator.SetFloat(_animIDSpeed, 0f);
                 return;
             }
 
@@ -614,7 +629,7 @@ namespace StarterAssets
             }
 
             // 코요테 타임: 발판 끝에서 살짝 늦게 눌러도 점프됨
-            bool canJump = !rolling && _coyoteTimer > 0f && _jumpTimeoutDelta <= 0.0f && _verticalVelocity <= 0.0f;
+            bool canJump = !IsDead && !rolling && _coyoteTimer > 0f && _jumpTimeoutDelta <= 0.0f && _verticalVelocity <= 0.0f;
             if (_jumpBufferTimer > 0f && canJump)
             {
                 _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);

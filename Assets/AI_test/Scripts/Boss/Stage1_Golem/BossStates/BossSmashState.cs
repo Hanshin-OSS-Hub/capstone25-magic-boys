@@ -25,6 +25,8 @@ public class BossSmashState : IBossState
 
         castTime = (data != null) ? data.SmashCastTime : 1.5f;
         timer = castTime;
+        BossFX.SmashCharge(boss.transform, castTime, boss.smashIndicator != null ? boss.smashIndicator.transform : null,
+            data != null ? data.SmashRadius : 5f); // 발밑 용암 + 땅울림 (범위에 맞춰 크기 조정)
 
         // 플레이어 바라보기
         if (boss.playerTransform != null)
@@ -108,6 +110,8 @@ public class BossSmashState : IBossState
         {
             boss.smashIndicator.SetActive(false);
         }
+
+        BossFX.SmashImpact(boss.transform.position, data != null ? data.SmashRadius : 5f); // 용암 폭발 + 충격파
 
         if (data != null)
         {

@@ -78,6 +78,7 @@ public class BossThrowState : IBossState
             Quaternion lookRot = Quaternion.LookRotation(aimDir);
 
             GameObject rock = Object.Instantiate(data.RockPrefab, boss.handTransform.position, lookRot);
+            BossFX.ThrowRock(rock.transform, boss.handTransform.position); // 불꽃 꼬리
 
             EnemyProjectile proj = rock.GetComponent<EnemyProjectile>();
             if (proj != null)

@@ -127,9 +127,12 @@ public class PlayerStats : MonoBehaviour, IDamageable
         currentMP = Mathf.Min(currentMP, maxMP);
     }
 
+    public bool IsDead => currentHP <= 0;
+
     public void TakeDamage(float amount)
     {
         if (amount <= 0) return;
+        if (currentHP <= 0) return; // 이미 사망: 사망 처리가 반복되지 않게
 
         currentHP = Mathf.Max(0, currentHP - Mathf.RoundToInt(amount));
 
@@ -324,6 +327,8 @@ public class PlayerStats : MonoBehaviour, IDamageable
         RecalculateDerived();
 
         currentHP = Mathf.Clamp(PlayerPrefs.GetInt(K_HP, maxHP), 0, maxHP);
+        // 지난 판에 사망한 상태로 저장됐으면 체력을 채워서 시작
+        if (currentHP <= 0) currentHP = maxHP;
         currentMP = Mathf.Clamp(PlayerPrefs.GetInt(K_MP, maxMP), 0, maxMP);
 
         BroadcastAll();

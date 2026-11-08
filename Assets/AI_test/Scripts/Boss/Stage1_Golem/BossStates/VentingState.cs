@@ -29,6 +29,7 @@ public class VentingState : IBossState
         {
             timer = 5f;
         }
+        BossFX.Venting(boss.transform, timer); // 증기 분출 (약점 노출)
     }
 
     public void UpdateState(BossStateManager boss)

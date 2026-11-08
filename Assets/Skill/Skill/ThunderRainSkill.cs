@@ -54,6 +54,11 @@ public class ThunderRainSkill : MonoBehaviour
 
     void DealDamageOnce()
     {
+        // Strongest skill: small screen shake on every strike
+        var cam = Camera.main;
+        var shaker = cam != null ? cam.GetComponentInParent<CameraSwitch>() : null;
+        if (shaker != null) shaker.Shake(0.09f, 0.18f);
+
         Collider[] hits = Physics.OverlapSphere(transform.position, areaRadius, enemyMask, QueryTriggerInteraction.Collide);
 
         foreach (var hit in hits)
@@ -63,6 +68,8 @@ public class ThunderRainSkill : MonoBehaviour
 
             if (dmgable != null) dmgable.TakeDamage(damagePerStrike);
             else if (simple != null) simple.TakeDamage(damagePerStrike, owner);
+            if (dmgable != null || simple != null)
+                HitFeedback.Play(hit, hit.bounds.center + Vector3.up * 0.3f, damagePerStrike, HitElement.Thunder, hit.transform.position - transform.position, 2.5f);
         }
     }
 

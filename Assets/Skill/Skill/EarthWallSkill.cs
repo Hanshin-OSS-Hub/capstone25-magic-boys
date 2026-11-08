@@ -76,6 +76,35 @@ public class EarthWallSkill : MonoBehaviour
 
         if (solidCollider != null)
             solidCollider.enabled = true;
+
+        AddNavObstacle();
+    }
+
+    // Enemies path around the wall like terrain (removed together with the wall)
+    void AddNavObstacle()
+    {
+        if (solidCollider == null) return;
+        GameObject host = solidCollider.gameObject;
+        if (host.GetComponent<UnityEngine.AI.NavMeshObstacle>() != null) return;
+
+        var obs = host.AddComponent<UnityEngine.AI.NavMeshObstacle>();
+        obs.shape = UnityEngine.AI.NavMeshObstacleShape.Box;
+        if (solidCollider is BoxCollider bc)
+        {
+            obs.center = bc.center;
+            obs.size = bc.size;
+        }
+        else
+        {
+            Bounds b = solidCollider.bounds;
+            Vector3 ls = host.transform.lossyScale;
+            obs.center = host.transform.InverseTransformPoint(b.center);
+            obs.size = new Vector3(b.size.x / Mathf.Max(0.001f, Mathf.Abs(ls.x)),
+                                   b.size.y / Mathf.Max(0.001f, Mathf.Abs(ls.y)),
+                                   b.size.z / Mathf.Max(0.001f, Mathf.Abs(ls.z)));
+        }
+        obs.carving = true;
+        obs.carveOnlyStationary = false;
     }
 
     void TryLiftCasterToTop()
@@ -153,6 +182,9 @@ public class EarthWallSkill : MonoBehaviour
         var simple = (dmgable == null)
             ? (hit.GetComponentInParent<EnemySimple>() ?? hit.GetComponent<EnemySimple>())
             : null;
+
+        if (dmgable != null || simple != null)
+            HitFeedback.Play(hit, hit.bounds.center, damage, HitElement.Earth, hit.transform.position - transform.position, 7f);
 
         if (dmgable != null)
         {

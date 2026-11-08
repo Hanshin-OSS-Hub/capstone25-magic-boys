@@ -27,6 +27,13 @@ public class WaterFieldSkill : MonoBehaviour
         SphereCollider sc = GetComponent<SphereCollider>();
         sc.isTrigger = true;
 
+        // 트리거 이벤트는 둘 중 하나에 Rigidbody가 있어야 발생한다.
+        // 프리팹·적 모두 Rigidbody가 없어서 OnTriggerStay가 아예 호출되지 않았음 → 키네마틱 Rigidbody 보장
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb == null) rb = gameObject.AddComponent<Rigidbody>();
+        rb.isKinematic = true;
+        rb.useGravity = false;
+
         Destroy(gameObject, lifeTime);
     }
 
@@ -43,6 +50,12 @@ public class WaterFieldSkill : MonoBehaviour
         nextTickTime[other] = Time.time + tickInterval;
 
         var slowable = other.GetComponentInParent<ISlowable>();
+        if (slowable == null)
+        {
+            // No enemy implements ISlowable yet: attach SlowEffect to the enemy root
+            var agent = other.GetComponentInParent<UnityEngine.AI.NavMeshAgent>();
+            if (agent != null) slowable = agent.gameObject.AddComponent<SlowEffect>();
+        }
         slowable?.ApplySlow(slowMultiplier, slowDuration);
 
         var dmgable = other.GetComponentInParent<IDamageable>();
@@ -50,6 +63,8 @@ public class WaterFieldSkill : MonoBehaviour
 
         if (dmgable != null) dmgable.TakeDamage(tickDamage);
         else if (simple != null) simple.TakeDamage(tickDamage, owner);
+        if (dmgable != null || simple != null)
+            HitFeedback.Play(other, other.bounds.center, tickDamage, HitElement.Water, other.transform.position - transform.position, 1.5f);
     }
 
     void OnTriggerExit(Collider other)
