@@ -1950,8 +1950,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
@@ -3050,6 +3050,7 @@ GameObject:
   - component: {fileID: 211820205}
   - component: {fileID: 211820207}
   - component: {fileID: 211820206}
+  - component: {fileID: 211820208}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -3192,6 +3193,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bossTag: Boss
   toggleKey: 9
+  lockOnRange: 25
+  breakRange: 35
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  maxScreenAngle: 70
+  showMarker: 1
+  markerColor: {r: 1, g: 0.35, b: 0.25, a: 0.95}
+  markerSize: 26
 --- !u!114 &211820194
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3220,7 +3230,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0c38d06a4a8b7746ab64d2d1ad53375, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackLockTime: 1.1
+  comboSafetyTimeout: 3
+  comboStates:
+  - Attack1
+  - Attack2
+  - Attack3
+  hitStart:
+  - 0.38
+  - 0.22
+  - 0.17
+  hitEnd:
+  - 0.88
+  - 0.86
+  - 0.38
+  linkTime:
+  - 0.84
+  - 0.84
+  - 1.1
+  moveCancelTime:
+  - 0.9
+  - 0.9
+  - 0.5
+  damageMultiplier:
+  - 1
+  - 1.2
+  - 2
+  inputBufferOpen: 0.2
+  firstCrossFade: 0.1
+  comboCrossFade: 0.08
+  returnCrossFade: 0.2
+  hitStopDuration: 0.055
+  finisherHitStopMultiplier: 1.8
+  hitShakeAmplitude: 0.06
   hammerCollider: {fileID: 0}
   playerCamera: {fileID: 1228341683}
   chestHitRange: 5
@@ -3264,10 +3305,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecb304bc2e992ce44b7bd9eda83c09b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveSpeed: 2
-  SprintSpeed: 5.335
-  RotationSmoothTime: 0.12
-  SpeedChangeRate: 10
+  WalkSpeed: 2
+  RunSpeed: 5
+  DashSpeed: 7
+  WalkKey: 308
+  Acceleration: 35
+  Deceleration: 28
+  TurnAcceleration: 60
+  AirAcceleration: 10
+  AttackDeceleration: 20
+  TurnSpeedIdle: 1500
+  TurnSpeedMoving: 720
+  AirTurnMultiplier: 0.5
+  AttackTurnWindow: 0.15
+  AnimationBlendRate: 12
+  DashAnimationSpeed: 1.2
+  AttackLungeSpeed: 3.5
+  FinisherLungeMultiplier: 1.4
+  LockOnFacingSpeed: 540
+  LockOnCameraSharpness: 10
   LandingAudioClip: {fileID: 8300000, guid: ff697d3070687ce4583faa0561a145a2, type: 3}
   FootstepAudioClips:
   - {fileID: 8300000, guid: 72f526a6a9890f643a88e85a61c86c8a, type: 3}
@@ -3281,8 +3337,13 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 274649b0e221539409070ebf6c18918b, type: 3}
   - {fileID: 8300000, guid: a3194b8bbc96ef84fab1f98f4b7dae3e, type: 3}
   FootstepAudioVolume: 0.5
+  MinLandingAirTime: 0.35
+  GroundSnapDistance: 0.5
   JumpHeight: 1.2
   Gravity: -15
+  FallGravityMultiplier: 1.6
+  CoyoteTime: 0.12
+  JumpBufferTime: 0.15
   JumpTimeout: 0
   FallTimeout: 0.15
   Grounded: 1
@@ -3297,6 +3358,48 @@ MonoBehaviour:
   CameraAngleOverride: 0
   LockCameraPosition: 0
   RollSpeed: 8
+  RollSpeedCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1.25
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.35
+      value: 1.05
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.75
+      value: 0.6
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0.3
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   IsLockOn: 0
   LockOnTarget: {fileID: 0}
 --- !u!114 &211820198
@@ -3533,7 +3636,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b6e5858a26584da4a9cec1a322f428e9, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BabelDwarfMotion
   gameplay: {fileID: 211820203}
   visual: {fileID: 937368548}
@@ -3549,7 +3652,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1257c95b79e389a46a2d146ef349cca6, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BabelMageAppearance
   originalBody: {fileID: 1193685533}
   dressedBody: {fileID: 982244875}
@@ -3605,6 +3708,28 @@ MonoBehaviour:
   - {fileID: 1421852130}
   - {fileID: 1212385312}
   - {fileID: 1614345239}
+--- !u!114 &211820208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 211820190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 218d30f7019710743aad160b45e255d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Mediapipe.Unity.Sample::MagicAttackk
+  playerCamera: {fileID: 1228341683}
+  movableTag: Movable
+  castRange: 20
+  minHoldDistance: 2
+  maxHoldDistance: 15
+  scrollSensitivity: 3
+  moveSpeed: 12
+  maxTelekinesisTime: 10
+  maxHoldHeightOffset: 1
+  telekinesisFillImage: {fileID: 0}
 --- !u!1 &216649852
 GameObject:
   m_ObjectHideFlags: 0
@@ -4159,7 +4284,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -4197,7 +4322,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Mask
   m_ShowMaskGraphic: 0
 --- !u!1 &296873427
@@ -10566,6 +10691,8 @@ MonoBehaviour:
     m_Bits: 0
   sphereRadius: 0.2
   extraBack: 0.1
+  dashFovBoost: 8
+  obstructionPullInLerp: 25
   isFirstPerson: 1
 --- !u!1 &930453672
 GameObject:
@@ -10836,7 +10963,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage:
+  m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -19758,11 +19885,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 0e9dde2650ef69842ac01d2063b650a9, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
-      value:
+      value: 
       objectReference: {fileID: 2100000, guid: 19265f4c62a8b5648bd5a388f13958bb, type: 2}
     - target: {fileID: -5754084199372789682, guid: 0e9dde2650ef69842ac01d2063b650a9, type: 3}
       propertyPath: m_Mesh
-      value:
+      value: 
       objectReference: {fileID: 4300000, guid: 2b847b0284e9b7f45984d719617a1492, type: 2}
     - target: {fileID: 919132149155446097, guid: 0e9dde2650ef69842ac01d2063b650a9, type: 3}
       propertyPath: m_Name

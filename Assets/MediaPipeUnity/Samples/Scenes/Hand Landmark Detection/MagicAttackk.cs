@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+[DisallowMultipleComponent]
 public class MagicAttackk : MonoBehaviour
 {
     [Header("Telekinesis")]
@@ -24,7 +25,7 @@ public class MagicAttackk : MonoBehaviour
     // 현재 물체를 잡고 있는 거리
     private float currentHoldDistance = 4f;
 
-    void Start()
+    void Awake()
     {
         if (playerCamera == null)
         {
@@ -36,6 +37,30 @@ public class MagicAttackk : MonoBehaviour
             telekinesisFillImage.fillAmount = 0f;
             telekinesisFillImage.gameObject.SetActive(false);
         }
+    }
+
+    public void BindSceneContext(Camera camera, Image fillImage)
+    {
+        StopTelekinesis();
+        playerCamera = camera;
+        telekinesisFillImage = fillImage;
+        if (telekinesisFillImage != null)
+        {
+            telekinesisFillImage.fillAmount = 0f;
+            telekinesisFillImage.gameObject.SetActive(false);
+        }
+    }
+
+    public void ReleaseSceneContext(Image fillImage)
+    {
+        if (telekinesisFillImage != fillImage) return;
+        StopTelekinesis();
+        telekinesisFillImage = null;
+    }
+
+    private void OnDisable()
+    {
+        StopTelekinesis();
     }
 
     void Update()
@@ -100,7 +125,7 @@ public class MagicAttackk : MonoBehaviour
 
     public void Telekinesis()
     {
-        if (isTelekinesisActive)
+        if (!isActiveAndEnabled || isTelekinesisActive)
             return;
 
         if (playerCamera == null)
@@ -151,6 +176,7 @@ public class MagicAttackk : MonoBehaviour
 
     private void StopTelekinesis()
     {
+        bool wasActive = isTelekinesisActive;
         if (currentTargetRb != null)
         {
             currentTargetRb.useGravity = true;
@@ -169,6 +195,6 @@ public class MagicAttackk : MonoBehaviour
             telekinesisFillImage.gameObject.SetActive(false);
         }
 
-        Debug.Log("Telekinesis End");
+        if (wasActive) Debug.Log("Telekinesis End");
     }
 }

@@ -77,9 +77,16 @@ namespace Mediapipe.Unity.Sample.HandLandmarkDetection
             _wasThumbUp = thumbUpState;
         }
 
+        public void SetTelekinesisTarget(MagicAttackk target)
+        {
+            if (_magicAttackk == target) return;
+            _magicAttackk = target;
+            ResetThumbState();
+        }
+
         private void Telekinesis()
         {
-            if (_magicAttackk != null)
+            if (_magicAttackk != null && _magicAttackk.isActiveAndEnabled)
             {
                 _magicAttackk.Telekinesis();
             }
