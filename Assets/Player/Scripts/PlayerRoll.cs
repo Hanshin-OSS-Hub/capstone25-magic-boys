@@ -30,6 +30,9 @@ public class PlayerRoll : MonoBehaviour
     public bool IsRolling { get; private set; }
     private float rollTimer;
 
+    // 0 = 구르기 시작, 1 = 구르기 끝. 이동 속도 곡선에 사용
+    public float RollProgress => rollDuration > 0f ? Mathf.Clamp01(1f - rollTimer / rollDuration) : 1f;
+
     private Vector3 rollDirection;
 
     private StarterAssetsInputs _input;
@@ -143,18 +146,26 @@ public class PlayerRoll : MonoBehaviour
 
     void TryRoll()
     {
-        Vector3 inputDir = GetBufferedDirection();
+        // 대각선 포함 8방향: 현재 이동 입력을 우선 사용하고, 없으면 직전 방향키 버퍼 사용
+        Vector3 inputDir = Vector3.zero;
+        if (_input != null && _input.move.sqrMagnitude > 0.01f)
+            inputDir = new Vector3(_input.move.x, 0f, _input.move.y).normalized;
+        else
+            inputDir = GetBufferedDirection();
+
+        if (_cameraTransform == null && Camera.main != null)
+            _cameraTransform = Camera.main.transform;
 
         if (inputDir == Vector3.zero)
-            inputDir = Vector3.forward;
-
-        float yaw = 0f;
-        if (_cameraTransform != null)
         {
-            yaw = _cameraTransform.eulerAngles.y;
+            // 입력이 없으면 캐릭터가 바라보는 방향으로 구르기
+            rollDirection = transform.forward;
         }
-
-        rollDirection = Quaternion.Euler(0f, yaw, 0f) * inputDir;
+        else
+        {
+            float yaw = _cameraTransform != null ? _cameraTransform.eulerAngles.y : transform.eulerAngles.y;
+            rollDirection = Quaternion.Euler(0f, yaw, 0f) * inputDir;
+        }
 
         Vector3 flatDir = new Vector3(rollDirection.x, 0f, rollDirection.z);
         if (flatDir != Vector3.zero)

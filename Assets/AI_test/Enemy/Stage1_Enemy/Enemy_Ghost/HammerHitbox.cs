@@ -20,6 +20,12 @@ public class HammerHitbox : MonoBehaviour
         lastHitTimes.Clear();
     }
 
+    // 콤보의 매 타격마다 호출: 같은 적을 다음 타에서도 때릴 수 있게 기록 초기화
+    public void ResetHitHistory()
+    {
+        lastHitTimes.Clear();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         ProcessHit(other);
@@ -57,8 +63,8 @@ public class HammerHitbox : MonoBehaviour
 
         // 데미지 적용 및 쿨타임 갱신
         lastHitTimes[rootObject] = Time.time;
-        damageable.TakeDamage(damage);
-        
-        Debug.Log($"[HammerHitbox] {rootObject.name}에게 {damage} 데미지 적용 (다음 타격 가능까지 {hitCooldown}초)");
+        float finalDamage = damage * (playerAttack != null ? playerAttack.CurrentDamageMultiplier : 1f);
+        damageable.TakeDamage(finalDamage);
+        if (playerAttack != null) playerAttack.NotifyHitLanded();
     }
 }
