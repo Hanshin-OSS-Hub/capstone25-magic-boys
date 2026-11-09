@@ -7,3 +7,4 @@
 *.anim merge=unityyamlmerge eol=lf
 *.meta merge=unityyamlmerge eol=lf
 BabelTower_1.fbx filter=lfs diff=lfs merge=lfs -text
+Assets/Tower/Sub_tower/Meshy_AI_Tower_of_Ascension_20261109_texture_fbx/Meshy_AI_Tower_of_Ascension_20261109_texture.fbx filter=lfs diff=lfs merge=lfs -text

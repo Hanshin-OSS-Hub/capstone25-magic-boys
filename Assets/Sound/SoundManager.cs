@@ -52,6 +52,15 @@ public class SoundManager : MonoBehaviour
         ApplyVolumeToSources();
     }
 
+    void Start()
+    {
+        // 게임 플레이 BGM 재생
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlayBGM("MainBGM", true);
+        }
+    }
+
     private void BuildBanks()
     {
         bgmClips.Clear();

@@ -3070,7 +3070,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c55c09691f60064d9b3549b9c93e323, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
-  baseMaxHP: 1000
+  baseMaxHP: 100
   baseMaxMP: 500
   basePhysicalATK: 10
   baseMagicATK: 10
@@ -3180,6 +3180,13 @@ MonoBehaviour:
   yMeteorVfxPrefab: {fileID: 2842540418666017718, guid: 40eeb2fa0cb8416bbf3c301b58939ae1, type: 3}
   yMpCost: 30
   yCooldown: 18
+  yBaseDamage: 40
+  yRadius: 5
+  yImpactDelay: 1
+  yKnockback: 12
+  meteorSuccessSfxName: Meteor_Voice
+  meteorSuccessSfxVolume: 1
+  meteorSuccessSfxPitch: 1
 --- !u!114 &211820193
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3401,6 +3408,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  IsDead: 0
   IsLockOn: 0
   LockOnTarget: {fileID: 0}
 --- !u!114 &211820198
@@ -12303,7 +12311,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bgm2DSource: {fileID: 1028034007}
   sfx2DSource: {fileID: 1028034006}
-  bgmClipList: []
+  bgmClipList:
+  - name: MainBGM
+    clip: {fileID: 8300000, guid: 8407bd26ac92ffe41bffb6f84a233caa, type: 3}
+  - name: EndingBGM
+    clip: {fileID: 8300000, guid: 989faafdce3ecfd46a6de9a4e3cf5f95, type: 3}
   sfxClipList:
   - name: fireball_cast
     clip: {fileID: 8300000, guid: 947fb3f81224d4147a1c99bfe9985982, type: 3}
