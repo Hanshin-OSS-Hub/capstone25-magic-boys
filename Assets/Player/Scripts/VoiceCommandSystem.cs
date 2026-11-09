@@ -64,7 +64,9 @@ public class VoiceCommandSystem : MonoBehaviour
         else if (text.Contains("storm")) { matched = true; displayWord = "storm"; magicAttack.SelectSkill(MagicAttack.SkillSlot.T); }
 
         // Y - Meteor (ultimate)
-        else if (text.Contains("meteor") || text.Contains("meteo")) { matched = true; displayWord = "meteor"; magicAttack.SelectSkill(MagicAttack.SkillSlot.Y); }
+        // "메테오" 한국식 발음이 Mateo/Matteo/Metal/Media 등으로 받아적히는 경우도 메테오로 처리
+        else if (text.Contains("meteor") || text.Contains("meteo") || text.Contains("mateo") || text.Contains("matteo")
+            || text.Contains("metal") || text.Contains("media") || text.Contains("medio") || text.Contains("meet you")) { matched = true; displayWord = "meteor"; magicAttack.SelectSkill(MagicAttack.SkillSlot.Y); }
         else if (text.Contains("anvil")) { matched = true; displayWord = "anvil"; magicAttack.SelectSkill(MagicAttack.SkillSlot.Y); }
         else if (text.Contains("ultimate")) { matched = true; displayWord = "ultimate"; magicAttack.SelectSkill(MagicAttack.SkillSlot.Y); }
         else if (text.Contains("skill y")) { matched = true; displayWord = "skill y"; magicAttack.SelectSkill(MagicAttack.SkillSlot.Y); }
