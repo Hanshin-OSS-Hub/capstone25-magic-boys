@@ -12313,7 +12313,7 @@ MonoBehaviour:
   sfx2DSource: {fileID: 1028034006}
   bgmClipList:
   - name: MainBGM
-    clip: {fileID: 8300000, guid: 8407bd26ac92ffe41bffb6f84a233caa, type: 3}
+    clip: {fileID: 8300000, guid: 3c4c44b44ea8f6d4bb5ac5211d09dd4e, type: 3}
   - name: EndingBGM
     clip: {fileID: 8300000, guid: 989faafdce3ecfd46a6de9a4e3cf5f95, type: 3}
   sfxClipList:
