@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Golem Data
   m_EditorClassIdentifier: 
   BossName: Golem
-  MaxHP: 500
+  MaxHP: 250
   MoveSpeed: 5
   Damage: 10
   DetectionRange: 5

@@ -457,101 +457,158 @@ void SpawnDoors()
     }
 
 
+    // 퍼즐 룸은 매 판 반드시 생성되어야 한다.
+    // 1) 브랜치 끝 → 2) 메인 경로(시작/출구 제외)의 빈 연결부 순서로 겹치지 않는 자리를 찾고,
+    // 3) 그래도 실패하면 브랜치 막다른 방 하나를 퍼즐 룸으로 교체한다.
     IEnumerator SpawnPuzzleRoom()
     {
         if (puzzlePrefabs == null || puzzlePrefabs.Length == 0)
         {
-            Debug.LogWarning("PuzzlePrefabs가 비어있습니다. 퍼즐 룸을 생성하지 않습니다.");
+            Debug.LogError("PuzzlePrefabs가 비어있습니다. 퍼즐 룸을 생성할 수 없습니다.");
             yield break;
         }
-
-
-        List<Connector> branchEndConnectors = new List<Connector>();
-
-        foreach (Transform child in transform)
-        {
-          
-            if (!child.name.Contains("Branch")) continue;
-
-            foreach (Connector connector in child.GetComponentsInChildren<Connector>())
-            {
-                if (!connector.isConnected)
-                {
-                    branchEndConnectors.Add(connector);
-                }
-            }
-        }
-
-        if (branchEndConnectors.Count == 0)
-        {
-            Debug.LogWarning("사용 가능한 브랜치 끝 Connector가 없습니다.");
-            yield break;
-        }
-
-
-        int randIdx = Random.Range(0, branchEndConnectors.Count);
-        Connector selectedConnector = branchEndConnectors[randIdx];
-        tileFrom = selectedConnector.transform.parent.parent;
-
-
-        GameObject puzzleContainer = new GameObject("PuzzleRoom");
-        puzzleContainer.transform.SetParent(transform);
-        container = puzzleContainer.transform;
 
         yield return new WaitForSeconds(constructionDelay);
 
-        int puzzleIndex = Random.Range(0, puzzlePrefabs.Length);
-        GameObject goPuzzle = Instantiate(
-            puzzlePrefabs[puzzleIndex],
-            Vector3.zero,
-            Quaternion.identity,
-            container
-        );
-        goPuzzle.name = "Puzzle Room";
+        GameObject puzzleContainer = new GameObject("PuzzleRoom");
+        puzzleContainer.transform.SetParent(transform);
+        Transform puzzleParent = puzzleContainer.transform;
 
-        Transform originTile = genneratedTiles[genneratedTiles.FindIndex(x => x.tile == tileFrom)].tile;
-        genneratedTiles.Add(new Tile(goPuzzle.transform, originTile));
-        tileTo = goPuzzle.transform;
-
-        ConnectTilesWithConnector(selectedConnector.transform);
-
-        CollisionCheck();
-
-        if (tileTo == null || tileTo.gameObject == null)
+        // 1~2단계: 빈 연결부에 배치 시도
+        List<Connector> candidates = new List<Connector>();
+        List<Connector> mainCandidates = new List<Connector>();
+        foreach (Transform child in transform)
         {
-            Debug.LogWarning("퍼즐 룸 배치 실패: 충돌로 인해 제거됨.");
-            Destroy(puzzleContainer);
-            yield break;
+            bool isBranch = child.name.Contains("Branch");
+            bool isMain = child.name.Contains("Main");
+            if (!isBranch && !isMain) continue;
+            foreach (Connector c in child.GetComponentsInChildren<Connector>())
+            {
+                if (c.isConnected) continue;
+                Transform owner = c.transform.parent != null ? c.transform.parent.parent : null;
+                if (owner == null) continue;
+                if (owner.name == "Start Room" || owner.name == "Exit Room") continue;
+                if (isBranch) candidates.Add(c); else mainCandidates.Add(c);
+            }
+        }
+        Shuffle(candidates);
+        Shuffle(mainCandidates);
+        candidates.AddRange(mainCandidates);
+
+        foreach (Connector c in candidates)
+        {
+            if (TryPlacePuzzle(c, puzzleParent)) yield break;
         }
 
-        DebugRoomLighting(tileTo, Color.cyan);
-        Debug.Log($"퍼즐 룸이 [{tileFrom.name}]의 끝에 생성되었습니다.");
+        // 3단계: 브랜치 막다른 방을 제거하고 그 자리에 퍼즐 룸 배치
+        List<Tile> leafTiles = genneratedTiles.FindAll(t =>
+            t.tile != null && t.connector != null &&
+            t.tile.parent != null && t.tile.parent.name.Contains("Branch") &&
+            t.tile.GetComponentsInChildren<Connector>().Count(x => x.isConnected) <= 1);
+        Shuffle(leafTiles);
+
+        foreach (Tile leaf in leafTiles)
+        {
+            Connector originConnector = leaf.connector;
+            Transform leafTransform = leaf.tile;
+            genneratedTiles.Remove(leaf);
+            DestroyImmediate(leafTransform.gameObject);
+            originConnector.isConnected = false;
+            Physics.SyncTransforms();
+
+            if (TryPlacePuzzle(originConnector, puzzleParent)) yield break;
+        }
+
+        Debug.LogError("퍼즐 룸을 배치할 자리를 찾지 못했습니다.");
+        Destroy(puzzleContainer);
     }
 
-    void ConnectTilesWithConnector(Transform connectFrom)
+    bool TryPlacePuzzle(Connector fromConnector, Transform puzzleParent)
     {
-        Transform connectTo = GetRandomConnector(tileTo);
-        if (connectFrom == null || connectTo == null) return;
+        Transform from = fromConnector.transform.parent.parent;
+        int fromIndex = genneratedTiles.FindIndex(x => x.tile == from);
+        if (fromIndex < 0) return false;
 
+        // 프리팹 순서와 프리팹의 연결부를 모두 시도
+        List<int> prefabOrder = Enumerable.Range(0, puzzlePrefabs.Length).ToList();
+        Shuffle(prefabOrder);
 
-        connectFrom.GetComponent<Connector>().isConnected = true;
+        foreach (int prefabIndex in prefabOrder)
+        {
+            int connectorCount = puzzlePrefabs[prefabIndex].GetComponentsInChildren<Connector>(true).Length;
+            for (int ci = 0; ci < connectorCount; ci++)
+            {
+                GameObject goPuzzle = Instantiate(puzzlePrefabs[prefabIndex], Vector3.zero, Quaternion.identity, puzzleParent);
+                goPuzzle.name = "Puzzle Room";
+                Transform puzzle = goPuzzle.transform;
+                Connector[] puzzleConnectors = puzzle.GetComponentsInChildren<Connector>(true);
+                Transform connectTo = puzzleConnectors[ci].transform;
+                Transform connectorsRoot = connectTo.parent;
 
+                connectTo.SetParent(fromConnector.transform);
+                puzzle.SetParent(connectTo);
+                connectTo.localPosition = Vector3.zero;
+                connectTo.localRotation = Quaternion.identity;
+                connectTo.Rotate(0, 180f, 0);
+                puzzle.SetParent(puzzleParent);
+                connectTo.SetParent(connectorsRoot);
+                Physics.SyncTransforms();
 
-        BoxCollider box = tileFrom.GetComponent<BoxCollider>();
+                if (!OverlapsOtherTiles(puzzle, from))
+                {
+                    fromConnector.isConnected = true;
+                    puzzleConnectors[ci].isConnected = true;
+
+                    BoxCollider fromBox = from.GetComponent<BoxCollider>();
+                    if (fromBox == null)
+                    {
+                        fromBox = from.gameObject.AddComponent<BoxCollider>();
+                        fromBox.isTrigger = true;
+                    }
+
+                    Tile puzzleTile = new Tile(puzzle, from);
+                    puzzleTile.connector = fromConnector;
+                    genneratedTiles.Add(puzzleTile);
+
+                    DebugRoomLighting(puzzle, Color.cyan);
+                    Debug.Log($"퍼즐 룸이 [{from.name}]에 연결되어 생성되었습니다.");
+                    return true;
+                }
+
+                DestroyImmediate(goPuzzle);
+            }
+        }
+        return false;
+    }
+
+    bool OverlapsOtherTiles(Transform tile, Transform ignore)
+    {
+        BoxCollider box = tile.GetComponent<BoxCollider>();
         if (box == null)
         {
-            box = tileFrom.gameObject.AddComponent<BoxCollider>();
+            box = tile.gameObject.AddComponent<BoxCollider>();
             box.isTrigger = true;
+            Physics.SyncTransforms();
         }
+        Vector3 offset = (tile.right * box.center.x) + (tile.up * box.center.y) + (tile.forward * box.center.z);
+        Vector3 halfExtents = box.bounds.extents;
+        Collider[] hits = Physics.OverlapBox(tile.position + offset, halfExtents, Quaternion.identity, LayerMask.GetMask("Tile"));
+        foreach (Collider hit in hits)
+        {
+            if (hit.transform == tile || hit.transform == ignore) continue;
+            if (hit.transform.IsChildOf(tile)) continue;
+            return true;
+        }
+        return false;
+    }
 
-        connectTo.SetParent(connectFrom);
-        tileTo.SetParent(connectTo);
-        connectTo.localPosition = Vector3.zero;
-        connectTo.localRotation = Quaternion.identity;
-        connectTo.Rotate(0, 180f, 0);
-        tileTo.SetParent(container);
-        connectTo.SetParent(tileTo.Find("Connectors"));
-        genneratedTiles.Last().connector = connectFrom.GetComponent<Connector>();
+    static void Shuffle<T>(List<T> list)
+    {
+        for (int i = list.Count - 1; i > 0; i--)
+        {
+            int j = Random.Range(0, i + 1);
+            (list[i], list[j]) = (list[j], list[i]);
+        }
     }
 
 }

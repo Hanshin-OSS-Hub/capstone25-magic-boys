@@ -4231,6 +4231,8 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 88087d4dcc12da24e98814de462442d9, type: 3}
   - name: Thunder_Voice
     clip: {fileID: 8300000, guid: af7274ec07642c349a397bee81f5321b, type: 3}
+  - name: Meteor_Voice
+    clip: {fileID: 8300000, guid: 8693ac63893f4bcebb6c2a7ebf75f516, type: 3}
   bgmVolume: 1
   sfxVolume: 1
   poolInitialSize: 6
@@ -15390,8 +15392,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c55c09691f60064d9b3549b9c93e323, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
-  baseMaxHP: 100
-  baseMaxMP: 50
+  baseMaxHP: 1000
+  baseMaxMP: 500
   basePhysicalATK: 10
   baseMagicATK: 10
   baseMPRegenPerSec: 1

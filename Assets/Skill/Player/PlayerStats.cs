@@ -6,8 +6,8 @@ public enum StatType { STR, DEX, MAG, LUK }
 public class PlayerStats : MonoBehaviour, IDamageable
 {
     [Header("Base")]
-    public int baseMaxHP = 100;
-    public int baseMaxMP = 50;
+    public int baseMaxHP = 1000;
+    public int baseMaxMP = 500;
     public int basePhysicalATK = 10;
     public int baseMagicATK = 10;
     public float baseMPRegenPerSec = 1f;
