@@ -8,6 +8,9 @@ public class EndingSequenceController : MonoBehaviour
     [SerializeField] private CinemachineVirtualCamera orbitCam;
     [SerializeField] private CinemachineVirtualCamera topCam;
 
+    [Header("Optional Continuous Tower Shot")]
+    [SerializeField] private TowerEndingCameraPath cameraPath;
+
     [Header("Fade")]
     [SerializeField] private Image fadeImage;
 
@@ -26,11 +29,16 @@ public class EndingSequenceController : MonoBehaviour
     private bool isFading = false;
     private bool startTextFade = false;
     private float textTimer = 0f;
+    private bool continuousShot;
+    private float shotTime;
 
     void Start()
     {
         if (orbitCam != null) orbitCam.Priority = 10;
         if (topCam != null) topCam.Priority = 5;
+
+        continuousShot = cameraPath != null && cameraPath.Begin();
+        if (continuousShot) orbitDuration = cameraPath.Duration;
 
         if (fadeImage != null)
         {
@@ -47,6 +55,11 @@ public class EndingSequenceController : MonoBehaviour
 
     void Update()
     {
+        if (continuousShot)
+        {
+            shotTime += Time.deltaTime;
+            cameraPath.EvaluateTime(shotTime);
+        }
         timer += Time.deltaTime;
 
         // 1. 공전 카메라 -> 탑 위 카메라 전환
@@ -55,10 +68,13 @@ public class EndingSequenceController : MonoBehaviour
             switchedToTop = true;
             timer = 0f;
 
-            if (orbitCam != null) orbitCam.Priority = 5;
-            if (topCam != null) topCam.Priority = 20;
+            if (!continuousShot)
+            {
+                if (orbitCam != null) orbitCam.Priority = 5;
+                if (topCam != null) topCam.Priority = 20;
+            }
 
-            Debug.Log("[Ending] Top camera 전환");
+            Debug.Log(continuousShot ? "[Ending] Summit hold" : "[Ending] Top camera 전환");
         }
 
         // 2. 탑 위 카메라를 잠깐 보여준 뒤 페이드 시작
