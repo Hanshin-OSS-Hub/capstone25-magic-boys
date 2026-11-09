@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -72,34 +73,64 @@ public class MainMenuUI : MonoBehaviour
         continueButton.interactable = GameSceneSavePoint.HasSavedScene();
     }
 
-    public void NewGame()
+    private bool isLoading;
+
+    public void NewGame() => BeginGame(true);
+
+    public void ContinueGame() => BeginGame(false);
+
+    private void BeginGame(bool newGame)
     {
-        Time.timeScale = 1f;
+        if (isLoading) return;
+        string sceneName = newGame ? firstGameSceneName
+            : PlayerPrefs.GetString(GameSceneSavePoint.LastSceneKey, firstGameSceneName);
+        if (!Application.CanStreamedLevelBeLoaded(sceneName))
+        {
+            Debug.LogError("[MainMenu] Cannot load scene: " + sceneName);
+            return;
+        }
 
-        // 메인메뉴에 숨어 있던 기존 Player 제거
-        PersistentPlayer.DestroyCurrent();
-
-        PlayerStats.ResetSavedData();
-        SkillProgressionManager.ResetSavedData();
-        GameSceneSavePoint.ResetSavedScene();
-
-        PlayerPrefs.SetString(GameSceneSavePoint.LastSceneKey, firstGameSceneName);
-        PlayerPrefs.Save();
-
-        DungeonGenerator.saveSeed = -1;
-
-        SceneManager.LoadScene(firstGameSceneName);
+        isLoading = true;
+        if (newGameButton != null) newGameButton.interactable = false;
+        if (continueButton != null) continueButton.interactable = false;
+        StartCoroutine(LoadGame(newGame, sceneName));
     }
 
-    public void ContinueGame()
+    private IEnumerator LoadGame(bool newGame, string sceneName)
     {
         Time.timeScale = 1f;
+        PauseMenuUI.ForcePausedState(false);
+        StatsPanelToggle.ForceUIBlocked(false);
 
-        // 메인메뉴에 숨어 있던 기존 Player 제거
+        Debug.Log($"[MainMenu] {(newGame ? "NewGame" : "Continue")} requested; releasing previous Player.");
+        PersistentPlayer.HideCurrent();
         PersistentPlayer.DestroyCurrent();
 
-        string sceneName = PlayerPrefs.GetString(GameSceneSavePoint.LastSceneKey, firstGameSceneName);
-        SceneManager.LoadScene(sceneName);
+        // Destroy is deferred. Finish renderer/Player cleanup before starting
+        // scene loading, which otherwise competes for Unity's asset locks.
+        yield return null;
+
+        if (newGame)
+        {
+            PlayerStats.ResetSavedData();
+            SkillProgressionManager.ResetSavedData();
+            GameSceneSavePoint.ResetSavedScene();
+            PlayerPrefs.SetString(GameSceneSavePoint.LastSceneKey, firstGameSceneName);
+            PlayerPrefs.Save();
+            DungeonGenerator.saveSeed = -1;
+        }
+
+        Debug.Log("[MainMenu] Player cleanup complete; loading " + sceneName);
+        AsyncOperation load = null;
+        try { load = SceneManager.LoadSceneAsync(sceneName); }
+        catch (System.Exception error) { Debug.LogException(error); }
+        if (load != null) yield return load;
+        else
+        {
+            isLoading = false;
+            if (newGameButton != null) newGameButton.interactable = true;
+            RefreshContinueButton();
+        }
     }
 
     public void OpenSettings()
